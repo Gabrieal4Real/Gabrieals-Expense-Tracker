@@ -1,0 +1,10 @@
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:E6B1635E-31A4-45A6-B62E-EDFE348074BB, OS:18.3.1, name:iPhone 16 }
+{ platform:iOS Simulator, arch:x86_64, id:E6B1635E-31A4-45A6-B62E-EDFE348074BB, OS:18.3.1, name:iPhone 16 }
+** BUILD FAILED **
+
+
+The following build commands failed:
+	PhaseScriptExecution [CP-User]\ Generate\ Specs /Users/danieljayarajan/Library/Developer/Xcode/DerivedData/ExpenseTracker-cafrcfsmblhpffdffpeybujkkduo/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/ReactCodegen.build/Script-46EB2E000277D0.sh (in target 'ReactCodegen' from project 'Pods')
+	Building workspace ExpenseTracker with scheme ExpenseTracker and configuration Debug
+(2 failures)
