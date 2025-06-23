@@ -2,28 +2,37 @@ import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import 'react-native-reanimated'; 
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    PoppinsBold: require('../assets/fonts/Poppins-Bold.ttf'),
-    PoppinsExtraBold: require('../assets/fonts/Poppins-ExtraBold.ttf'),
-    PoppinsMedium: require('../assets/fonts/Poppins-Medium.ttf'),
-    PoppinsRegular: require('../assets/fonts/Poppins-Regular.ttf'),
-    PoppinsSemiBold: require('../assets/fonts/Poppins-SemiBold.ttf'),
+    PoppinsBold: require('@/assets/fonts/Poppins-Bold.ttf'),
+    PoppinsExtraBold: require('@/assets/fonts/Poppins-ExtraBold.ttf'),
+    PoppinsMedium: require('@/assets/fonts/Poppins-Medium.ttf'),
+    PoppinsRegular: require('@/assets/fonts/Poppins-Regular.ttf'),
+    PoppinsSemiBold: require('@/assets/fonts/Poppins-SemiBold.ttf'),
   });
 
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
   if (!loaded) {
-    // Async font loading only occurs in development.
     return null;
   }
 
   return (
     <ThemeProvider value={DarkTheme}>
-      <Stack>
-        <Stack.Screen name="features/home/home" options={{ headerShown: false }} />
+      <StatusBar style="light" />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(features)/(tabs)" options={{ title: 'Home' }}/>
       </Stack>
-      <StatusBar style="auto" />
     </ThemeProvider>
   );
 }
