@@ -1,13 +1,13 @@
 import React from 'react';
-import { TitleText } from '@/app/util/widgets/custom-text';
+import { TitleText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
-import { baseStyles } from '@/constants/Styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { baseStyles } from '@/constants/Styles';
 
-export default function SettingsScreen() {
+export default function StatisticsScreen() {
   return (
     <SafeAreaView style={baseStyles.baseBackground}>
-      <TitleText text="Settings" color={Colors.textPrimary} />
+      <TitleText text="Statistics" color={Colors.textPrimary} />
     </SafeAreaView>
   );
 }

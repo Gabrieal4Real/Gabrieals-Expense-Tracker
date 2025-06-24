@@ -3,6 +3,8 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Pressable } from 'react-native';
+
 
 const tabs = [
   {
@@ -22,12 +24,22 @@ const tabs = [
   },
 ];
 
+const TabButton = React.forwardRef((props: any, ref) => (
+  <Pressable
+    ref={ref}
+    android_ripple={null}
+    {...props}
+  />
+));
+
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
+        animation: 'fade',
         tabBarActiveTintColor: Colors.textPrimary,
         tabBarInactiveTintColor: Colors.placeholder,
         tabBarStyle: {
@@ -37,6 +49,9 @@ export default function TabLayout() {
           paddingTop: 4,
           height: 56 + insets.bottom,
         },
+        tabBarButton: (props) => (
+          <TabButton {...props} />
+        ),
       }}
     >
       {tabs.map(({ name, title, icon }) => (

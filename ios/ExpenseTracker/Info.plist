@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>expensetracker</string>
-          <string>com.anonymous.ExpenseTracker</string>
+          <string>org.gabrieal.ExpenseTracker</string>
         </array>
       </dict>
     </array>

@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.ExpenseTracker'
+    namespace 'org.gabrieal.ExpenseTracker'
     defaultConfig {
-        applicationId 'com.anonymous.ExpenseTracker'
+        applicationId 'org.gabrieal.ExpenseTracker'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

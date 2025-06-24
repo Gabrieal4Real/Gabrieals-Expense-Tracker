@@ -1,4 +1,4 @@
-package com.anonymous.ExpenseTracker
+package org.gabrieal.ExpenseTracker
 
 import android.app.Application
 import android.content.res.Configuration

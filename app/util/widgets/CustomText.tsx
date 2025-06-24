@@ -48,19 +48,19 @@ export const SubtitleText: React.FC<TypographyProps> = ({ text, style, color, nu
   </Text>
 );
 
-export const DescriptionText: React.FC<TypographyProps> = ({ text, style, textAlign = 'left', ...props }) => (
+export const DescriptionText: React.FC<TypographyProps> = ({ text, style, color, textAlign = 'left', ...props }) => (
   <Text
     {...props}
-    style={[styles.descriptionText, { color: Colors.textPrimary, textAlign }, style]}
+    style={[styles.descriptionText, { color: color || Colors.textPrimary, textAlign }, style]}
   >
     {text}
   </Text>
 );
 
-export const TinyText: React.FC<TypographyProps> = ({ text, style, textAlign = 'left', ...props }) => (
+export const TinyText: React.FC<TypographyProps> = ({ text, style, color, textAlign = 'left', ...props }) => (
   <Text
     {...props}
-    style={[styles.tinyText, { color: Colors.textPrimary, textAlign }, style]}
+    style={[styles.tinyText, { color: color || Colors.textPrimary, textAlign }, style]}
   >
     {text}
   </Text>
