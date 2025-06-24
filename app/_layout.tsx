@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { initDB } from './sql/AppDatabaseFactory';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,9 +42,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={DarkTheme}>
       <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(features)/(tabs)" options={{ title: 'Home' }}/>
-      </Stack>
+      <GestureHandlerRootView>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" options={{ title: 'Home' }}/>
+        </Stack>
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }
