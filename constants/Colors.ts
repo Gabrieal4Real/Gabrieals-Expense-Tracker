@@ -15,8 +15,10 @@ export const Colors = {
   // Comxmon
   black: 'rgba(0, 0, 0, 1)',
   white: 'rgba(255, 255, 255, 1)',
+  red: 'rgb(178, 34, 34))',
+  green: 'rgba(10, 152, 105, 1)',
 
   // Accents
   greenAccent: 'rgba(51, 214, 159, 1)',
-  redAccent: 'rgba(255, 76, 94, 1)',
+  redAccent: 'rgba(252, 35, 57, 1)',
 };

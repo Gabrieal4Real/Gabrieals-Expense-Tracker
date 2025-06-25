@@ -28,7 +28,7 @@ const CustomTextInput = forwardRef<TextInput, InputProps>(
           )}
           <TextInput
             ref={ref}
-            style={{ flex: 1, paddingVertical: 0, color: Colors.textPrimary }}
+            style={[baseStyles.textInput]}
             placeholderTextColor={Colors.placeholder}
             selectionColor={Colors.placeholder}
             returnKeyType="next"

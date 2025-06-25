@@ -72,31 +72,37 @@ const styles = StyleSheet.create({
     fontSize: 18,
     letterSpacing: 4,
     lineHeight: 24,
+    includeFontPadding: false,
   },
   biggerText: {
     fontFamily: 'PoppinsExtraBold',
     fontSize: 24,
     letterSpacing: 10,
     lineHeight: 30,
+    includeFontPadding: false,
   },
   bigText: {
     fontFamily: 'PoppinsSemiBold',
     fontSize: 20,
     lineHeight: 28,
+    includeFontPadding: false,
   },
   subtitleText: {
     fontFamily: 'PoppinsSemiBold',
     fontSize: 16,
     lineHeight: 22,
+    includeFontPadding: false,
   },
   descriptionText: {
     fontFamily: 'PoppinsMedium',
     fontSize: 14,
     lineHeight: 20,
+    includeFontPadding: false,
   },
   tinyText: {
     fontFamily: 'PoppinsRegular',
     fontSize: 12,
     lineHeight: 18,
+    includeFontPadding: false,
   },
 });

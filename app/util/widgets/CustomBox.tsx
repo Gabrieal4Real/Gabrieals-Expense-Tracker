@@ -43,7 +43,7 @@ export const SpacerVertical = ({ size = 8 }: { size?: number }) => (
 );
 
 type FilterChipGroupProps<T> = {
-  title: string;
+  title?: string;
   items: T[];
   selected: T;
   onSelectedChange: (item: T) => void;
@@ -61,7 +61,7 @@ export function FilterChipGroup<T extends string | number>({
 }: FilterChipGroupProps<T>) {
   return (
     <>
-      <TinyText text={title} color={Colors.textPrimary} />
+    {title && <TinyText text={title} color={Colors.textPrimary} />}
       <View style={[baseStyles.categoryContainer, style]}>
         {items.map((item) => {
           const isSelected = selected === item;

@@ -3,7 +3,7 @@ export enum TransactionType {
     Income = 'Income'
 }
 
-export enum Category {
+export enum ExpenseCategory {
     Food = '🍕 Food',
     Transport = '🚗 Transport',
     Shopping = '🛒 Shopping',
@@ -11,14 +11,22 @@ export enum Category {
     Health = '💊 Health',
     Education = '📚 Education',
     Utilities = '🏠 Utilities',
-    Other = '💁 Other'
-}
+    Other = '💁 Other',
+  }
+  
+  export enum IncomeCategory {
+    Salary = '💼 Salary',
+    Bonus = '🎁 Bonus',
+    Investment = '📈 Investment',
+    Gift = '🎉 Gift',
+    Other = '💁 Other',
+  }
 
-export interface Transaction {
+  export interface Transaction {
     id?: number;
     amount: number;
     date: string;
     type: TransactionType;
-    category: Category;
+    category: ExpenseCategory | IncomeCategory;
     description: string;
   }

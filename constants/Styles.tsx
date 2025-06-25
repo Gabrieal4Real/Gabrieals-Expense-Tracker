@@ -1,6 +1,13 @@
-
 import { Colors } from '@/constants/Colors';
 import { StyleSheet } from 'react-native';
+
+const shadow = {
+  elevation: 5,
+  shadowColor: Colors.black,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.3,
+  shadowRadius: 3,
+};
 
 export const baseStyles = StyleSheet.create({
   baseBackground: {
@@ -9,26 +16,36 @@ export const baseStyles = StyleSheet.create({
     paddingTop: 18,
     paddingHorizontal: 18,
   },
+
   baseRoundedBox: {
     backgroundColor: Colors.navigationBar,
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 12,
-    elevation: 2,
-    shadowColor: Colors.black,
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    ...shadow,
   },
+
   input: {
     color: Colors.textPrimary,
     borderColor: Colors.textPrimary,
+    alignItems: 'center',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
-    paddingVertical: 16,
+    paddingVertical: 0,
     marginBottom: 16,
   },
+
+  textInput: {
+    flex: 1,
+    fontFamily: 'PoppinsRegular',
+    color: Colors.textPrimary,
+    textAlign: 'left',
+    fontSize: 12,
+    paddingVertical: 16,
+    includeFontPadding: false,
+  },
+
   button: {
     borderRadius: 8,
     paddingHorizontal: 12,
@@ -36,11 +53,13 @@ export const baseStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   categoryContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 8,
   },
+
   categoryButton: {
     backgroundColor: Colors.navigationBar,
     borderRadius: 8,
@@ -51,11 +70,32 @@ export const baseStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.borderStroke,
   },
+
   selectedCategoryButton: {
     backgroundColor: Colors.textSecondary,
     borderColor: 'transparent',
   },
+
   pressed: {
     opacity: 0.7,
+  },
+
+  iconButton: {
+    position: 'absolute',
+    right: 16,
+    top: '50%',
+  },
+
+  fab: {
+    position: 'absolute',
+    right: 16,
+    bottom: 16,
+    backgroundColor: Colors.textSecondary,
+    width: 48,
+    height: 48,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...shadow,
   },
 });

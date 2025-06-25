@@ -3,8 +3,8 @@ import { View, FlatList, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { TitleText, BiggerText, TinyText, DescriptionText } from '@/app/util/widgets/CustomText';
-import { HorizontalDivider, RoundedBox, VerticalDivider, SpacerVertical } from '@/app/util/widgets/CustomBox';
-import { IconButton, TinyButton } from '@/app/util/widgets/CustomButton';
+import { HorizontalDivider, RoundedBox } from '@/app/util/widgets/CustomBox';
+import { IconButton } from '@/app/util/widgets/CustomButton';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
 import { Transaction, TransactionType } from '@/app/data/TransactionItem';
@@ -73,7 +73,7 @@ export default function HomeScreen() {
             textAlign="center"
             style={{ paddingVertical: 4, paddingHorizontal: 48 }}
           />
-          <TinyText text="REMAINING" color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
+          <TinyText text={"Remaining".toUpperCase()} color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
         </View>
 
         <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {}} />
@@ -102,12 +102,12 @@ export default function HomeScreen() {
       )}
 
       <CustomBottomSheet index={bottomSheetIndex} snapPoints={['90%']} ref={bottomSheetRef} onChange={handleSheetChange}>
-        <TransactionBottomSheet transactionType={type} onTransactionAdded={handleTransactionAdded} />
+        <TransactionBottomSheet type={type} onTransactionAdded={handleTransactionAdded} />
       </CustomBottomSheet>
 
       <FloatingActionButton
-        icon={bottomSheetIndex === -1 ? 'add' : 'close'}
         onPress={bottomSheetIndex === -1 ? openBottomSheet : closeBottomSheet}
+        icon={bottomSheetIndex === -1 ? 'add' : 'close'}
       />
     </View>
   );
