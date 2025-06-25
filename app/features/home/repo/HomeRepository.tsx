@@ -1,4 +1,4 @@
-import { addTransaction, getAllTransactions } from "@/app/sql/AppDatabase";
+import { addTransaction, getAllTransactions, getProfile, upsertProfile } from "@/app/sql/AppDatabase";
 import { TransactionType, ExpenseCategory, IncomeCategory } from "@/app/data/TransactionItem";
 
 export const HomeRepository = {
@@ -19,5 +19,13 @@ export const HomeRepository = {
         category,
         description,
       });
+    },
+
+    async getProfile() {
+      return await getProfile();
+    },
+
+    async updateProfile(remaining: number) {
+      return await upsertProfile(remaining);
     },
   };

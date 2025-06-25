@@ -26,6 +26,10 @@ export function useHomeViewModel() {
       updateUiState({ loading: true, error: null });
       try {
         await HomeRepository.createTransaction(type, amount, category, description);
+        const previousRemaining = uiState.profile?.remaining ?? 0;
+        const currentRemaining = type === TransactionType.Expense ? previousRemaining - amount : previousRemaining + amount;
+
+        await updateProfile(currentRemaining);
         await loadTransactions();
       } catch (err) {
         console.error('Failed to add transaction:', err);
@@ -35,5 +39,33 @@ export function useHomeViewModel() {
     [updateUiState, loadTransactions]
   );
 
-  return { uiState, updateUiState, loadTransactions, addNewTransaction };
+  const updateProfile = useCallback(
+    async (remaining: number) => {
+      updateUiState({ loading: true, error: null });
+      try {
+        await HomeRepository.updateProfile(remaining);
+        await getProfile();
+      } catch (err) {
+        console.error('Failed to update profile:', err);
+        updateUiState({ loading: false, error: 'Failed to update profile' });
+      }
+    },
+    [updateUiState, loadTransactions]
+  );
+
+  const getProfile = useCallback(
+    async () => {
+      updateUiState({ loading: true, error: null });
+      try {
+        const profile = await HomeRepository.getProfile();
+        updateUiState({ profile, loading: false, error: null });
+      } catch (err) {
+        console.error('Failed to get profile:', err);
+        updateUiState({ loading: false, error: 'Failed to get profile' });
+      }
+    },
+    [updateUiState]
+  );
+
+  return { uiState, updateUiState, loadTransactions, addNewTransaction, updateProfile, getProfile };
 }

@@ -1,3 +1,4 @@
+import { Profile } from '@/app/data/Profile';
 import { Transaction, TransactionType } from '@/app/data/TransactionItem';
 
 export interface HomeUiState {
@@ -5,6 +6,7 @@ export interface HomeUiState {
   loading: boolean;
   error: string | null;
   type: TransactionType;
+  profile: Profile | null;
 }
 
 export const initialHomeUiState: HomeUiState = {
@@ -12,4 +14,5 @@ export const initialHomeUiState: HomeUiState = {
   loading: false,
   error: null,
   type: TransactionType.Expense,
+  profile: null,
 };

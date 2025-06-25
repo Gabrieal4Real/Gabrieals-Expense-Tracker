@@ -28,11 +28,11 @@ export const BiggerText: React.FC<TypographyProps> = ({ text, style, color, text
   </Text>
 );
 
-export const BigText: React.FC<TypographyProps> = ({ text, style, numberOfLines, textAlign = 'left', ...props }) => (
+export const BigText: React.FC<TypographyProps> = ({ text, style, color, numberOfLines, textAlign = 'left', ...props }) => (
   <Text
     {...props}
     numberOfLines={numberOfLines}
-    style={[styles.bigText, { color: Colors.textSecondary, textAlign }, style]}
+    style={[styles.bigText, { color: color || Colors.textSecondary, textAlign }, style]}
   >
     {text}
   </Text>
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
   },
   biggerText: {
     fontFamily: 'PoppinsExtraBold',
-    fontSize: 24,
-    letterSpacing: 10,
+    fontSize: 22,
+    letterSpacing: 4,
     lineHeight: 30,
     includeFontPadding: false,
   },

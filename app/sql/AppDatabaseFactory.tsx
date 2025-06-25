@@ -18,6 +18,11 @@ export const schemaStatements = [
     type TEXT NOT NULL,
     category TEXT NOT NULL,
     description TEXT
+  );`,
+
+  `CREATE TABLE IF NOT EXISTS profile (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    remaining REAL NOT NULL
   );`
 ];
 

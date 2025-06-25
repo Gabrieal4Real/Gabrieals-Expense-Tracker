@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { TitleText, BiggerText, TinyText, DescriptionText } from '@/app/util/widgets/CustomText';
-import { HorizontalDivider, RoundedBox } from '@/app/util/widgets/CustomBox';
+import { HorizontalDivider, RoundedBox, SpacerVertical } from '@/app/util/widgets/CustomBox';
 import { IconButton } from '@/app/util/widgets/CustomButton';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
@@ -18,12 +18,17 @@ export default function HomeScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [bottomSheetIndex, setBottomSheetIndex] = React.useState(-1);
 
-  const { uiState, loadTransactions, updateUiState } = useHomeViewModel();
-  const { transactions, loading, error, type } = uiState;
+  const { uiState, loadTransactions, getProfile } = useHomeViewModel();
+  const { transactions, loading, error, type, profile } = uiState;
+
+  const remaining = profile?.remaining ?? 0;
+  const remainingText = `RM ${remaining.toFixed(2).replace('.00', '')}`;
+  const remainingColor = remaining >= 0 ? Colors.greenAccent : Colors.redAccent;
 
   useEffect(() => {
     loadTransactions();
-  }, [loadTransactions]);
+    getProfile();
+  }, [loadTransactions, getProfile]);
 
   const handleSheetChange = useCallback((index: number) => {
     console.log('BottomSheet index:', index);
@@ -68,8 +73,8 @@ export default function HomeScreen() {
       <RoundedBox style={{ marginVertical: 16 }}>
         <View style={{ alignItems: 'center' }}>
           <BiggerText
-            text="RM 7000"
-            color={Colors.greenAccent}
+            text={remainingText}
+            color={remainingColor}
             textAlign="center"
             style={{ paddingVertical: 4, paddingHorizontal: 48 }}
           />
@@ -91,7 +96,18 @@ export default function HomeScreen() {
           <TinyText text={error} color={Colors.redAccent} textAlign="center" />
         </View>
       ) : (
-        <FlatList
+        transactions.length === 0 ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Image
+              source={require('@/assets/images/nothing_here_yet.webp')}
+              style={{ height: 300, right: 8 }}
+              resizeMode="contain"
+            />
+            <SpacerVertical size={8} />
+            <TinyText text="No transactions yet" color={Colors.textPrimary} textAlign="center" />
+          </View>
+        ) : (
+          <FlatList
           data={[...transactions].reverse()}
           renderItem={renderTransaction}
           showsVerticalScrollIndicator={false}
@@ -99,6 +115,7 @@ export default function HomeScreen() {
           ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
           contentContainerStyle={{ paddingVertical: 16 }}
         />
+        )
       )}
 
       <CustomBottomSheet index={bottomSheetIndex} snapPoints={['90%']} ref={bottomSheetRef} onChange={handleSheetChange}>
