@@ -1,22 +1,22 @@
 export const Colors = {
   // Text
-  textPrimary: '#E4EEF0',
-  textSecondary: '#A4D0D7',
-  placeholder: '#526D82',
+  textPrimary: 'rgba(228, 238, 240, 1)',
+  textSecondary: 'rgba(164, 208, 215, 1)',
+  placeholder: 'rgba(82, 109, 130, 1)',
 
   // Backgrounds
-  backgroundColor: '#1d1e28',
-  bottomSheetBackground: '#161720',
-  navigationBar: '#212834',
+  backgroundColor: 'rgba(30, 30, 40, 1)',
+  bottomSheetBackground: 'rgba(22, 23, 32, 1)',
+  navigationBar: 'rgba(33, 40, 52, 1)',
 
   // Borders
-  borderStroke: '#93BFCF',
+  borderStroke: 'rgba(147, 191, 207, 1)',
 
-  // Common
-  black: '#000',
-  white: '#fff',
+  // Comxmon
+  black: 'rgba(0, 0, 0, 1)',
+  white: 'rgba(255, 255, 255, 1)',
 
   // Accents
-  greenAccent: '#33D69F',
-  redAccent: '#FF4C5E',
+  greenAccent: 'rgba(51, 214, 159, 1)',
+  redAccent: 'rgba(255, 76, 94, 1)',
 };

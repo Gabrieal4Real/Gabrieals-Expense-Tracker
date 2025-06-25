@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TinyText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
+import { baseStyles } from '@/constants/Styles';
 
 interface TinyButtonProps {
   text: string;
@@ -19,6 +20,14 @@ interface IconButtonProps {
   style?: ViewStyle;
 }
 
+interface CustomButtonProps {
+  text: string;
+  onPress?: () => void;
+  style?: ViewStyle;
+  color?: string;
+  disabled?: boolean;
+}
+
 export const TinyButton: React.FC<TinyButtonProps> = ({
   text,
   onPress,
@@ -29,7 +38,26 @@ export const TinyButton: React.FC<TinyButtonProps> = ({
     onPress={onPress}
     style={({ pressed }) => [
       styles.tinyButton,
-      pressed && styles.pressed,
+      pressed && baseStyles.pressed,
+      style,
+    ]}>
+    <TinyText text={text} color={color} textAlign="center" />
+  </Pressable>
+);
+
+export const CustomButton: React.FC<CustomButtonProps> = ({
+  text,
+  onPress = () => console.log('Button pressed'),
+  style,
+  color = Colors.textPrimary,
+  disabled = false,
+}) => (
+  <Pressable
+    onPress={onPress}
+    disabled={disabled}
+    style={({ pressed }) => [
+      baseStyles.button,
+      pressed && baseStyles.pressed,
       style,
     ]}>
     <TinyText text={text} color={color} textAlign="center" />
@@ -55,9 +83,6 @@ const styles = StyleSheet.create({
   tinyButton: {
     flex: 1,
     alignSelf: 'flex-start',
-  },
-  pressed: {
-    opacity: 0.6,
   },
   iconButton: {
     position: 'absolute',

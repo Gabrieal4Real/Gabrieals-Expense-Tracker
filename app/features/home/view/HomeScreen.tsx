@@ -7,20 +7,21 @@ import { HorizontalDivider, RoundedBox, VerticalDivider, SpacerVertical } from '
 import { IconButton, TinyButton } from '@/app/util/widgets/CustomButton';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
-import { TransactionType } from '@/app/data/TransactionItem';
-import { useHomeViewModel } from './HomeViewModel';
+import { Transaction, TransactionType } from '@/app/data/TransactionItem';
 import { CustomBottomSheet } from '@/app/util/widgets/CustomBottomSheet';
-import TransactionBottomSheet from './TransactionBottomSheet';
+import TransactionBottomSheet from '../../transactionBottomSheet/view/TransactionBottomSheet';
+import { useHomeViewModel } from '../viewmodel/HomeViewModel';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const { transactions, loading, error, loadTransactions } = useHomeViewModel();
+  const { uiState, loadTransactions, updateUiState } = useHomeViewModel();
+  const { transactions, loading, error, type } = uiState;
 
   useEffect(() => {
     loadTransactions();
-  }, []);
+  }, [loadTransactions]);
 
   const handleSheetChange = useCallback((index: number) => {
     console.log('BottomSheet index:', index);
@@ -28,15 +29,22 @@ export default function HomeScreen() {
 
   const openBottomSheet = () => bottomSheetRef.current?.expand();
 
-  const renderTransaction = ({ item }: any) => (
+  const handleTransactionAdded = useCallback(() => {
+    bottomSheetRef.current?.close();
+    loadTransactions();
+    console.log('Transaction added successfully!');
+  }, [loadTransactions]);
+
+  const renderTransaction = ({ item }: { item: Transaction }) => (
     <RoundedBox style={{ paddingVertical: 12 }}>
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <DescriptionText
-            text={"RM " + item.amount.toString()}
-            textAlign="left"
+          <DescriptionText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
+          <TinyText
+            text={item.type}
+            color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent}
+            textAlign="right"
           />
-          <TinyText text={item.type} color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent} textAlign="right" />
         </View>
         <TinyText
           text={item.description || 'No description'}
@@ -54,22 +62,35 @@ export default function HomeScreen() {
 
       <RoundedBox style={{ marginVertical: 16 }}>
         <View style={{ alignItems: 'center' }}>
-          <BiggerText text="RM 7000" color={Colors.greenAccent} textAlign="center" style={{ paddingVertical: 4, paddingHorizontal: 48 }} />
+          <BiggerText
+            text="RM 7000"
+            color={Colors.greenAccent}
+            textAlign="center"
+            style={{ paddingVertical: 4, paddingHorizontal: 48 }}
+          />
           <TinyText text="REMAINING" color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
         </View>
 
-        <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {
-          // TODO: Implement fingerprint authentication
-        }} />
+        <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {}} />
 
         <SpacerVertical size={8} />
         <HorizontalDivider />
         <SpacerVertical size={8} />
 
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <TinyButton text="- Expense" color={Colors.redAccent} onPress={openBottomSheet} style={{ padding: 4 }} />
+          <TinyButton text="- Expense" color={Colors.redAccent} onPress={
+            () => {
+              updateUiState({ type: TransactionType.Expense });
+              openBottomSheet();
+            }
+          } style={{ padding: 4 }} />
           <VerticalDivider />
-          <TinyButton text="+ Income" color={Colors.greenAccent} onPress={openBottomSheet} style={{ padding: 4 }} />
+          <TinyButton text="+ Income" color={Colors.greenAccent} onPress={
+            () => {
+              updateUiState({ type: TransactionType.Income });
+              openBottomSheet();
+            }
+          } style={{ padding: 4 }} />
         </View>
       </RoundedBox>
 
@@ -86,19 +107,17 @@ export default function HomeScreen() {
         </View>
       ) : (
         <FlatList
-          data={transactions}
+          data={[...transactions].reverse()}
           renderItem={renderTransaction}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
-          ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+          ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
           contentContainerStyle={{ paddingVertical: 16 }}
         />
       )}
 
-      <CustomBottomSheet 
-        snapPoints={['90%']}
-        ref={bottomSheetRef}
-        onChange={handleSheetChange}>
-        <TransactionBottomSheet />
+      <CustomBottomSheet snapPoints={['90%']} ref={bottomSheetRef} onChange={handleSheetChange}>
+        <TransactionBottomSheet transactionType={type} onTransactionAdded={handleTransactionAdded} />
       </CustomBottomSheet>
     </View>
   );
