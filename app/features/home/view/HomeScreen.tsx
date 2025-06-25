@@ -11,10 +11,12 @@ import { Transaction, TransactionType } from '@/app/data/TransactionItem';
 import { CustomBottomSheet } from '@/app/util/widgets/CustomBottomSheet';
 import TransactionBottomSheet from '../../transactionBottomSheet/view/TransactionBottomSheet';
 import { useHomeViewModel } from '../viewmodel/HomeViewModel';
+import { FloatingActionButton } from '@/app/util/widgets/CustomButton';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [bottomSheetIndex, setBottomSheetIndex] = React.useState(-1);
 
   const { uiState, loadTransactions, updateUiState } = useHomeViewModel();
   const { transactions, loading, error, type } = uiState;
@@ -25,12 +27,15 @@ export default function HomeScreen() {
 
   const handleSheetChange = useCallback((index: number) => {
     console.log('BottomSheet index:', index);
+    setBottomSheetIndex(index);
   }, []);
 
   const openBottomSheet = () => bottomSheetRef.current?.expand();
 
+  const closeBottomSheet = () => bottomSheetRef.current?.close();
+
   const handleTransactionAdded = useCallback(() => {
-    bottomSheetRef.current?.close();
+    closeBottomSheet();
     loadTransactions();
     console.log('Transaction added successfully!');
   }, [loadTransactions]);
@@ -72,26 +77,6 @@ export default function HomeScreen() {
         </View>
 
         <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {}} />
-
-        <SpacerVertical size={8} />
-        <HorizontalDivider />
-        <SpacerVertical size={8} />
-
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <TinyButton text="- Expense" color={Colors.redAccent} onPress={
-            () => {
-              updateUiState({ type: TransactionType.Expense });
-              openBottomSheet();
-            }
-          } style={{ padding: 4 }} />
-          <VerticalDivider />
-          <TinyButton text="+ Income" color={Colors.greenAccent} onPress={
-            () => {
-              updateUiState({ type: TransactionType.Income });
-              openBottomSheet();
-            }
-          } style={{ padding: 4 }} />
-        </View>
       </RoundedBox>
 
       <TitleText text="Expenses" color={Colors.textPrimary} textAlign="left" style={{ marginVertical: 8 }} />
@@ -116,9 +101,14 @@ export default function HomeScreen() {
         />
       )}
 
-      <CustomBottomSheet snapPoints={['90%']} ref={bottomSheetRef} onChange={handleSheetChange}>
+      <CustomBottomSheet index={bottomSheetIndex} snapPoints={['90%']} ref={bottomSheetRef} onChange={handleSheetChange}>
         <TransactionBottomSheet transactionType={type} onTransactionAdded={handleTransactionAdded} />
       </CustomBottomSheet>
+
+      <FloatingActionButton
+        icon={bottomSheetIndex === -1 ? 'add' : 'close'}
+        onPress={bottomSheetIndex === -1 ? openBottomSheet : closeBottomSheet}
+      />
     </View>
   );
 }

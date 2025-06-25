@@ -9,21 +9,34 @@ import { SpacerVertical } from "@/app/util/widgets/CustomBox";
 
 interface InputProps extends TextInputProps {
     label: string;
+    prefix?: string;
 }
 
-const CustomTextInput = forwardRef<TextInput, InputProps>(({ label, ...props }, ref) => (
-    <View>
+const CustomTextInput = forwardRef<TextInput, InputProps>(
+    ({ label, prefix, ...props }, ref) => (
+      <View>
         <TinyText text={label} color={Colors.textPrimary} textAlign="left" />
         <SpacerVertical size={8} />
-        <TextInput
+        <View style={[baseStyles.input, { flexDirection: 'row', alignItems: 'center' }]}>
+          {prefix && (
+            <TinyText
+              text={prefix}
+              color={Colors.textPrimary}
+              textAlign="left"
+              style={{ marginRight: 8 }}
+            />
+          )}
+          <TextInput
             ref={ref}
-            style={baseStyles.input}
+            style={{ flex: 1, paddingVertical: 0, color: Colors.textPrimary }}
             placeholderTextColor={Colors.placeholder}
             selectionColor={Colors.placeholder}
             returnKeyType="next"
             {...props}
-        />
-    </View>
-));
+          />
+        </View>
+      </View>
+    )
+  );
 
 export default CustomTextInput;

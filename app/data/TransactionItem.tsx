@@ -4,14 +4,14 @@ export enum TransactionType {
 }
 
 export enum Category {
-    Food = 'Food',
-    Transport = 'Transport',
-    Shopping = 'Shopping',
-    Entertainment = 'Entertainment',
-    Health = 'Health',
-    Education = 'Education',
-    Utilities = 'Utilities',
-    Other = 'Other'
+    Food = '🍕 Food',
+    Transport = '🚗 Transport',
+    Shopping = '🛒 Shopping',
+    Entertainment = '🍿 Entertainment',
+    Health = '💊 Health',
+    Education = '📚 Education',
+    Utilities = '🏠 Utilities',
+    Other = '💁 Other'
 }
 
 export interface Transaction {

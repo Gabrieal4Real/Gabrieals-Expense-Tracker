@@ -9,7 +9,6 @@ import CustomTextInput from '@/app/util/widgets/CustomTextInput';
 import { CustomButton } from '@/app/util/widgets/CustomButton';
 import { FilterChipGroup } from '@/app/util/widgets/CustomBox';
 import { useTransactionViewModel } from '../viewmodel/TransactionViewModel';
-import { initialTransactionUiState } from '../viewmodel/TransactionUiState';
 
 interface TransactionBottomSheetProps {
   transactionType: TransactionType;
@@ -34,7 +33,8 @@ export default function TransactionBottomSheet({ transactionType, onTransactionA
 
       <CustomTextInput
         label="Amount"
-        placeholder="RM 75.00"
+        prefix="RM"
+        placeholder="75.00"
         keyboardType="decimal-pad"
         value={amount}
         onChangeText={

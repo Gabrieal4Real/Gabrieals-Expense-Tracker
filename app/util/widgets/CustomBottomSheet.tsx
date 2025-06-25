@@ -4,6 +4,7 @@ import { ViewStyle } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 interface CustomBottomSheetProps {
+  index: number;
   children: React.ReactNode;
   snapPoints?: string[];
   onChange?: (index: number) => void;
@@ -23,6 +24,7 @@ const CustomBackdrop = (props: BottomSheetBackdropProps) => (
 
 export const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>((props, ref) => {
   const {
+    index,
     children,
     snapPoints = ['65%'],
     onChange,
@@ -33,7 +35,7 @@ export const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>
   return (
     <BottomSheet
       ref={ref}
-      index={-1} // Hidden on mount
+      index={index}
       snapPoints={snapPoints}
       onChange={onChange}
       enablePanDownToClose
