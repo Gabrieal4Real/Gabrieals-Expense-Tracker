@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { HomeUiState, initialHomeUiState } from './HomeUiState';
 import { HomeRepository } from '../repo/HomeRepository';
-import { TransactionType, Category } from '@/app/data/TransactionItem';
+import { TransactionType, ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
 
 export function useHomeViewModel() {
   const [uiState, setUiState] = useState<HomeUiState>(initialHomeUiState);
@@ -22,7 +22,7 @@ export function useHomeViewModel() {
   }, [updateUiState]);
 
   const addNewTransaction = useCallback(
-    async (type: TransactionType, amount: number, category: Category, description: string) => {
+    async (type: TransactionType, amount: number, category: ExpenseCategory | IncomeCategory, description: string) => {
       updateUiState({ loading: true, error: null });
       try {
         await HomeRepository.createTransaction(type, amount, category, description);

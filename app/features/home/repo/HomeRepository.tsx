@@ -1,5 +1,5 @@
 import { addTransaction, getAllTransactions } from "@/app/sql/AppDatabase";
-import { TransactionType, Category } from "@/app/data/TransactionItem";
+import { TransactionType, ExpenseCategory, IncomeCategory } from "@/app/data/TransactionItem";
 
 export const HomeRepository = {
     async fetchTransactions() {
@@ -9,7 +9,7 @@ export const HomeRepository = {
     async createTransaction(
       type: TransactionType,
       amount: number,
-      category: Category,
+      category: ExpenseCategory | IncomeCategory,
       description: string
     ) {
       return await addTransaction({
