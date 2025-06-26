@@ -4,45 +4,23 @@ import { TitleText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
 import { SpacerVertical } from '@/app/util/widgets/CustomBox';
 import { ExpenseCategory, IncomeCategory, TransactionType } from '@/app/data/TransactionItem';
-import { useHomeViewModel } from '../../home/viewmodel/HomeViewModel';
 import CustomTextInput from '@/app/util/widgets/CustomTextInput';
 import { CustomButton } from '@/app/util/widgets/CustomButton';
 import { FilterChipGroup } from '@/app/util/widgets/CustomBox';
 import { useTransactionViewModel } from '../viewmodel/TransactionViewModel';
 
 interface TransactionBottomSheetProps {
-  type: TransactionType;
-  onTransactionAdded?: () => void;
+  onTransactionAdded?: (type: TransactionType, amount: number, category: ExpenseCategory | IncomeCategory, description: string) => void;
 }
 
-export default function TransactionBottomSheet({ type, onTransactionAdded }: TransactionBottomSheetProps) {
-  const { addNewTransaction } = useHomeViewModel();
-  const { uiState, updateUiState } = useTransactionViewModel();
-  const { amount, description, category, transactionType } = uiState;
+export default function TransactionBottomSheet({ onTransactionAdded }: TransactionBottomSheetProps) {
+  const transactionViewModel = useTransactionViewModel();
 
- const getCategoriesByType = (type: TransactionType): string[] => {
-    return type === TransactionType.Expense
-      ? Object.values(ExpenseCategory)
-      : Object.values(IncomeCategory);
-  };
-
-  useEffect(() => {
-    updateUiState({ transactionType: type });
-  }, [type, updateUiState]);
+  const { transactionType, amount, category, description } = transactionViewModel.uiState;
 
   const handleSubmit = () => {
-    addNewTransaction(transactionType, Number(amount), category, description);
-  
-    updateUiState({
-      amount: '',
-      description: '',
-      category:
-        transactionType === TransactionType.Expense
-          ? ExpenseCategory.Food
-          : IncomeCategory.Salary,
-    });
-  
-    onTransactionAdded?.();
+    onTransactionAdded?.(transactionType, Number(amount), category, description);
+    transactionViewModel.reset();
   };
 
   return (
@@ -54,7 +32,9 @@ export default function TransactionBottomSheet({ type, onTransactionAdded }: Tra
         items={Object.values(TransactionType)}
         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         selected={transactionType}
-        onSelectedChange={(type) => updateUiState({ transactionType: type as TransactionType })}
+        onSelectedChange={(type) => {
+          transactionViewModel.updateTransactionType(type as TransactionType);
+        }}
       />
       <SpacerVertical size={8} />
 
@@ -67,7 +47,7 @@ export default function TransactionBottomSheet({ type, onTransactionAdded }: Tra
         onChangeText={
           (text) => {
             if (text === '' || /^\d*\.?\d{0,2}$/.test(text)) {
-              updateUiState({ amount: text });
+              transactionViewModel.updateAmount(text);
             }
           }
         }
@@ -79,7 +59,7 @@ export default function TransactionBottomSheet({ type, onTransactionAdded }: Tra
         value={description}
         onChangeText={
           (text) => {
-            updateUiState({ description: text });
+            transactionViewModel.updateDescription(text);
           }
         }
       />
@@ -87,10 +67,10 @@ export default function TransactionBottomSheet({ type, onTransactionAdded }: Tra
 
       <FilterChipGroup
         title="Category"
-        items={Object.values(getCategoriesByType(transactionType))}
+        items={Object.values(transactionViewModel.getCategoriesByType(transactionType))}
         selected={category}
         onSelectedChange={(category) => {
-          updateUiState({ category: category as ExpenseCategory | IncomeCategory });
+          transactionViewModel.updateCategory(category as ExpenseCategory | IncomeCategory);
         }}
       />
 

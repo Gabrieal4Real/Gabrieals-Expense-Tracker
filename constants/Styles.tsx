@@ -60,6 +60,15 @@ export const baseStyles = StyleSheet.create({
     marginTop: 8,
   },
 
+  categoryDisplay: {
+    backgroundColor: Colors.navigationBar,
+    borderRadius: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderWidth: 1,
+    borderColor: Colors.borderStroke,
+  },
+
   categoryButton: {
     backgroundColor: Colors.navigationBar,
     borderRadius: 8,

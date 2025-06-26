@@ -66,6 +66,15 @@ export const TinyText: React.FC<TypographyProps> = ({ text, style, color, textAl
   </Text>
 );
 
+export const TinierText: React.FC<TypographyProps> = ({ text, style, color, textAlign = 'left', ...props }) => (
+  <Text
+    {...props}
+    style={[styles.tinierText, { color: color || Colors.textPrimary, textAlign }, style]}
+  >
+    {text}
+  </Text>
+);
+
 const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'PoppinsBold',
@@ -103,6 +112,12 @@ const styles = StyleSheet.create({
     fontFamily: 'PoppinsRegular',
     fontSize: 12,
     lineHeight: 18,
+    includeFontPadding: false,
+  },
+  tinierText: {
+    fontFamily: 'PoppinsRegular',
+    fontSize: 10,
+    lineHeight: 14,
     includeFontPadding: false,
   },
 });

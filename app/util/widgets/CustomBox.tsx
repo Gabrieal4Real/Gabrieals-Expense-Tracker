@@ -2,7 +2,7 @@ import { baseStyles } from '@/constants/Styles';
 import React, { ReactNode } from 'react';
 import { View, StyleProp, ViewStyle, Pressable } from 'react-native';
 import { Colors } from '@/constants/Colors';
-import { TinyText } from '@/app/util/widgets/CustomText';
+import { TinyText, TinierText } from '@/app/util/widgets/CustomText';
 
 type RoundedBoxProps = {
   children: ReactNode;
@@ -83,3 +83,10 @@ export function FilterChipGroup<T extends string | number>({
     </>
   );
 }
+
+
+  export const CategoryLabel = ({ title = "" }: { title: string }) => (
+    <View style={[baseStyles.categoryDisplay]}>
+      <TinierText text={title} color={Colors.white} textAlign="center" />
+    </View>
+  );

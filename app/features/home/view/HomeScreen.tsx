@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import { View, FlatList, ActivityIndicator, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { TitleText, BiggerText, TinyText, DescriptionText } from '@/app/util/widgets/CustomText';
+import { TitleText, BiggerText, TinyText, DescriptionText, SubtitleText, TinierText } from '@/app/util/widgets/CustomText';
 import { HorizontalDivider, RoundedBox, SpacerVertical } from '@/app/util/widgets/CustomBox';
 import { IconButton } from '@/app/util/widgets/CustomButton';
 import { Colors } from '@/constants/Colors';
@@ -12,23 +12,25 @@ import { CustomBottomSheet } from '@/app/util/widgets/CustomBottomSheet';
 import TransactionBottomSheet from '../../transactionBottomSheet/view/TransactionBottomSheet';
 import { useHomeViewModel } from '../viewmodel/HomeViewModel';
 import { FloatingActionButton } from '@/app/util/widgets/CustomButton';
+import { ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
+import { CategoryLabel } from '@/app/util/widgets/CustomBox';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [bottomSheetIndex, setBottomSheetIndex] = React.useState(-1);
 
-  const { uiState, loadTransactions, getProfile } = useHomeViewModel();
-  const { transactions, loading, error, type, profile } = uiState;
+  const homeViewModel = useHomeViewModel();
+  const { transactions, loading, error, profile } = homeViewModel.uiState;
 
   const remaining = profile?.remaining ?? 0;
   const remainingText = `RM ${remaining.toFixed(2).replace('.00', '')}`;
   const remainingColor = remaining >= 0 ? Colors.greenAccent : Colors.redAccent;
 
   useEffect(() => {
-    loadTransactions();
-    getProfile();
-  }, [loadTransactions, getProfile]);
+    homeViewModel.getTransactions();
+    homeViewModel.getProfile();
+  }, [homeViewModel.getTransactions, homeViewModel.getProfile]);
 
   const handleSheetChange = useCallback((index: number) => {
     console.log('BottomSheet index:', index);
@@ -39,29 +41,33 @@ export default function HomeScreen() {
 
   const closeBottomSheet = () => bottomSheetRef.current?.close();
 
-  const handleTransactionAdded = useCallback(() => {
+  const handleTransactionAdded = useCallback((type: TransactionType, amount: number, category: ExpenseCategory | IncomeCategory, description: string) => {
+    homeViewModel.updateTransaction(type, amount, category, description);
     closeBottomSheet();
-    loadTransactions();
-    console.log('Transaction added successfully!');
-  }, [loadTransactions]);
+  }, []);
 
   const renderTransaction = ({ item }: { item: Transaction }) => (
     <RoundedBox style={{ paddingVertical: 12 }}>
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <DescriptionText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
+          <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
           <TinyText
             text={item.type}
             color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent}
             textAlign="right"
           />
         </View>
+        <SpacerVertical size={2} />
         <TinyText
           text={item.description || 'No description'}
           color={Colors.textPrimary}
           textAlign="left"
           style={{ paddingBottom: 4 }}
         />
+        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between', alignItems: 'flex-end'}}>
+          <TinierText text={item.date} color={Colors.textPrimary} textAlign="left" />
+          <CategoryLabel title={item.category.valueOf()} />
+        </View>
       </View>
     </RoundedBox>
   );
@@ -119,7 +125,7 @@ export default function HomeScreen() {
       )}
 
       <CustomBottomSheet index={bottomSheetIndex} snapPoints={['90%']} ref={bottomSheetRef} onChange={handleSheetChange}>
-        <TransactionBottomSheet type={type} onTransactionAdded={handleTransactionAdded} />
+        <TransactionBottomSheet onTransactionAdded={handleTransactionAdded} />
       </CustomBottomSheet>
 
       <FloatingActionButton

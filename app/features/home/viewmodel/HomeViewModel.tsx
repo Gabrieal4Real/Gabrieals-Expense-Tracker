@@ -1,71 +1,98 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { HomeUiState, initialHomeUiState } from './HomeUiState';
 import { HomeRepository } from '../repo/HomeRepository';
 import { TransactionType, ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
+import { Profile } from '@/app/data/Profile';
 
 export function useHomeViewModel() {
   const [uiState, setUiState] = useState<HomeUiState>(initialHomeUiState);
 
-  const updateUiState = useCallback((partial: Partial<HomeUiState>) => {
-    setUiState((prev) => ({ ...prev, ...partial }));
+  const updateState = useCallback((updater: (state: HomeUiState) => Partial<HomeUiState>) => {
+    setUiState(prev => ({ ...prev, ...updater(prev) }));
   }, []);
 
-  const loadTransactions = useCallback(async () => {
-    updateUiState({ loading: true, error: null });
+  const updateLoading = useCallback((loading: boolean, error: string | null) => {
+    updateState(() => ({ loading, error }));
+  }, [updateState]);
+
+  const getProfile = useCallback(async () => {
+    updateLoading(true, null);
     try {
-      const data = await HomeRepository.fetchTransactions();
-      updateUiState({ transactions: data, loading: false, error: null });
-    } catch (err) {
-      console.error('Failed to load transactions:', err);
-      updateUiState({ transactions: [], loading: false, error: 'Failed to load transactions', type: TransactionType.Expense });
+      const profile = await HomeRepository.getProfile();
+      if (!profile) {
+        await HomeRepository.updateProfile(0);
+        updateState(() => ({ profile: { remaining: 0 } }));
+        return { remaining: 0 };
+      } else {
+        updateState(() => ({ profile }));
+        return profile;
+      }
+    } catch {
+      updateLoading(false, 'Failed to get profile');
+      return null;
+    } finally {
+      updateLoading(false, null);
     }
-  }, [updateUiState]);
+  }, [updateState, updateLoading]);
 
-  const addNewTransaction = useCallback(
-    async (type: TransactionType, amount: number, category: ExpenseCategory | IncomeCategory, description: string) => {
-      updateUiState({ loading: true, error: null });
-      try {
-        await HomeRepository.createTransaction(type, amount, category, description);
-        const previousRemaining = uiState.profile?.remaining ?? 0;
-        const currentRemaining = type === TransactionType.Expense ? previousRemaining - amount : previousRemaining + amount;
+  const updateProfile = useCallback(async (profile: Profile) => {
+    updateLoading(true, null);
+    try {
+      await HomeRepository.updateProfile(profile.remaining);
+      updateState(() => ({ profile }));
+    } catch {
+      updateLoading(false, 'Failed to update profile');
+    } finally {
+      updateLoading(false, null);
+    }
+  }, [updateState, updateLoading]);
 
-        await updateProfile(currentRemaining);
-        await loadTransactions();
-      } catch (err) {
-        console.error('Failed to add transaction:', err);
-        updateUiState({ loading: false, error: 'Failed to add transaction' });
+  const getTransactions = useCallback(async () => {
+    updateLoading(true, null);
+    try {
+      const transactions = await HomeRepository.fetchTransactions();
+      updateState(() => ({ transactions }));
+    } catch {
+      updateLoading(false, 'Failed to load transactions');
+    } finally {
+      updateLoading(false, null);
+    }
+  }, [updateState, updateLoading]);
+
+  const updateTransaction = useCallback(async (
+    type: TransactionType,
+    amount: number,
+    category: ExpenseCategory | IncomeCategory,
+    description: string
+  ) => {
+    updateLoading(true, null);
+    try {
+      await HomeRepository.createTransaction(type, amount, category, description);
+      const profile = await getProfile();
+      if (profile) {
+        const remaining = type === TransactionType.Expense
+          ? profile.remaining - amount
+          : profile.remaining + amount;
+        await updateProfile({ remaining });
+        await getTransactions();
       }
-    },
-    [updateUiState, loadTransactions]
-  );
+    } catch {
+      updateLoading(false, 'Failed to add transaction');
+    }
+  }, [getProfile, updateProfile, getTransactions, updateLoading]);
 
-  const updateProfile = useCallback(
-    async (remaining: number) => {
-      updateUiState({ loading: true, error: null });
-      try {
-        await HomeRepository.updateProfile(remaining);
-        await getProfile();
-      } catch (err) {
-        console.error('Failed to update profile:', err);
-        updateUiState({ loading: false, error: 'Failed to update profile' });
-      }
-    },
-    [updateUiState, loadTransactions]
-  );
+  useEffect(() => {
+    (async () => {
+      await getProfile();
+      await getTransactions();
+    })();
+  }, [getProfile, getTransactions]);
 
-  const getProfile = useCallback(
-    async () => {
-      updateUiState({ loading: true, error: null });
-      try {
-        const profile = await HomeRepository.getProfile();
-        updateUiState({ profile, loading: false, error: null });
-      } catch (err) {
-        console.error('Failed to get profile:', err);
-        updateUiState({ loading: false, error: 'Failed to get profile' });
-      }
-    },
-    [updateUiState]
-  );
-
-  return { uiState, updateUiState, loadTransactions, addNewTransaction, updateProfile, getProfile };
+  return {
+    uiState,
+    getTransactions,
+    updateTransaction,
+    getProfile,
+    updateProfile,
+  };
 }
