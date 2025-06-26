@@ -15,6 +15,10 @@ export function useHomeViewModel() {
     updateState(() => ({ loading, error }));
   }, [updateState]);
 
+  const updateAuthenticated = useCallback((authenticated: boolean) => {
+    updateState(() => ({ authenticated }));
+  }, [updateState]);
+
   const getProfile = useCallback(async () => {
     updateLoading(true, null);
     try {
@@ -94,5 +98,6 @@ export function useHomeViewModel() {
     updateTransaction,
     getProfile,
     updateProfile,
+    updateAuthenticated
   };
 }

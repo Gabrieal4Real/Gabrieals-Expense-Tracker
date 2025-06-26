@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import { View, FlatList, ActivityIndicator, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { TitleText, BiggerText, TinyText, DescriptionText, SubtitleText, TinierText } from '@/app/util/widgets/CustomText';
-import { HorizontalDivider, RoundedBox, SpacerVertical } from '@/app/util/widgets/CustomBox';
+import { TitleText, BiggerText, TinyText, SubtitleText, TinierText } from '@/app/util/widgets/CustomText';
+import { HorizontalDivider, RoundedBox, SpacerVertical, SpacerHorizontal } from '@/app/util/widgets/CustomBox';
 import { IconButton } from '@/app/util/widgets/CustomButton';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
@@ -14,6 +14,13 @@ import { useHomeViewModel } from '../viewmodel/HomeViewModel';
 import { FloatingActionButton } from '@/app/util/widgets/CustomButton';
 import { ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
 import { CategoryLabel } from '@/app/util/widgets/CustomBox';
+import { format } from 'date-fns';
+import { Ionicons } from '@expo/vector-icons';
+import * as LocalAuthentication from 'expo-local-authentication';
+import { BlurView } from 'expo-blur';
+import { StyleSheet } from 'react-native';
+import { authenticate } from '@/app/util/systemFunctions/AuthenticationUtil';
+
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -21,11 +28,20 @@ export default function HomeScreen() {
   const [bottomSheetIndex, setBottomSheetIndex] = React.useState(-1);
 
   const homeViewModel = useHomeViewModel();
-  const { transactions, loading, error, profile } = homeViewModel.uiState;
+  const { transactions, loading, error, profile, authenticated } = homeViewModel.uiState;
 
   const remaining = profile?.remaining ?? 0;
-  const remainingText = `RM ${remaining.toFixed(2).replace('.00', '')}`;
-  const remainingColor = remaining >= 0 ? Colors.greenAccent : Colors.redAccent;
+
+  const handleFabPress = () => {
+    if (!authenticated) {
+      authenticate(() => {
+        homeViewModel.updateAuthenticated(true);
+        bottomSheetIndex === -1 ? openBottomSheet() : closeBottomSheet();
+      });
+    } else {
+      bottomSheetIndex === -1 ? openBottomSheet() : closeBottomSheet();
+    }
+  };
 
   useEffect(() => {
     homeViewModel.getTransactions();
@@ -51,13 +67,10 @@ export default function HomeScreen() {
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
-          <TinyText
-            text={item.type}
-            color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent}
-            textAlign="right"
-          />
+          <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+            <Ionicons name={item.type === TransactionType.Income ? "arrow-down" : "arrow-up"} size={28} color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent} />
+          </View>
         </View>
-        <SpacerVertical size={2} />
         <TinyText
           text={item.description || 'No description'}
           color={Colors.textPrimary}
@@ -65,7 +78,7 @@ export default function HomeScreen() {
           style={{ paddingBottom: 4 }}
         />
         <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between', alignItems: 'flex-end'}}>
-          <TinierText text={item.date} color={Colors.textPrimary} textAlign="left" />
+          <TinyText text={format(new Date(item.date), 'dd MMM yyyy hh:mm:ss a').toUpperCase()} color={Colors.textPrimary} textAlign="left" />
           <CategoryLabel title={item.category.valueOf()} />
         </View>
       </View>
@@ -79,15 +92,15 @@ export default function HomeScreen() {
       <RoundedBox style={{ marginVertical: 16 }}>
         <View style={{ alignItems: 'center' }}>
           <BiggerText
-            text={remainingText}
-            color={remainingColor}
+            text={authenticated ? 'RM ' + remaining.toFixed(2).replace('.00', '') : '******'}
+            color={remaining >= 0 ? Colors.greenAccent : Colors.redAccent}
             textAlign="center"
             style={{ paddingVertical: 4, paddingHorizontal: 48 }}
           />
           <TinyText text={"Remaining".toUpperCase()} color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
         </View>
 
-        <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {}} />
+        <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {authenticate()}} />
       </RoundedBox>
 
       <TitleText text="Expenses" color={Colors.textPrimary} textAlign="left" style={{ marginVertical: 8 }} />
@@ -102,7 +115,7 @@ export default function HomeScreen() {
           <TinyText text={error} color={Colors.redAccent} textAlign="center" />
         </View>
       ) : (
-        transactions.length === 0 ? (
+        (!authenticated || transactions.length === 0) ? (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Image
               source={require('@/assets/images/nothing_here_yet.webp')}
@@ -114,13 +127,13 @@ export default function HomeScreen() {
           </View>
         ) : (
           <FlatList
-          data={[...transactions].reverse()}
-          renderItem={renderTransaction}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
-          ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-          contentContainerStyle={{ paddingVertical: 16 }}
-        />
+            data={[...transactions].reverse()}
+            renderItem={renderTransaction}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
+            ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+            contentContainerStyle={{ paddingVertical: 16 }}
+            />
         )
       )}
 
@@ -129,7 +142,7 @@ export default function HomeScreen() {
       </CustomBottomSheet>
 
       <FloatingActionButton
-        onPress={bottomSheetIndex === -1 ? openBottomSheet : closeBottomSheet}
+        onPress={handleFabPress}
         icon={bottomSheetIndex === -1 ? 'add' : 'close'}
       />
     </View>

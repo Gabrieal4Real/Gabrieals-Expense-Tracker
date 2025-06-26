@@ -34,7 +34,7 @@ export const VerticalDivider = () => {
   );
 };
 
-export const Spacer = ({ size = 8 }: { size?: number }) => (
+export const SpacerHorizontal = ({ size = 8 }: { size?: number }) => (
   <View style={{ width: size }} />
 );
 

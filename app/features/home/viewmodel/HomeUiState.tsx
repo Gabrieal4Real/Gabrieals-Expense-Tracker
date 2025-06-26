@@ -6,6 +6,7 @@ export interface HomeUiState {
   loading: boolean;
   error: string | null;
   profile: Profile | null;
+  authenticated: boolean;
 }
 
 export const initialHomeUiState: HomeUiState = {
@@ -13,4 +14,5 @@ export const initialHomeUiState: HomeUiState = {
   loading: false,
   error: null,
   profile: null,
+  authenticated: false,
 };

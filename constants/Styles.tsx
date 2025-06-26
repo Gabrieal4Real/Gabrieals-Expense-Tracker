@@ -41,7 +41,7 @@ export const baseStyles = StyleSheet.create({
     fontFamily: 'PoppinsRegular',
     color: Colors.textPrimary,
     textAlign: 'left',
-    fontSize: 12,
+    fontSize: 14,
     paddingVertical: 16,
     includeFontPadding: false,
   },
