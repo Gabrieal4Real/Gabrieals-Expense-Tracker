@@ -58,11 +58,7 @@ export default function TransactionBottomSheet({ onTransactionAdded }: Transacti
         placeholder="Enter description"
         value={description}
         maxLength={100}
-        onChangeText={
-          (text) => {
-            transactionViewModel.updateDescription(text);
-          }
-        }
+        onChangeText={ (text) => { transactionViewModel.updateDescription(text) } }
       />
       <SpacerVertical size={8} />
 

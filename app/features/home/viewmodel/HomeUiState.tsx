@@ -7,6 +7,7 @@ export interface HomeUiState {
   error: string | null;
   profile: Profile | null;
   authenticated: boolean;
+  currentFilter: string;
 }
 
 export const initialHomeUiState: HomeUiState = {
@@ -15,4 +16,5 @@ export const initialHomeUiState: HomeUiState = {
   error: null,
   profile: null,
   authenticated: false,
+  currentFilter: "All",
 };

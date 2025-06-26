@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import { View, FlatList, ActivityIndicator, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { TitleText, BiggerText, TinyText, SubtitleText, TinierText } from '@/app/util/widgets/CustomText';
-import { HorizontalDivider, RoundedBox, SpacerVertical, SpacerHorizontal } from '@/app/util/widgets/CustomBox';
+import { TitleText, BiggerText, TinyText, SubtitleText } from '@/app/util/widgets/CustomText';
+import { FilterChipGroup, HorizontalDivider, RoundedBox, SpacerVertical } from '@/app/util/widgets/CustomBox';
 import { IconButton } from '@/app/util/widgets/CustomButton';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
@@ -16,11 +16,7 @@ import { ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
 import { CategoryLabel } from '@/app/util/widgets/CustomBox';
 import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
-import * as LocalAuthentication from 'expo-local-authentication';
-import { BlurView } from 'expo-blur';
-import { StyleSheet } from 'react-native';
 import { authenticate } from '@/app/util/systemFunctions/AuthenticationUtil';
-
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -28,9 +24,11 @@ export default function HomeScreen() {
   const [bottomSheetIndex, setBottomSheetIndex] = React.useState(-1);
 
   const homeViewModel = useHomeViewModel();
-  const { transactions, loading, error, profile, authenticated } = homeViewModel.uiState;
+  const { transactions, loading, error, profile, authenticated, currentFilter } = homeViewModel.uiState;
 
   const remaining = profile?.remaining ?? 0;
+
+  const filteredTransactions = transactions.filter(transaction => currentFilter === "All" || transaction.type === currentFilter);
 
   const handleFabPress = () => {
     if (!authenticated) {
@@ -92,7 +90,7 @@ export default function HomeScreen() {
       <RoundedBox style={{ marginVertical: 16 }}>
         <View style={{ alignItems: 'center' }}>
           <BiggerText
-            text={authenticated ? 'RM ' + remaining.toFixed(2).replace('.00', '') : '******'}
+            text={authenticated ? Intl.NumberFormat('en-US', { style: 'currency', currency: 'MYR' }).format(remaining) : '******'}
             color={remaining >= 0 ? Colors.greenAccent : Colors.redAccent}
             textAlign="center"
             style={{ paddingVertical: 4, paddingHorizontal: 48 }}
@@ -100,7 +98,7 @@ export default function HomeScreen() {
           <TinyText text={"Remaining".toUpperCase()} color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
         </View>
 
-        <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {authenticate()}} />
+        {!authenticated && <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {authenticate(() => {homeViewModel.updateAuthenticated(true)})}} />}
       </RoundedBox>
 
       <TitleText text="Expenses" color={Colors.textPrimary} textAlign="left" style={{ marginVertical: 8 }} />
@@ -126,14 +124,22 @@ export default function HomeScreen() {
             <TinyText text="No transactions yet" color={Colors.textPrimary} textAlign="center" />
           </View>
         ) : (
-          <FlatList
-            data={[...transactions].reverse()}
-            renderItem={renderTransaction}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
-            ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-            contentContainerStyle={{ paddingVertical: 16 }}
+          <View style={{ flex: 1 }}>
+            <FilterChipGroup
+              items={["All", TransactionType.Expense, TransactionType.Income]}
+              selected={currentFilter}
+              onSelectedChange={homeViewModel.updateCurrentFilter}
             />
+
+            <FlatList
+              data={[...filteredTransactions].reverse()}
+              renderItem={renderTransaction}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
+              ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+              contentContainerStyle={{ paddingBottom: 16, paddingTop: 12 }}
+            />
+          </View>
         )
       )}
 

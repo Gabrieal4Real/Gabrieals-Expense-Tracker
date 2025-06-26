@@ -14,24 +14,11 @@ export const RoundedBox = ({ children, style }: RoundedBoxProps) => {
 }
 
 export const HorizontalDivider = () => {
-  return <View
-  style={{
-    height: 1.5,
-    backgroundColor: Colors.borderStroke,
-  }}
-/>
+  return <View style={{ height: 1.5, backgroundColor: Colors.borderStroke }} />;
 }
 
 export const VerticalDivider = () => {
-  return (
-    <View
-      style={{
-        width: 1.5,
-        backgroundColor: Colors.borderStroke,
-        alignSelf: 'stretch',
-      }}
-    />
-  );
+  return <View style={{ width: 1.5, backgroundColor: Colors.borderStroke, alignSelf: 'stretch' }} />;
 };
 
 export const SpacerHorizontal = ({ size = 8 }: { size?: number }) => (
@@ -84,9 +71,8 @@ export function FilterChipGroup<T extends string | number>({
   );
 }
 
-
-  export const CategoryLabel = ({ title = "" }: { title: string }) => (
-    <View style={[baseStyles.categoryDisplay]}>
-      <TinierText text={title} color={Colors.white} textAlign="center" />
-    </View>
-  );
+export const CategoryLabel = ({ title = "" }: { title: string }) => (
+  <View style={[baseStyles.categoryDisplay]}>
+    <TinierText text={title.toUpperCase()} color={Colors.white} textAlign="center" />
+  </View>
+);

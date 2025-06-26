@@ -15,6 +15,10 @@ export function useHomeViewModel() {
     updateState(() => ({ loading, error }));
   }, [updateState]);
 
+  const updateCurrentFilter = useCallback((currentFilter: string) => {
+    updateState(() => ({ currentFilter }));
+  }, [updateState]);
+  
   const updateAuthenticated = useCallback((authenticated: boolean) => {
     updateState(() => ({ authenticated }));
   }, [updateState]);
@@ -82,6 +86,8 @@ export function useHomeViewModel() {
       }
     } catch {
       updateLoading(false, 'Failed to add transaction');
+    } finally {
+      updateLoading(false, null);
     }
   }, [getProfile, updateProfile, getTransactions, updateLoading]);
 
@@ -98,6 +104,7 @@ export function useHomeViewModel() {
     updateTransaction,
     getProfile,
     updateProfile,
-    updateAuthenticated
+    updateAuthenticated,
+    updateCurrentFilter
   };
 }

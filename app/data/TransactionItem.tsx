@@ -14,19 +14,19 @@ export enum ExpenseCategory {
     Other = '💁 Other',
   }
   
-  export enum IncomeCategory {
-    Salary = '💼 Salary',
-    Bonus = '🎁 Bonus',
-    Investment = '📈 Investment',
-    Gift = '🎉 Gift',
-    Other = '💁 Other',
-  }
+export enum IncomeCategory {
+  Salary = '💼 Salary',
+  Bonus = '🎁 Bonus',
+  Investment = '📈 Investment',
+  Gift = '🎉 Gift',
+  Other = '💁 Other',
+}
 
-  export interface Transaction {
-    id?: number;
-    amount: number;
-    date: string;
-    type: TransactionType;
-    category: ExpenseCategory | IncomeCategory;
-    description: string;
-  }
+export interface Transaction {
+  id?: number;
+  amount: number;
+  date: string;
+  type: TransactionType;
+  category: ExpenseCategory | IncomeCategory;
+  description: string;
+}

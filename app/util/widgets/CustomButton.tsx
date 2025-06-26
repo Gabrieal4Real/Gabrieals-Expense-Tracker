@@ -1,7 +1,7 @@
 import React from 'react';
-import { Pressable, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { Pressable, TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { DescriptionText, TinyText } from '@/app/util/widgets/CustomText';
+import { DescriptionText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
 
