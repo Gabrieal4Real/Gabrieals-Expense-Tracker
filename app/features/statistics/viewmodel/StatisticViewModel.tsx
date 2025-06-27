@@ -2,6 +2,9 @@ import { useState, useCallback } from 'react';
 import { StatisticUiState, initialStatisticUiState } from "./StatisticUiState";
 import { HomeRepository } from '../../home/repo/HomeRepository';
 import { Transaction, TransactionType } from '@/app/data/TransactionItem';
+import { ChartPageData } from '@/app/data/ChartData';
+import { getMonthName, getYearName } from '@/app/util/systemFunctions/DateUtil';
+
 
 export function useStatisticViewModel() {
     const [uiState, setUiState] = useState<StatisticUiState>(initialStatisticUiState);
@@ -15,78 +18,116 @@ export function useStatisticViewModel() {
     }, [updateState]);
 
     const generateChartData = useCallback((transactions: Transaction[]) => {
-      const expenseCategoryMap: Record<string, number> = {};
-      const incomeCategoryMap: Record<string, number> = {};
+      const groupedMap = new Map<string, {
+        expense: Record<string, number>,
+        income: Record<string, number>
+      }>();
     
-      transactions.sort((a, b) => b.amount - a.amount);
+      transactions.forEach(({ amount, category, type, date }) => {
+        const txDate = new Date(date);
+        const key = `${txDate.getFullYear()}-${txDate.getMonth()}`;
     
-      transactions.forEach(({ amount, category, type }) => {
-        if(type == TransactionType.Expense)
-          expenseCategoryMap[category] = (expenseCategoryMap[category] || 0) + amount;
-        else
-        incomeCategoryMap[category] = (incomeCategoryMap[category] || 0) + amount;
+        if (!groupedMap.has(key)) {
+          groupedMap.set(key, { expense: {}, income: {} });
+        }
+    
+        const group = groupedMap.get(key)!;
+    
+        if (type === TransactionType.Expense) {
+          group.expense[category] = (group.expense[category] || 0) + amount;
+        } else {
+          group.income[category] = (group.income[category] || 0) + amount;
+        }
       });
     
-      const expenseChartData = Object.entries(expenseCategoryMap).map(([category, totalAmount]) => ({
-        x: category,
-        y: totalAmount,
-      }));
-
-      const incomeChartData = Object.entries(incomeCategoryMap).map(([category, totalAmount]) => ({
-        x: category,
-        y: totalAmount,
-      }));
+      const chartPages: {
+        title: string;
+        data: { x: string, y: number }[];
+        type: 'expense' | 'income';
+        month: number;
+        year: number;
+      }[] = [];
     
-      updateState(() => ({ expenseChartData, incomeChartData }));
+      groupedMap.forEach((group, key) => {
+        const [yearStr, monthStr] = key.split('-');
+        const year = parseInt(yearStr);
+        const yearName = getYearName(year);
+        const month = parseInt(monthStr);
+        const monthName = getMonthName(month);
+    
+        const expenseChart = Object.entries(group.expense).map(([x, y]) => ({ x, y }));
+        const incomeChart = Object.entries(group.income).map(([x, y]) => ({ x, y }));
+    
+        if (expenseChart.length > 0) {
+          chartPages.push({
+            title: `${monthName} ${yearName} Expense Summary`,
+            data: expenseChart,
+            type: 'expense',
+            month,
+            year,
+          });
+        }
+    
+        if (incomeChart.length > 0) {
+          chartPages.push({
+            title: `${monthName} ${year} Income Summary`,
+            data: incomeChart,
+            type: 'income',
+            month,
+            year,
+          });
+        }
+      });
+    
+      chartPages.sort((a, b) => {
+        const aKey = a.year * 12 + a.month;
+        const bKey = b.year * 12 + b.month;
+        return bKey - aKey;
+      });
+    
+      updateState(() => ({ chartPages }));
     }, [updateState]);
 
-    const generateFakeChartData = () => {
-      const expenseCategoryMap: Record<string, number> = {};
-      const incomeCategoryMap: Record<string, number> = {};
-      
-      const expenseTransactions = [
-        { amount: 100, category: 'Food' },
-        { amount: 200, category: 'Transport' },
-        { amount: 300, category: 'Entertainment' },
-        { amount: 400, category: 'Shopping' },
-        { amount: 600, category: 'Education' },
-        { amount: 700, category: 'Others' },
-      ].map(item => ({
-        x: item.category,
-        y: item.amount,
-      }));
+    const getRandomAmount = (min: number, max: number) =>
+      Math.floor(Math.random() * (max - min + 1)) + min;
 
-      const incomeTransactions = [
-        { amount: 5000, category: 'Salary' },
-        { amount: 200, category: 'Bonus' },
-        { amount: 600, category: 'Investment' },
-        { amount: 4000, category: 'Gift' },
-        { amount: 700, category: 'Others' },
-      ].map(item => ({
-        x: item.category,
-        y: item.amount,
-      }));
-      
-      expenseTransactions.forEach(({ x, y }) => {
-        expenseCategoryMap[x] = (expenseCategoryMap[x] || 0) + y;
+    const generateFakeChartData = (): ChartPageData[] => {
+      const expenseCategories = ['Food', 'Transport', 'Entertainment', 'Shopping', 'Education', 'Others'];
+      const incomeCategories = ['Salary', 'Bonus', 'Investment', 'Gift', 'Others'];
+    
+      const months = [
+        {month: 7, year: 2024},
+        { month: 5, year: 2025 },
+      ];
+    
+      return months.flatMap(({ month, year }) => {
+        const expenseChart: ChartPageData = {
+          title: `${getMonthName(month)} ${getYearName(year)} Expense Summary`,
+          data: expenseCategories.map((category) => ({
+            x: category,
+            y: getRandomAmount(100, 800),
+          })),
+          type: 'expense',
+          month,
+          year,
+        };
+    
+        const incomeChart: ChartPageData = {
+          title: `${getMonthName(month)} ${year} Income Summary`,
+          data: incomeCategories.map((category) => ({
+            x: category,
+            y: getRandomAmount(1000, 5000),
+          })),
+          type: 'income',
+          month,
+          year,
+        };
+    
+        return [expenseChart, incomeChart];
       });
-
-      incomeTransactions.forEach(({ x, y }) => {
-        incomeCategoryMap[x] = (incomeCategoryMap[x] || 0) + y;
-      });
-
-      const expenseChart = Object.entries(expenseCategoryMap).map(([category, totalAmount]) => ({
-        x: category,
-        y: totalAmount
-      }));
-
-      const incomeChart = Object.entries(incomeCategoryMap).map(([category, totalAmount]) => ({
-        x: category,
-        y: totalAmount
-      }));
-      
-      return { expenseChart, incomeChart };
     };
+    
+    
     
     const getTransactions = useCallback(async () => {
       updateLoading(true, null);

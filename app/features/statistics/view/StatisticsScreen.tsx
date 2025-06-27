@@ -1,32 +1,36 @@
 import React, { useEffect } from 'react';
-import { TitleText } from '@/app/util/widgets/CustomText';
+import { TinyText, TitleText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FloatingActionButton } from '@/app/util/widgets/CustomButton';
 import { authenticate, useAuth } from '@/app/util/systemFunctions/AuthenticationUtil';
 import { useStatisticViewModel } from '../../statistics/viewmodel/StatisticViewModel';
-import { LegendPie } from '@/app/util/widgets/CustomChart';
-import { ScrollView, View } from 'react-native';
-import { SpacerVertical } from '@/app/util/widgets/CustomBox';
+import { ChartPager, LegendPie } from '@/app/util/widgets/CustomChart';
+import { FlatList, ScrollView, View } from 'react-native';
+import { RoundedBox, SpacerHorizontal, SpacerVertical } from '@/app/util/widgets/CustomBox';
 import { getMonthName } from '@/app/util/systemFunctions/DateUtil';
+import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
+
 
 export default function StatisticsScreen() {
   const insets = useSafeAreaInsets();
   const statisticViewModel = useStatisticViewModel();
-  const { expenseChartData, incomeChartData } = statisticViewModel.uiState;
+  const { chartPages } = statisticViewModel.uiState;
   
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
-  var expenseChart = (isAuthenticated && expenseChartData.length > 0) ? expenseChartData : statisticViewModel.generateFakeChartData().expenseChart
-  var incomeChart = (isAuthenticated && incomeChartData.length > 0) ? incomeChartData : statisticViewModel.generateFakeChartData().incomeChart
+  var expenseChart = ((isAuthenticated && chartPages.length > 0) ? chartPages : statisticViewModel.generateFakeChartData()).filter(c => c.type === 'expense')
+  var incomeChart = ((isAuthenticated && chartPages.length > 0) ? chartPages : statisticViewModel.generateFakeChartData()).filter(c => c.type === 'income')
+
+  console.log(statisticViewModel.generateFakeChartData());
 
   const handleFabPress = () => {
       if (!isAuthenticated) {
         authenticate(() => {
           setIsAuthenticated(true);
-          expenseChart = expenseChartData;
-          incomeChart = incomeChartData;
+          expenseChart = chartPages.filter(c => c.type === 'expense');
+          incomeChart = chartPages.filter(c => c.type === 'income');
         });
       } else {
         
@@ -42,12 +46,10 @@ export default function StatisticsScreen() {
       <TitleText text="Statistics" color={Colors.textPrimary} textAlign="center" />
       <SpacerVertical size={16} />
       <ScrollView 
-      showsVerticalScrollIndicator={false} 
-      contentContainerStyle={{ paddingBottom: 60 }}
-      >
-      <LegendPie title={(getMonthName(new Date().getMonth()) + " Expense Summary").toUpperCase()} chart={expenseChart} theme={0}/>
-      <LegendPie title={(getMonthName(new Date().getMonth()) + " Income Summary").toUpperCase()} chart={incomeChart} theme={1}/>
-      
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={{ paddingBottom: 60 }}>
+        <ChartPager chart={expenseChart} />     
+        <ChartPager chart={incomeChart} />     
       </ScrollView>
 
       {!isAuthenticated && <FloatingActionButton
