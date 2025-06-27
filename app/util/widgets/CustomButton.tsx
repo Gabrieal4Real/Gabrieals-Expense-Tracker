@@ -1,17 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Pressable, TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { DescriptionText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
-
-interface IconButtonProps {
-  icon?: keyof typeof Ionicons.glyphMap;
-  onPress?: () => void;
-  size?: number;
-  color?: string;
-  style?: ViewStyle;
-}
 
 interface CustomButtonProps {
   text: string;
@@ -40,18 +32,18 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
   </Pressable>
 );
 
-export const IconButton: React.FC<IconButtonProps> = ({
-  icon = 'finger-print',
+export const IconButton = ({
+  icon = 'fingerprint',
   onPress = () => console.log('Icon pressed'),
   size = 32,
   color = Colors.textPrimary,
-  style,
-}) => (
+  style
+}: { icon?: string, onPress?: () => void, size?: number, color?: string, style?: ViewStyle }) => (
   <Pressable
     onPress={onPress}
     style={({ pressed }) => [baseStyles.iconButton, pressed && baseStyles.pressed, style]}
   >
-    <Ionicons name={icon} size={size} color={color} />
+    <MaterialIcons name={icon as any} size={size} color={color} />
   </Pressable>
 );
 

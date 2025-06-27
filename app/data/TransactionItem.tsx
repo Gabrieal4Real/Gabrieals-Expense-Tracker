@@ -3,6 +3,7 @@ export enum TransactionType {
     Income = 'Income'
 }
 
+
 export enum ExpenseCategory {
     Food = '🍕 Food',
     Transport = '🚗 Transport',
@@ -21,6 +22,7 @@ export enum IncomeCategory {
   Gift = '🎉 Gift',
   Other = '💁 Other',
 }
+
 
 export interface Transaction {
   id?: number;

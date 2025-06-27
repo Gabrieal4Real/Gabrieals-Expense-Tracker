@@ -16,7 +16,7 @@ import { ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
 import { CategoryLabel } from '@/app/util/widgets/CustomBox';
 import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
-import { authenticate } from '@/app/util/systemFunctions/AuthenticationUtil';
+import { authenticate, useAuth } from '@/app/util/systemFunctions/AuthenticationUtil';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -24,16 +24,17 @@ export default function HomeScreen() {
   const [bottomSheetIndex, setBottomSheetIndex] = React.useState(-1);
 
   const homeViewModel = useHomeViewModel();
-  const { transactions, loading, error, profile, authenticated, currentFilter } = homeViewModel.uiState;
+  const { transactions, loading, error, profile, currentFilter } = homeViewModel.uiState;
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   const remaining = profile?.remaining ?? 0;
 
   const filteredTransactions = transactions.filter(transaction => currentFilter === "All" || transaction.type === currentFilter);
 
   const handleFabPress = () => {
-    if (!authenticated) {
+    if (!isAuthenticated) {
       authenticate(() => {
-        homeViewModel.updateAuthenticated(true);
+        setIsAuthenticated(true);
         bottomSheetIndex === -1 ? openBottomSheet() : closeBottomSheet();
       });
     } else {
@@ -65,7 +66,7 @@ export default function HomeScreen() {
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
-          <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Ionicons name={item.type === TransactionType.Income ? "arrow-down" : "arrow-up"} size={28} color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent} />
           </View>
         </View>
@@ -75,7 +76,7 @@ export default function HomeScreen() {
           textAlign="left"
           style={{ paddingBottom: 4 }}
         />
-        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between', alignItems: 'flex-end'}}>
+        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <TinyText text={format(new Date(item.date), 'dd MMM yyyy hh:mm:ss a').toUpperCase()} color={Colors.textPrimary} textAlign="left" />
           <CategoryLabel title={item.category.valueOf()} />
         </View>
@@ -90,7 +91,7 @@ export default function HomeScreen() {
       <RoundedBox style={{ marginVertical: 16 }}>
         <View style={{ alignItems: 'center' }}>
           <BiggerText
-            text={authenticated ? Intl.NumberFormat('en-US', { style: 'currency', currency: 'MYR' }).format(remaining) : '******'}
+            text={isAuthenticated ? Intl.NumberFormat('en-US', { style: 'currency', currency: 'MYR' }).format(remaining) : '******'}
             color={remaining >= 0 ? Colors.greenAccent : Colors.redAccent}
             textAlign="center"
             style={{ paddingVertical: 4, paddingHorizontal: 48 }}
@@ -98,7 +99,7 @@ export default function HomeScreen() {
           <TinyText text={"Remaining".toUpperCase()} color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
         </View>
 
-        {!authenticated && <IconButton icon="finger-print" size={32} color={Colors.textPrimary} onPress={() => {authenticate(() => {homeViewModel.updateAuthenticated(true)})}} />}
+        {!isAuthenticated && <IconButton icon="fingerprint" size={32} color={Colors.textPrimary} onPress={() => { authenticate(() => { setIsAuthenticated(true) }) }} />}
       </RoundedBox>
 
       <TitleText text="Expenses" color={Colors.textPrimary} textAlign="left" style={{ marginVertical: 8 }} />
@@ -113,7 +114,7 @@ export default function HomeScreen() {
           <TinyText text={error} color={Colors.redAccent} textAlign="center" />
         </View>
       ) : (
-        (!authenticated || transactions.length === 0) ? (
+        (!isAuthenticated || transactions.length === 0) ? (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Image
               source={require('@/assets/images/nothing_here_yet.webp')}
@@ -137,7 +138,7 @@ export default function HomeScreen() {
               showsVerticalScrollIndicator={false}
               keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
               ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-              contentContainerStyle={{ paddingBottom: 16, paddingTop: 12 }}
+              contentContainerStyle={{ paddingBottom: 80, paddingTop: 12 }}
             />
           </View>
         )

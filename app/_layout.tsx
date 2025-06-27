@@ -7,6 +7,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { initDB } from './sql/AppDatabaseFactory';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AuthProvider } from './util/systemFunctions/AuthenticationUtil';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,12 +42,14 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={DarkTheme}>
-      <StatusBar style="light" />
-      <GestureHandlerRootView>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" options={{ title: 'Home' }}/>
-        </Stack>
-      </GestureHandlerRootView>
+      <AuthProvider>
+        <StatusBar style="light" />
+        <GestureHandlerRootView>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" options={{ title: 'Home' }}/>
+          </Stack>
+        </GestureHandlerRootView>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
