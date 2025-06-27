@@ -137,7 +137,7 @@ export default function HomeScreen() {
               renderItem={renderTransaction}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
-              ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+              ItemSeparatorComponent={() => <SpacerVertical size={8} />}
               contentContainerStyle={{ paddingBottom: 80, paddingTop: 12 }}
             />
           </View>

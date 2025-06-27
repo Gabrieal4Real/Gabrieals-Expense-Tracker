@@ -1,15 +1,10 @@
 import { useState, useCallback } from 'react';
 import { StatisticUiState, initialStatisticUiState } from "./StatisticUiState";
 import { HomeRepository } from '../../home/repo/HomeRepository';
-import { Transaction } from '@/app/data/TransactionItem';
-import { ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
-import { blueScaleColors, ChartData } from '@/app/data/ChartData';
-import { Colors } from '@/constants/Colors';
-import { useAuth } from '@/app/util/systemFunctions/AuthenticationUtil';
+import { Transaction, TransactionType } from '@/app/data/TransactionItem';
 
 export function useStatisticViewModel() {
     const [uiState, setUiState] = useState<StatisticUiState>(initialStatisticUiState);
-    const { isAuthenticated, setIsAuthenticated } = useAuth();
     
     const updateState = useCallback((updater: (state: StatisticUiState) => Partial<StatisticUiState>) => {
       setUiState(prev => ({ ...prev, ...updater(prev) }));
@@ -20,55 +15,77 @@ export function useStatisticViewModel() {
     }, [updateState]);
 
     const generateChartData = useCallback((transactions: Transaction[]) => {
-      const categoryMap: Record<string, number> = {};
-
+      const expenseCategoryMap: Record<string, number> = {};
+      const incomeCategoryMap: Record<string, number> = {};
+    
       transactions.sort((a, b) => b.amount - a.amount);
-      
-      transactions.forEach(({ amount, category }) => {
-        categoryMap[category] = (categoryMap[category] || 0) + amount;
+    
+      transactions.forEach(({ amount, category, type }) => {
+        if(type == TransactionType.Expense)
+          expenseCategoryMap[category] = (expenseCategoryMap[category] || 0) + amount;
+        else
+        incomeCategoryMap[category] = (incomeCategoryMap[category] || 0) + amount;
       });
-      
-      const chartData = Object.entries(categoryMap).map(([category, totalAmount], index) => ({
-        name: category,
-        population: totalAmount,
-        color: blueScaleColors[index % blueScaleColors.length],
-        legendFontColor: Colors.white,
-        legendFontSize: 12,
-        legendFontFamily: 'PoppinsRegular',
-        legendLineHeight: 14,
-        legendIncludeFontPadding: false,
+    
+      const expenseChartData = Object.entries(expenseCategoryMap).map(([category, totalAmount]) => ({
+        x: category,
+        y: totalAmount,
       }));
 
-      updateState(() => ({ chartData }));
+      const incomeChartData = Object.entries(incomeCategoryMap).map(([category, totalAmount]) => ({
+        x: category,
+        y: totalAmount,
+      }));
+    
+      updateState(() => ({ expenseChartData, incomeChartData }));
     }, [updateState]);
 
     const generateFakeChartData = () => {
-      const categoryMap: Record<string, number> = {};
+      const expenseCategoryMap: Record<string, number> = {};
+      const incomeCategoryMap: Record<string, number> = {};
       
-      const transactions = [
+      const expenseTransactions = [
         { amount: 100, category: 'Food' },
         { amount: 200, category: 'Transport' },
         { amount: 300, category: 'Entertainment' },
         { amount: 400, category: 'Shopping' },
-        { amount: 500, category: 'Health' },
         { amount: 600, category: 'Education' },
         { amount: 700, category: 'Others' },
-      ].sort((a, b) => b.amount - a.amount);
-      
-      transactions.forEach(({ amount, category }) => {
-        categoryMap[category] = (categoryMap[category] || 0) + amount;
-      });
-      
-      return Object.entries(categoryMap).map(([category, totalAmount], index) => ({
-        name: category,
-        population: totalAmount,
-        color: blueScaleColors[index % blueScaleColors.length],
-        legendFontColor: Colors.white,
-        legendFontSize: 12,
-        legendFontFamily: 'PoppinsRegular',
-        legendLineHeight: 14,
-        legendIncludeFontPadding: false,
+      ].map(item => ({
+        x: item.category,
+        y: item.amount,
       }));
+
+      const incomeTransactions = [
+        { amount: 5000, category: 'Salary' },
+        { amount: 200, category: 'Bonus' },
+        { amount: 600, category: 'Investment' },
+        { amount: 4000, category: 'Gift' },
+        { amount: 700, category: 'Others' },
+      ].map(item => ({
+        x: item.category,
+        y: item.amount,
+      }));
+      
+      expenseTransactions.forEach(({ x, y }) => {
+        expenseCategoryMap[x] = (expenseCategoryMap[x] || 0) + y;
+      });
+
+      incomeTransactions.forEach(({ x, y }) => {
+        incomeCategoryMap[x] = (incomeCategoryMap[x] || 0) + y;
+      });
+
+      const expenseChart = Object.entries(expenseCategoryMap).map(([category, totalAmount]) => ({
+        x: category,
+        y: totalAmount
+      }));
+
+      const incomeChart = Object.entries(incomeCategoryMap).map(([category, totalAmount]) => ({
+        x: category,
+        y: totalAmount
+      }));
+      
+      return { expenseChart, incomeChart };
     };
     
     const getTransactions = useCallback(async () => {

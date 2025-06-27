@@ -1,27 +1,32 @@
 import React, { useEffect } from 'react';
 import { TitleText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
-import { Dimensions, View } from 'react-native';
 import { baseStyles } from '@/constants/Styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FloatingActionButton } from '@/app/util/widgets/CustomButton';
 import { authenticate, useAuth } from '@/app/util/systemFunctions/AuthenticationUtil';
 import { useStatisticViewModel } from '../../statistics/viewmodel/StatisticViewModel';
-import { PieChart } from 'react-native-chart-kit';
-
+import { LegendPie } from '@/app/util/widgets/CustomChart';
+import { ScrollView, View } from 'react-native';
+import { SpacerVertical } from '@/app/util/widgets/CustomBox';
+import { getMonthName } from '@/app/util/systemFunctions/DateUtil';
 
 export default function StatisticsScreen() {
   const insets = useSafeAreaInsets();
   const statisticViewModel = useStatisticViewModel();
-  const { chartData } = statisticViewModel.uiState;
-  const screenWidth = Dimensions.get("window").width;
+  const { expenseChartData, incomeChartData } = statisticViewModel.uiState;
   
   const { isAuthenticated, setIsAuthenticated } = useAuth();
+
+  var expenseChart = (isAuthenticated && expenseChartData.length > 0) ? expenseChartData : statisticViewModel.generateFakeChartData().expenseChart
+  var incomeChart = (isAuthenticated && incomeChartData.length > 0) ? incomeChartData : statisticViewModel.generateFakeChartData().incomeChart
 
   const handleFabPress = () => {
       if (!isAuthenticated) {
         authenticate(() => {
           setIsAuthenticated(true);
+          expenseChart = expenseChartData;
+          incomeChart = incomeChartData;
         });
       } else {
         
@@ -32,33 +37,24 @@ export default function StatisticsScreen() {
     statisticViewModel.getTransactions();
   }, [statisticViewModel.getTransactions]);
 
-  console.log(chartData);
-
   return (
-    <View style={[baseStyles.baseBackground, { paddingTop: 18 + insets.top }]}>
+    <View style={[baseStyles.baseBackground, { paddingTop: 18 + insets.top}]}>
       <TitleText text="Statistics" color={Colors.textPrimary} textAlign="center" />
+      <SpacerVertical size={16} />
+      <ScrollView 
+      showsVerticalScrollIndicator={false} 
+      contentContainerStyle={{ paddingBottom: 60 }}
+      >
+      <LegendPie title={(getMonthName(new Date().getMonth()) + " Expense Summary").toUpperCase()} chart={expenseChart} theme={0}/>
+      <LegendPie title={(getMonthName(new Date().getMonth()) + " Income Summary").toUpperCase()} chart={incomeChart} theme={1}/>
+      
+      </ScrollView>
+
       {!isAuthenticated && <FloatingActionButton
         onPress={handleFabPress}
         icon='fingerprint'
       />}
       
-      <PieChart
-        data={isAuthenticated ? chartData : statisticViewModel.generateFakeChartData()}
-        width={screenWidth - 18*2}
-        height={(isAuthenticated ? chartData.length : statisticViewModel.generateFakeChartData().length) * 28}
-        chartConfig={{
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        }}
-        style={{
-          marginVertical: 16,
-          borderRadius: 12,
-          elevation: 4
-        }}
-        accessor={"population"}
-        backgroundColor={Colors.navigationBar}
-        paddingLeft={"8"}
-      />
     </View>
   );
 }

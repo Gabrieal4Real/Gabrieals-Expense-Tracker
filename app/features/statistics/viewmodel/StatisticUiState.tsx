@@ -5,12 +5,14 @@ export interface StatisticUiState {
     loading: boolean;
     error: string | null;
     transactions: Transaction[];
-    chartData: ChartData[];
+    expenseChartData: ChartData[];
+    incomeChartData: ChartData[];
 }
 
 export const initialStatisticUiState: StatisticUiState = {
     loading: false,
     error: null,
     transactions: [],
-    chartData: []
+    expenseChartData: [],
+    incomeChartData: []
 };

@@ -1,9 +1,15 @@
 export interface ChartData {
-  name: string;
-  population: number;
-  color: string;
-  legendFontColor: string;
-  legendFontSize: number;
+  x: string;
+  y: number;
+}
+
+
+export interface ChartPageData {
+  title: string;
+  data: ChartData[];
+  type: 'expense' | 'income';
+  month: number;
+  year: number;
 }
 
 export const blueScaleColors: string[] = [
