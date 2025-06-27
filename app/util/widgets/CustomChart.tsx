@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { FlatList, View } from 'react-native';
 import { VictoryPie, VictoryLegend, VictoryTheme } from 'victory-native';
+
 import { Colors } from '@/constants/Colors';
+import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
 import { SubtitleText } from '@/app/util/widgets/CustomText';
 import { RoundedBox } from '@/app/util/widgets/CustomBox';
-import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
-import { Dimensions, FlatList, View } from 'react-native';
 import { ChartPageData } from '@/app/data/ChartData';
 
 export function LegendPie({
@@ -16,11 +17,11 @@ export function LegendPie({
   chart: { x: string; y: number }[];
   theme: number;
 }) {
-    var selectedTheme = theme == 0 ? VictoryTheme.clean : VictoryTheme.material
-    var colorScale = selectedTheme.pie;
+  const selectedTheme = theme === 0 ? VictoryTheme.clean : VictoryTheme.material;
+  const colorScale = selectedTheme.pie?.colorScale ?? [];
 
-    return (
-    <View style={{alignItems: 'center'}}>
+  return (
+    <View style={{ alignItems: 'center' }}>
       <SubtitleText text={title} color={Colors.textPrimary} textAlign="center" />
 
       <VictoryPie
@@ -29,7 +30,6 @@ export function LegendPie({
         padAngle={6}
         data={chart}
         theme={selectedTheme}
-        animate={{ duration: 1000 }}
         cornerRadius={4}
         startAngle={-6}
         innerRadius={60}
@@ -43,13 +43,15 @@ export function LegendPie({
         itemsPerRow={3}
         gutter={20}
         style={{
-          labels: { fill: Colors.white, fontFamily: 'PoppinsRegular', fontSize: 12 },
+          labels: {
+            fill: Colors.white,
+            fontFamily: 'PoppinsRegular',
+            fontSize: 12,
+          },
         }}
         data={chart.map((item, index) => ({
           name: item.x,
-          symbol: {
-            fill: colorScale?.colorScale?.[index],
-          },
+          symbol: { fill: colorScale[index] },
         }))}
       />
     </View>
@@ -58,16 +60,22 @@ export function LegendPie({
 
 export function ChartPager({ chart }: { chart: ChartPageData[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
+
   return (
     <RoundedBox style={{ marginBottom: 16, paddingHorizontal: 0, alignItems: 'center' }}>
       <FlatList
         data={chart}
-        renderItem={(item) => (
-          <LegendPie title={item.item.title} chart={item.item.data} theme={item.item.type === 'expense' ? 0 : 1} />
-        )}
+        keyExtractor={(_, index) => index.toString()}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <LegendPie
+            title={item.title}
+            chart={item.data}
+            theme={item.type === 'expense' ? 0 : 1}
+          />
+        )}
         onViewableItemsChanged={({ viewableItems }) => {
           if (viewableItems.length > 0) {
             setActiveIndex(viewableItems[0].index ?? 0);
