@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { TinyText, TitleText } from '@/app/util/widgets/CustomText';
+import { SubtitleText, TinyText, TitleText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,7 +8,7 @@ import { authenticate, useAuth } from '@/app/util/systemFunctions/Authentication
 import { useStatisticViewModel } from '../../statistics/viewmodel/StatisticViewModel';
 import { ChartPager, LegendPie } from '@/app/util/widgets/CustomChart';
 import { FlatList, ScrollView, View } from 'react-native';
-import { RoundedBox, SpacerHorizontal, SpacerVertical } from '@/app/util/widgets/CustomBox';
+import { CustomBlurView, RoundedBox, SpacerHorizontal, SpacerVertical } from '@/app/util/widgets/CustomBox';
 import { getMonthName } from '@/app/util/systemFunctions/DateUtil';
 import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
 import { BlurView } from 'expo-blur';
@@ -23,6 +23,7 @@ export default function StatisticsScreen() {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   const fakeChart = statisticViewModel.generateFakeChartData();
+  const categorySummary = statisticViewModel.getCategorySummary(chartPages);
 
   const handleFabPress = () => {
       if (!isAuthenticated) {
@@ -51,42 +52,13 @@ export default function StatisticsScreen() {
       <ScrollView 
         showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ paddingBottom: 60 }}>
-          <View>
+          <CustomBlurView isShowBlur={!isAuthenticated || chartPages.length === 0}>
             <ChartPager chart={(chartPages.length > 0 && isAuthenticated) ? chartPages : fakeChart} />
+          </CustomBlurView>
 
-            {(!isAuthenticated || chartPages.length === 0) && (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding:16,
-                  marginBottom: 16,
-                  ...StyleSheet.absoluteFillObject,
-                }}
-              >
-              <BlurView
-                intensity={20}
-                experimentalBlurMethod="dimezisBlurView"
-                tint="dark"
-                style={{
-                  borderRadius: 12,
-                  overflow: 'hidden',
-                  ...StyleSheet.absoluteFillObject,
-                }}
-              />
-              <TitleText
-                text="Add a transaction to see statistics"
-                color={Colors.white}
-                textAlign="center"
-                style={{
-                  backgroundColor: Colors.lightMaroon,
-                  padding: 16,
-                  borderRadius: 12,
-                }}
-              />
-            </View>
-          )}
-        </View>
+          <CustomBlurView isShowBlur={!isAuthenticated || chartPages.length === 0}>
+          <ChartPager chart={(chartPages.length > 0 && isAuthenticated) ? categorySummary : fakeChart} title=''/>
+          </CustomBlurView>
       </ScrollView>
 
       {!isAuthenticated && <FloatingActionButton

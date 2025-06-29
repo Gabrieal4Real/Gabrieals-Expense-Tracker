@@ -3,14 +3,52 @@ import React, { ReactNode } from 'react';
 import { View, StyleProp, ViewStyle, Pressable } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { TinyText, TinierText } from '@/app/util/widgets/CustomText';
+import { BlurView } from 'expo-blur';
+import { StyleSheet } from 'react-native';
+import { TitleText } from '@/app/util/widgets/CustomText';
 
-type RoundedBoxProps = {
-  children: ReactNode;
-  style?: StyleProp<ViewStyle>;
-};
-
-export const RoundedBox = ({ children, style }: RoundedBoxProps) => {
+export const RoundedBox = ({ children, style }: {children: ReactNode, style?: StyleProp<ViewStyle>}) => {
   return <View style={[baseStyles.baseRoundedBox, style]}>{children}</View>;
+}
+
+export const CustomBlurView = ({children, isShowBlur}: {children: ReactNode, isShowBlur: boolean}) => {
+  return (
+    <View>
+      {children}
+      {isShowBlur && (
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding:16,
+            marginBottom: 16,
+            ...StyleSheet.absoluteFillObject,
+          }}
+        >
+          <BlurView
+            intensity={20}
+            experimentalBlurMethod="dimezisBlurView"
+            tint="dark"
+            style={{
+              borderRadius: 12,
+              overflow: 'hidden',
+              ...StyleSheet.absoluteFillObject,
+            }}
+          />
+          <TitleText
+            text="Add a transaction to see statistics"
+            color={Colors.white}
+            textAlign="center"
+            style={{
+              backgroundColor: Colors.lightMaroon,
+              padding: 16,
+              borderRadius: 12,
+            }}
+          />
+        </View>
+      )}
+    </View>
+  );
 }
 
 export const HorizontalDivider = () => {
@@ -29,15 +67,6 @@ export const SpacerVertical = ({ size = 8 }: { size?: number }) => (
   <View style={{ height: size }} />
 );
 
-type FilterChipGroupProps<T> = {
-  title?: string;
-  items: T[];
-  selected: T;
-  onSelectedChange: (item: T) => void;
-  extractLabel?: (item: T) => string;
-  style?: ViewStyle;
-};
-
 export function FilterChipGroup<T extends string | number>({
   title,
   items,
@@ -45,7 +74,7 @@ export function FilterChipGroup<T extends string | number>({
   onSelectedChange,
   extractLabel = (item) => String(item),
   style,
-}: FilterChipGroupProps<T>) {
+}: {title?: string, items: T[], selected: T, onSelectedChange: (item: T) => void, extractLabel?: (item: T) => string, style?: ViewStyle}) {
   return (
     <>
     {title && <TinyText text={title} color={Colors.textPrimary} />}

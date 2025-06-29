@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { StatisticUiState, initialStatisticUiState } from "./StatisticUiState";
 import { HomeRepository } from '../../home/repo/HomeRepository';
-import { Transaction, TransactionType } from '@/app/data/TransactionItem';
-import { ChartPageData } from '@/app/data/ChartData';
+import { ExpenseCategory, IncomeCategory, Transaction, TransactionType } from '@/app/data/TransactionItem';
+import { ChartPageData, ChartData } from '@/app/data/ChartData';
 import { getMonthName, getYearName } from '@/app/util/systemFunctions/DateUtil';
 import { getRandomAmount } from '@/app/util/systemFunctions/TextUtil';
 
@@ -53,16 +53,39 @@ export function useStatisticViewModel() {
     updateState({ chartPages });
   }, [updateState]);
 
-  const generateFakeChartData = (): ChartPageData[] => {
-    const expenseCategories = ['Food', 'Transport', 'Entertainment', 'Shopping', 'Education', 'Others'];
-    const incomeCategories = ['Salary', 'Bonus', 'Investment', 'Gift', 'Others'];
 
-    const months = [{ month: 7, year: 2024 }];
+  function getCategorySummary(chartPages: ChartPageData[]): ChartPageData[] {
+    return chartPages.map(({ year, month, title, expense, income }) => {
+      const combinedMap: Record<string, number> = {};
+  
+      [...expense, ...income].forEach(({ x, y }) => {
+        combinedMap[x] = (combinedMap[x] || 0) + y;
+      });
+  
+      const combined: ChartData[] = Object.entries(combinedMap).map(([x, y]) => ({ x, y }));
+  
+      return {
+        year,
+        month,
+        title: `${getMonthName(month)} ${getYearName(year)} Category Summary`,
+        expense: combined,
+        income: [],
+      };
+    });
+  }
+  
+
+  const generateFakeChartData = (): ChartPageData[] => {
+
+    const months = [
+      { month: 7, year: 2024 },
+      { month: 8, year: 2024 }
+    ];
 
     return months.map(({ month, year }) => ({
       title: `${getMonthName(month)} ${getYearName(year)} Summary`,
-      expense: expenseCategories.map(x => ({ x, y: getRandomAmount(100, 800) })),
-      income: incomeCategories.map(x => ({ x, y: getRandomAmount(1000, 5000) })),
+      expense: Object.values(ExpenseCategory).map(x => ({ x, y: getRandomAmount(100, 800) })),
+      income: Object.values(IncomeCategory).map(x => ({ x, y: getRandomAmount(1000, 5000) })),
       month,
       year,
     }));
@@ -87,5 +110,6 @@ export function useStatisticViewModel() {
     getTransactions,
     generateChartData,
     generateFakeChartData,
+    getCategorySummary
   };
 }

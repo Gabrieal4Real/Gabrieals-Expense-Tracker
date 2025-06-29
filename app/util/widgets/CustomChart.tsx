@@ -11,18 +11,24 @@ import { ChartPageData } from '@/app/data/ChartData';
 export function LegendPie({
   title,
   chart,
-  theme
+  theme,
+  dualCharts = false
 }: {
   title: string;
   chart: { x: string; y: number }[];
   theme: number;
+  dualCharts?: boolean;
 }) {
   const selectedTheme = theme === 0 ? VictoryTheme.clean : VictoryTheme.material;
   const colorScale = selectedTheme.pie?.colorScale ?? [];
+  const width = dualCharts ? SCREEN_WIDTH * 0.30 : SCREEN_WIDTH * 0.7;
+  const itemsPerRow = dualCharts ? 1 : 3;
+  const heightMultiplier = dualCharts ? 28 : 32;
+  const height = Math.ceil(chart.length / (itemsPerRow)) * heightMultiplier;
 
   return (
     <View style={{ alignItems: 'center', paddingTop: 8 }}>
-      <TinyText text={title} color={Colors.textPrimary} textAlign="center" />
+      {title != "" && <TinyText text={title} color={Colors.textPrimary} textAlign="center" />}
 
       <VictoryPie
         height={150}
@@ -37,9 +43,9 @@ export function LegendPie({
 
       <VictoryLegend
         orientation="horizontal"
-        width={SCREEN_WIDTH * 0.30}
-        height={Math.ceil(chart.length / 2) * 60}
-        itemsPerRow={1}
+        width={width}
+        height={height}
+        itemsPerRow={itemsPerRow}
         gutter={20}
         style={{
           labels: {
@@ -57,9 +63,8 @@ export function LegendPie({
   );
 }
 
-export function ChartPager({ chart }: { chart: ChartPageData[] }) {
+export function ChartPager({ chart, title }: { chart: ChartPageData[]; title?: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
-
 
   return (
     <RoundedBox style={{ marginBottom: 16, paddingHorizontal: 0, alignItems: 'center' }}>
@@ -69,31 +74,37 @@ export function ChartPager({ chart }: { chart: ChartPageData[] }) {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <View style={{width: SCREEN_WIDTH * 0.915}}>
+        renderItem={({ item }) => {
+          const checkIfExpenseAndIncomeExist = item.expense.length > 0 && item.income.length > 0;
+  
+          return (
+            <View style={{width: SCREEN_WIDTH * 0.915}}>
             <SubtitleText text={item.title} color={Colors.textPrimary} textAlign="center" />
             <View style={{flexDirection: 'row', justifyContent: 'center'}}>
               {item.expense.length > 0 && (
                 <View style={{width: "49%"}}>
                   <LegendPie
-                    title="Expenses"
+                    title={title ?? "Expenses"}
                     chart={item.expense}
                     theme={0}
+                    dualCharts={checkIfExpenseAndIncomeExist}
                   />
                 </View>
               )}
               {item.income.length > 0 && (
                 <View style={{width: "49%"}}>
                   <LegendPie
-                    title="Income"
+                    title={title ?? "Income"}
                     chart={item.income}
                     theme={1}
+                    dualCharts={checkIfExpenseAndIncomeExist}
                   />
                 </View>
               )}
             </View>
           </View>
-        )}
+          );
+        }}
         onViewableItemsChanged={({ viewableItems }) => {
           if (viewableItems.length > 0) {
             setActiveIndex(viewableItems[0].index ?? 0);
@@ -102,14 +113,14 @@ export function ChartPager({ chart }: { chart: ChartPageData[] }) {
         viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
       />
 
-      <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 12 }}>
+      <View style={{ flexDirection: 'row', marginTop: 12 }}>
         {chart.map((_, index) => (
           <View
             key={index}
             style={{
-              width: 8,
-              height: 8,
-              borderRadius: 4,
+              width: index === activeIndex ? 16 : 8,
+              height: 4,
+              borderRadius: 8,
               marginHorizontal: 4,
               backgroundColor: index === activeIndex ? Colors.white : Colors.placeholder,
             }}
