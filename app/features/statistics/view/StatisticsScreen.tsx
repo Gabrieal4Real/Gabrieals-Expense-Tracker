@@ -22,12 +22,7 @@ export default function StatisticsScreen() {
   
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
-  var expenseChart = chartPages.filter(c => c.type === 'expense')
-  var fakeExpenseChart = statisticViewModel.generateFakeChartData().filter(c => c.type === 'expense')
-  var incomeChart = chartPages.filter(c => c.type === 'income')
-  var fakeIncomeChart = statisticViewModel.generateFakeChartData().filter(c => c.type === 'income')
-
-  console.log(statisticViewModel.generateFakeChartData());
+  const fakeChart = statisticViewModel.generateFakeChartData();
 
   const handleFabPress = () => {
       if (!isAuthenticated) {
@@ -57,9 +52,9 @@ export default function StatisticsScreen() {
         showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ paddingBottom: 60 }}>
           <View>
-            <ChartPager chart={isAuthenticated && expenseChart.length !== 0 ? expenseChart : fakeExpenseChart} />
+            <ChartPager chart={(chartPages.length > 0 && isAuthenticated) ? chartPages : fakeChart} />
 
-            {(!isAuthenticated || expenseChart.length === 0) && (
+            {(!isAuthenticated || chartPages.length === 0) && (
               <View
                 style={{
                   justifyContent: 'center',
@@ -80,43 +75,7 @@ export default function StatisticsScreen() {
                 }}
               />
               <TitleText
-                text="Add an expense type to see your pie"
-                color={Colors.white}
-                textAlign="center"
-                style={{
-                  backgroundColor: Colors.lightMaroon,
-                  padding: 16,
-                  borderRadius: 12,
-                }}
-              />
-            </View>
-          )}
-        </View>
-          <View>
-            <ChartPager chart={isAuthenticated && incomeChart.length !== 0 ? incomeChart : fakeIncomeChart} />
-
-            {(!isAuthenticated || incomeChart.length === 0) && (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding:16,
-                  marginBottom: 16,
-                  ...StyleSheet.absoluteFillObject,
-                }}
-              >
-              <BlurView
-                intensity={18}
-                tint="dark"
-                experimentalBlurMethod="dimezisBlurView"
-                style={{
-                  borderRadius: 12,
-                  overflow: 'hidden',
-                  ...StyleSheet.absoluteFillObject,
-                }}
-              />
-              <TitleText
-                text="Add an income type to see your pie"
+                text="Add a transaction to see statistics"
                 color={Colors.white}
                 textAlign="center"
                 style={{

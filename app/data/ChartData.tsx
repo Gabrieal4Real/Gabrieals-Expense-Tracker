@@ -3,11 +3,10 @@ export interface ChartData {
   y: number;
 }
 
-
 export interface ChartPageData {
   title: string;
-  data: ChartData[];
-  type: 'expense' | 'income';
+  expense: ChartData[];
+  income: ChartData[];
   month: number;
   year: number;
 }

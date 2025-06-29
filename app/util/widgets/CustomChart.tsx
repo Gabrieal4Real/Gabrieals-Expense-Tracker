@@ -4,7 +4,7 @@ import { VictoryPie, VictoryLegend, VictoryTheme } from 'victory-native';
 
 import { Colors } from '@/constants/Colors';
 import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
-import { SubtitleText } from '@/app/util/widgets/CustomText';
+import { SubtitleText, TinyText } from '@/app/util/widgets/CustomText';
 import { RoundedBox } from '@/app/util/widgets/CustomBox';
 import { ChartPageData } from '@/app/data/ChartData';
 
@@ -21,26 +21,25 @@ export function LegendPie({
   const colorScale = selectedTheme.pie?.colorScale ?? [];
 
   return (
-    <View style={{ alignItems: 'center' }}>
-      <SubtitleText text={title} color={Colors.textPrimary} textAlign="center" />
+    <View style={{ alignItems: 'center', paddingTop: 8 }}>
+      <TinyText text={title} color={Colors.textPrimary} textAlign="center" />
 
       <VictoryPie
-        width={SCREEN_WIDTH * 0.915}
         height={150}
         padAngle={6}
         data={chart}
         theme={selectedTheme}
         cornerRadius={4}
         startAngle={-6}
-        innerRadius={60}
+        innerRadius={65}
         labels={[]}
       />
 
       <VictoryLegend
         orientation="horizontal"
-        width={SCREEN_WIDTH * 0.78}
-        height={Math.ceil(chart.length / 3) * 28}
-        itemsPerRow={3}
+        width={SCREEN_WIDTH * 0.30}
+        height={Math.ceil(chart.length / 2) * 60}
+        itemsPerRow={1}
         gutter={20}
         style={{
           labels: {
@@ -61,6 +60,7 @@ export function LegendPie({
 export function ChartPager({ chart }: { chart: ChartPageData[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
+
   return (
     <RoundedBox style={{ marginBottom: 16, paddingHorizontal: 0, alignItems: 'center' }}>
       <FlatList
@@ -70,11 +70,29 @@ export function ChartPager({ chart }: { chart: ChartPageData[] }) {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
-          <LegendPie
-            title={item.title}
-            chart={item.data}
-            theme={item.type === 'expense' ? 0 : 1}
-          />
+          <View style={{width: SCREEN_WIDTH * 0.915}}>
+            <SubtitleText text={item.title} color={Colors.textPrimary} textAlign="center" />
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              {item.expense.length > 0 && (
+                <View style={{width: "49%"}}>
+                  <LegendPie
+                    title="Expenses"
+                    chart={item.expense}
+                    theme={0}
+                  />
+                </View>
+              )}
+              {item.income.length > 0 && (
+                <View style={{width: "49%"}}>
+                  <LegendPie
+                    title="Income"
+                    chart={item.income}
+                    theme={1}
+                  />
+                </View>
+              )}
+            </View>
+          </View>
         )}
         onViewableItemsChanged={({ viewableItems }) => {
           if (viewableItems.length > 0) {
