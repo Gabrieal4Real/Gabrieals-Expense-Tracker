@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Appspensive",
-    "slug": "ExpenseTracker",
+    "slug": "Expense-Tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/app_icon.png",
