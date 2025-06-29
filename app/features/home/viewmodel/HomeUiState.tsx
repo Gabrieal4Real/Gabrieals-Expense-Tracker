@@ -6,7 +6,8 @@ export interface HomeUiState {
   loading: boolean;
   error: string | null;
   profile: Profile | null;
-  currentFilter: string;
+  currentTypeFilter: string;
+  currentCategoryFilter?: string;
 }
 
 export const initialHomeUiState: HomeUiState = {
@@ -14,5 +15,6 @@ export const initialHomeUiState: HomeUiState = {
   loading: false,
   error: null,
   profile: null,
-  currentFilter: "All",
+  currentTypeFilter: "All",
+  currentCategoryFilter: undefined,
 };

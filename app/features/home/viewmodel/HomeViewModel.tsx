@@ -15,8 +15,12 @@ export function useHomeViewModel() {
     updateState(() => ({ loading, error }));
   }, [updateState]);
 
-  const updateCurrentFilter = useCallback((currentFilter: string) => {
-    updateState(() => ({ currentFilter }));
+  const updateCurrentTypeFilter = useCallback((currentTypeFilter: string) => {
+    updateState(() => ({ currentTypeFilter }));
+  }, [updateState]);
+
+  const updateCurrentCategoryFilter = useCallback((currentCategoryFilter?: string) => {
+    updateState(() => ({ currentCategoryFilter }));
   }, [updateState]);
   
   const getProfile = useCallback(async () => {
@@ -100,6 +104,7 @@ export function useHomeViewModel() {
     updateTransaction,
     getProfile,
     updateProfile,
-    updateCurrentFilter
+    updateCurrentTypeFilter,
+    updateCurrentCategoryFilter
   };
 }

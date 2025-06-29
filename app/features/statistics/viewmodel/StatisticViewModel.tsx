@@ -58,7 +58,15 @@ export function useStatisticViewModel() {
     return chartPages.map(({ year, month, title, expense, income }) => {
       const combinedMap: Record<string, number> = {};
   
-      [...expense, ...income].forEach(({ x, y }) => {
+      [...expense].forEach(({ x, y }) => {
+        if(x.includes(ExpenseCategory.Other))
+          x = x.replace("Other", "Ex. Other")
+        combinedMap[x] = (combinedMap[x] || 0) + y;
+      });
+
+      [...income].forEach(({ x, y }) => {
+        if(x.includes(IncomeCategory.Other))
+          x = x.replace("Other", "In. Other")
         combinedMap[x] = (combinedMap[x] || 0) + y;
       });
   

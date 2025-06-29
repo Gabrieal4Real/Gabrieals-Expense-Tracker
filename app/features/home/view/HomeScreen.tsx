@@ -24,12 +24,12 @@ export default function HomeScreen() {
   const [bottomSheetIndex, setBottomSheetIndex] = React.useState(-1);
 
   const homeViewModel = useHomeViewModel();
-  const { transactions, loading, error, profile, currentFilter } = homeViewModel.uiState;
+  const { transactions, loading, error, profile, currentTypeFilter, currentCategoryFilter } = homeViewModel.uiState;
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   const remaining = profile?.remaining ?? 0;
 
-  const filteredTransactions = transactions.filter(transaction => currentFilter === "All" || transaction.type === currentFilter);
+  const filteredTransactions = transactions.filter(transaction => currentTypeFilter === "All" || transaction.type === currentTypeFilter).filter(transaction => currentCategoryFilter === undefined || transaction.category === currentCategoryFilter);
 
   const handleFabPress = () => {
     if (!isAuthenticated) {
@@ -66,19 +66,14 @@ export default function HomeScreen() {
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name={item.type === TransactionType.Income ? "arrow-down" : "arrow-up"} size={28} color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent} />
-          </View>
+          <Ionicons name={item.type === TransactionType.Income ? "arrow-down" : "arrow-up"} size={28} color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent}/>
         </View>
-        <TinyText
-          text={item.description || 'No description'}
-          color={Colors.textPrimary}
-          textAlign="left"
-          style={{ paddingBottom: 4 }}
-        />
-        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <TinyText text={item.description} color={Colors.textPrimary} textAlign="left" />
+        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between', alignItems: 'flex-end'}}>
           <TinyText text={format(new Date(item.date), 'dd MMM yyyy hh:mm:ss a').toUpperCase()} color={Colors.textPrimary} textAlign="left" />
-          <CategoryLabel title={item.category.valueOf()} />
+          <CategoryLabel title={item.category.valueOf()} onClick={() => {
+            homeViewModel.updateCurrentCategoryFilter(currentCategoryFilter !== item.category ? item.category : undefined)
+          }} />
         </View>
       </View>
     </RoundedBox>
@@ -128,9 +123,15 @@ export default function HomeScreen() {
           <View style={{ flex: 1 }}>
             <FilterChipGroup
               items={["All", TransactionType.Expense, TransactionType.Income]}
-              selected={currentFilter}
-              onSelectedChange={homeViewModel.updateCurrentFilter}
+              selected={currentTypeFilter}
+              onSelectedChange={homeViewModel.updateCurrentTypeFilter}
             />
+
+            {currentCategoryFilter && 
+            <View style={{flex: 0, flexDirection: 'row', alignItems: 'center'}}>
+              <CategoryLabel title={currentCategoryFilter?.valueOf()} 
+              onClick={() => { homeViewModel.updateCurrentCategoryFilter(undefined)}} />
+            </View>}
 
             <FlatList
               data={[...filteredTransactions].reverse()}
