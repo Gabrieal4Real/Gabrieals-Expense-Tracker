@@ -1,18 +1,14 @@
-import React, { useCallback, useEffect } from 'react';
-import { SubtitleText, TinyText, TitleText } from '@/app/util/widgets/CustomText';
+import React, { useCallback } from 'react';
+import { TitleText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FloatingActionButton } from '@/app/util/widgets/CustomButton';
 import { authenticate, useAuth } from '@/app/util/systemFunctions/AuthenticationUtil';
 import { useStatisticViewModel } from '../../statistics/viewmodel/StatisticViewModel';
-import { ChartPager, LegendPie } from '@/app/util/widgets/CustomChart';
-import { FlatList, ScrollView, View } from 'react-native';
-import { CustomBlurView, RoundedBox, SpacerHorizontal, SpacerVertical } from '@/app/util/widgets/CustomBox';
-import { getMonthName } from '@/app/util/systemFunctions/DateUtil';
-import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
-import { BlurView } from 'expo-blur';
-import { StyleSheet } from 'react-native';
+import { ChartPager } from '@/app/util/widgets/CustomChart';
+import { ScrollView, View } from 'react-native';
+import { CustomBlurView, SpacerVertical } from '@/app/util/widgets/CustomBox';
 import { useFocusEffect } from 'expo-router';
 
 export default function StatisticsScreen() {

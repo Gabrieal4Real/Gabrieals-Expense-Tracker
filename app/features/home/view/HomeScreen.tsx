@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import { View, FlatList, ActivityIndicator, Image } from 'react-native';
+import { useEffect, useRef, useCallback } from 'react';
+import { View, FlatList, ActivityIndicator, Image, Pressable, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { TitleText, BiggerText, TinyText, SubtitleText } from '@/app/util/widgets/CustomText';
@@ -8,7 +8,7 @@ import { IconButton } from '@/app/util/widgets/CustomButton';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
 import { Transaction, TransactionType } from '@/app/data/TransactionItem';
-import { CustomBottomSheet } from '@/app/util/widgets/CustomBottomSheet';
+import { CustomBottomSheet, openBottomSheet, closeBottomSheet } from '@/app/util/widgets/CustomBottomSheet';
 import TransactionBottomSheet from '../../transactionBottomSheet/view/TransactionBottomSheet';
 import { useHomeViewModel } from '../viewmodel/HomeViewModel';
 import { FloatingActionButton } from '@/app/util/widgets/CustomButton';
@@ -17,14 +17,16 @@ import { CategoryLabel } from '@/app/util/widgets/CustomBox';
 import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
 import { authenticate, useAuth } from '@/app/util/systemFunctions/AuthenticationUtil';
+import { useState } from 'react';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const [bottomSheetIndex, setBottomSheetIndex] = React.useState(-1);
+  const [bottomSheetIndex, setBottomSheetIndex] = useState(-1);
 
   const homeViewModel = useHomeViewModel();
-  const { transactions, loading, error, profile, currentTypeFilter, currentCategoryFilter } = homeViewModel.uiState;
+  const { transactions, loading, error, profile, currentTypeFilter, currentCategoryFilter, selectedTransactions, isDeleteMode } = homeViewModel.uiState;
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   const remaining = profile?.remaining ?? 0;
@@ -35,10 +37,14 @@ export default function HomeScreen() {
     if (!isAuthenticated) {
       authenticate(() => {
         setIsAuthenticated(true);
-        bottomSheetIndex === -1 ? openBottomSheet() : closeBottomSheet();
+        bottomSheetIndex === -1 ? openBottomSheet(bottomSheetRef) : closeBottomSheet(bottomSheetRef);
       });
+    } else if (isDeleteMode) {
+      homeViewModel.deleteTransactions(selectedTransactions);
+      homeViewModel.updateIsDeleteMode(false);
+      homeViewModel.clearSelectedTransactions();
     } else {
-      bottomSheetIndex === -1 ? openBottomSheet() : closeBottomSheet();
+      bottomSheetIndex === -1 ? openBottomSheet(bottomSheetRef) : closeBottomSheet(bottomSheetRef);
     }
   };
 
@@ -52,32 +58,91 @@ export default function HomeScreen() {
     setBottomSheetIndex(index);
   }, []);
 
-  const openBottomSheet = () => bottomSheetRef.current?.expand();
-
-  const closeBottomSheet = () => bottomSheetRef.current?.close();
-
   const handleTransactionAdded = useCallback((type: TransactionType, amount: number, category: ExpenseCategory | IncomeCategory, description: string) => {
     homeViewModel.updateTransaction(type, amount, category, description);
-    closeBottomSheet();
+    closeBottomSheet(bottomSheetRef);
   }, []);
 
-  const renderTransaction = ({ item }: { item: Transaction }) => (
-    <RoundedBox style={{ paddingVertical: 12 }}>
-      <View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
-          <Ionicons name={item.type === TransactionType.Income ? "arrow-down" : "arrow-up"} size={28} color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent}/>
-        </View>
-        <TinyText text={item.description} color={Colors.textPrimary} textAlign="left" />
-        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between', alignItems: 'flex-end'}}>
-          <TinyText text={format(new Date(item.date), 'dd MMM yyyy hh:mm:ss a').toUpperCase()} color={Colors.textPrimary} textAlign="left" />
-          <CategoryLabel title={item.category.valueOf()} onClick={() => {
-            homeViewModel.updateCurrentCategoryFilter(currentCategoryFilter !== item.category ? item.category : undefined)
-          }} />
-        </View>
-      </View>
-    </RoundedBox>
-  );
+  const renderTransaction = ({ item }: { item: Transaction }) => {
+    const handleDelete = () => {
+      homeViewModel.deleteTransactions([item.id ?? -1]);
+    };
+  
+    const renderRightActions = () => (
+      <Pressable
+        onPress={handleDelete}
+        style={{
+          backgroundColor: Colors.red,
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+          paddingHorizontal: 20,
+          marginStart: -8,
+          borderTopRightRadius: 12,
+          borderBottomRightRadius: 12,
+        }}
+      >
+        <Ionicons name="trash" size={24} color={Colors.white} />
+      </Pressable>
+    );
+  
+    return (
+      <Swipeable renderRightActions={!isDeleteMode ? renderRightActions : undefined} friction={2}>
+        <Pressable
+          key={String(item.id)}
+          onPress={() => {
+            if (isDeleteMode) {
+              homeViewModel.updateSelectedTransaction(selectedTransactions, item.id ?? -1);
+              console.log('Selected transaction:', selectedTransactions);
+            }
+          }}
+          onLongPress={() => {
+            homeViewModel.updateSelectedTransaction(selectedTransactions, item.id ?? -1);
+            homeViewModel.updateIsDeleteMode(!isDeleteMode);
+            homeViewModel.clearSelectedTransactions();
+          }}
+          style={({ pressed }) => [pressed && baseStyles.pressed]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {isDeleteMode && (
+              <View>
+                <Ionicons
+                  name={selectedTransactions.includes(item.id ?? -1) ? "checkmark-circle" : "checkmark-circle-outline"}
+                  size={24}
+                  color={Colors.placeholder}
+                  style={{ paddingEnd: 8 }}
+                />
+              </View>
+            )}
+            <RoundedBox style={{ flex: 1, paddingVertical: 12 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
+                <Ionicons
+                  name={item.type === TransactionType.Income ? "arrow-down" : "arrow-up"}
+                  size={28}
+                  color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent}
+                />
+              </View>
+              <TinyText text={item.description} color={Colors.textPrimary} textAlign="left" />
+              <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <TinyText
+                  text={format(new Date(item.date), 'dd MMM yyyy hh:mm:ss a').toUpperCase()}
+                  color={Colors.textPrimary}
+                  textAlign="left"
+                />
+                <CategoryLabel
+                  title={item.category.valueOf()}
+                  onClick={() => {
+                    homeViewModel.updateCurrentCategoryFilter(
+                      currentCategoryFilter !== item.category ? item.category : undefined
+                    );
+                  }}
+                />
+              </View>
+            </RoundedBox>
+          </View>
+        </Pressable>
+      </Swipeable>
+    );
+  };  
 
   return (
     <View style={[baseStyles.baseBackground, { paddingTop: 18 + insets.top }]}>
@@ -151,7 +216,8 @@ export default function HomeScreen() {
 
       <FloatingActionButton
         onPress={handleFabPress}
-        icon={bottomSheetIndex === -1 ? 'add' : 'close'}
+        backgroundColor={isDeleteMode ? Colors.red : Colors.textSecondary}
+        icon={bottomSheetIndex === -1 && !isDeleteMode ? 'add' : isDeleteMode ? 'delete' : 'close'}
       />
     </View>
   );

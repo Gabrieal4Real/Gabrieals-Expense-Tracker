@@ -18,8 +18,8 @@ const tabs = [
     icon: { active: 'planet', inactive: 'planet-outline' },
   },
   {
-    name: 'settings',
-    title: 'Settings',
+    name: 'profile',
+    title: 'Profile',
     icon: { active: 'aperture', inactive: 'aperture-outline' },
   },
 ];

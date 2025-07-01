@@ -11,17 +11,17 @@ import { ChartPageData } from '@/app/data/ChartData';
 export function LegendPie({
   title,
   chart,
-  theme,
+  theme = 0,
   dualCharts = false
 }: {
   title: string;
   chart: { x: string; y: number }[];
-  theme: number;
+  theme?: number;
   dualCharts?: boolean;
 }) {
   const selectedTheme = theme === 0 ? VictoryTheme.clean : VictoryTheme.material;
   const colorScale = selectedTheme.pie?.colorScale ?? [];
-  const width = dualCharts ? SCREEN_WIDTH * 0.35 : SCREEN_WIDTH * 0.70;
+  const width = dualCharts ? SCREEN_WIDTH * 0.40 : SCREEN_WIDTH * 0.76;
   const itemsPerRow = dualCharts ? 1 : 2;
   const height = Math.ceil(chart.length / (itemsPerRow)) * 28;
   const totalY = chart.reduce((acc, { y }) => acc + y, 0);
@@ -46,7 +46,7 @@ export function LegendPie({
         width={width}
         height={height}
         itemsPerRow={itemsPerRow}
-        gutter={24}
+        gutter={32}
         style={{
           labels: {
             fill: Colors.white,
@@ -82,17 +82,16 @@ export function ChartPager({ chart, title }: { chart: ChartPageData[]; title?: s
             <SubtitleText text={item.title} color={Colors.textPrimary} textAlign="center" />
             <View style={{flexDirection: 'row', justifyContent: 'center'}}>
               {item.expense.length > 0 && (
-                <View style={{width: "49%"}}>
+                <View style={{width: "48%"}}>
                   <LegendPie
                     title={title ?? "Expense"}
                     chart={item.expense}
-                    theme={0}
                     dualCharts={checkIfExpenseAndIncomeExist}
                   />
                 </View>
               )}
               {item.income.length > 0 && (
-                <View style={{width: "49%"}}>
+                <View style={{width: "48%"}}>
                   <LegendPie
                     title={title ?? "Income"}
                     chart={item.income}

@@ -47,10 +47,10 @@ export const IconButton = ({
   </Pressable>
 );
 
-export const FloatingActionButton = ({ onPress, icon = 'add' }: { onPress: () => void, icon?: string }) => {
+export const FloatingActionButton = ({ onPress, icon = 'add', backgroundColor = Colors.textSecondary }: { onPress: () => void, icon?: string, backgroundColor?: string }) => {
   return (
-    <TouchableOpacity style={baseStyles.fab} onPress={onPress}>
-      <MaterialIcons name={icon as any} size={24} color="black" />
+    <TouchableOpacity style={[baseStyles.fab, { backgroundColor }]} onPress={onPress}>
+      <MaterialIcons name={icon as any} size={24} color={Colors.black} />
     </TouchableOpacity>
   );
 };

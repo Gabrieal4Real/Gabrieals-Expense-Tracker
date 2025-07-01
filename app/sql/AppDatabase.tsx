@@ -22,17 +22,24 @@ export async function getTransactionById(id: number): Promise<Transaction | null
   return result ?? null;
 }
 
+export async function deleteTransactionsByIds(ids: number[]): Promise<void> {
+  if (ids.length === 0) return;
+  const db = await getDB();
+  const placeholders = ids.map(() => '?').join(', ');
+  await db.runAsync(`DELETE FROM transactions WHERE id IN (${placeholders})`, ids);
+}
+
 export async function getProfile(): Promise<Profile | null> {
   const db = await getDB();
-  const result = await db.getFirstAsync<Profile>('SELECT remaining FROM profile WHERE id = 1');
+  const result = await db.getFirstAsync<Profile>('SELECT remaining, requireAuth FROM profile WHERE id = 1');
   return result ?? null;
 }
 
-export async function upsertProfile(remaining: number): Promise<void> {
+export async function upsertProfile(remaining: number, requireAuth: boolean): Promise<void> {
   const db = await getDB();
   await db.runAsync(
-    `INSERT INTO profile (id, remaining) VALUES (1, ?) 
-     ON CONFLICT(id) DO UPDATE SET remaining = excluded.remaining`,
-    [remaining]
+    `INSERT INTO profile (id, remaining, requireAuth) VALUES (1, ?, ?) 
+     ON CONFLICT(id) DO UPDATE SET remaining = ?, requireAuth = ?`,
+    [remaining, requireAuth ? 1 : 0, remaining, requireAuth ? 1 : 0]
   );
 }

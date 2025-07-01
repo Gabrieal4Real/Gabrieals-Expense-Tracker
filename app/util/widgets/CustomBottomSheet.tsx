@@ -49,3 +49,11 @@ export const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>
     </BottomSheet>
   );
 });
+
+export const openBottomSheet = (ref: React.RefObject<BottomSheet | null>) => {
+  ref.current?.expand();
+};
+
+export const closeBottomSheet = (ref: React.RefObject<BottomSheet | null>) => {
+  ref.current?.close();
+};

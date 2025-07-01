@@ -9,10 +9,30 @@ export function useHomeViewModel() {
 
   const updateState = useCallback((updater: (state: HomeUiState) => Partial<HomeUiState>) => {
     setUiState(prev => ({ ...prev, ...updater(prev) }));
+
   }, []);
 
   const updateLoading = useCallback((loading: boolean, error: string | null) => {
     updateState(() => ({ loading, error }));
+  }, [updateState]);
+
+  const updateSelectedTransaction = useCallback((selectedTransactions: number[], selectedTransaction: number) => {
+    const current = new Set(selectedTransactions);
+    if (current.has(selectedTransaction)) {
+      current.delete(selectedTransaction);
+    } else {
+      current.add(selectedTransaction);
+    }
+
+    updateState(() => ({ selectedTransactions: Array.from(current) }));
+  }, [updateState]);
+
+  const clearSelectedTransactions = useCallback(() => {
+    updateState(() => ({ selectedTransactions: [] }));
+  }, [updateState]);
+
+  const updateIsDeleteMode = useCallback((isDeleteMode: boolean) => {
+    updateState(() => ({ isDeleteMode }));
   }, [updateState]);
 
   const updateCurrentTypeFilter = useCallback((currentTypeFilter: string) => {
@@ -28,9 +48,9 @@ export function useHomeViewModel() {
     try {
       const profile = await HomeRepository.getProfile();
       if (!profile) {
-        await HomeRepository.updateProfile(0);
-        updateState(() => ({ profile: { remaining: 0 } }));
-        return { remaining: 0 };
+        await HomeRepository.updateProfile(0, true);
+        updateState(() => ({ profile: { remaining: 0, requireAuth: true } }));
+        return { remaining: 0, requireAuth: true };
       } else {
         updateState(() => ({ profile }));
         return profile;
@@ -46,7 +66,7 @@ export function useHomeViewModel() {
   const updateProfile = useCallback(async (profile: Profile) => {
     updateLoading(true, null);
     try {
-      await HomeRepository.updateProfile(profile.remaining);
+      await HomeRepository.updateProfile(profile.remaining, profile.requireAuth);
       updateState(() => ({ profile }));
     } catch {
       updateLoading(false, 'Failed to update profile');
@@ -81,7 +101,7 @@ export function useHomeViewModel() {
         const remaining = type === TransactionType.Expense
           ? profile.remaining - amount
           : profile.remaining + amount;
-        await updateProfile({ remaining });
+        await updateProfile({ remaining, requireAuth: profile.requireAuth });
         await getTransactions();
       }
     } catch {
@@ -90,6 +110,18 @@ export function useHomeViewModel() {
       updateLoading(false, null);
     }
   }, [getProfile, updateProfile, getTransactions, updateLoading]);
+
+  const deleteTransactions = useCallback(async (ids: number[]) => {
+    updateLoading(true, null);
+    try {
+      await HomeRepository.deleteTransactionsByIds(ids);
+      await getTransactions();
+    } catch {
+      updateLoading(false, 'Failed to delete transactions');
+    } finally {
+      updateLoading(false, null);
+    }
+  }, [getTransactions, updateLoading]);
 
   useEffect(() => {
     (async () => {
@@ -105,6 +137,10 @@ export function useHomeViewModel() {
     getProfile,
     updateProfile,
     updateCurrentTypeFilter,
-    updateCurrentCategoryFilter
+    updateCurrentCategoryFilter,
+    updateSelectedTransaction,
+    deleteTransactions,
+    updateIsDeleteMode,
+    clearSelectedTransactions
   };
 }

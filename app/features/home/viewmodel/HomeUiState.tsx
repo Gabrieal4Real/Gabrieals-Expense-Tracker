@@ -8,6 +8,8 @@ export interface HomeUiState {
   profile: Profile | null;
   currentTypeFilter: string;
   currentCategoryFilter?: string;
+  selectedTransactions: number[];
+  isDeleteMode: boolean;
 }
 
 export const initialHomeUiState: HomeUiState = {
@@ -17,4 +19,6 @@ export const initialHomeUiState: HomeUiState = {
   profile: null,
   currentTypeFilter: "All",
   currentCategoryFilter: undefined,
+  selectedTransactions: [],
+  isDeleteMode: false
 };
