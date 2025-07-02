@@ -26,3 +26,5 @@ captures
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # @end expo-cli
+ios/Appspensive.xcodeproj/project.pbxproj
+*.pbxproj

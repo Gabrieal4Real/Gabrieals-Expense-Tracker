@@ -1,9 +1,11 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Pressable, TouchableOpacity, ViewStyle } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { DescriptionText } from '@/app/util/widgets/CustomText';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
+import Animated from 'react-native-reanimated';
+import { AnimatedTouchableOpacity } from './CustomAnimations';
 
 interface CustomButtonProps {
   text: string;
@@ -47,10 +49,10 @@ export const IconButton = ({
   </Pressable>
 );
 
-export const FloatingActionButton = ({ onPress, icon = 'add', backgroundColor = Colors.textSecondary, iconColor = Colors.black }: { onPress: () => void, icon?: string, backgroundColor?: string, iconColor?: string }) => {
+export const FloatingActionButton = ({ onPress, icon = 'add', style }: { onPress: () => void, icon?: string, style?: ViewStyle }) => {
   return (
-    <TouchableOpacity style={[baseStyles.fab, { backgroundColor }]} onPress={onPress}>
-      <Ionicons name={icon as any} size={24} color={iconColor} />
-    </TouchableOpacity>
+    <AnimatedTouchableOpacity style={[baseStyles.fab, style]} onPress={onPress}>
+      <Ionicons name={icon as any} size={24} color={Colors.black} />
+    </AnimatedTouchableOpacity>
   );
 };

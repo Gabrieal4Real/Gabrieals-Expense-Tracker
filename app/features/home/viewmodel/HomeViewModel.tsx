@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { HomeUiState, initialHomeUiState } from './HomeUiState';
 import { HomeRepository } from '../repo/HomeRepository';
-import { TransactionType, ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
+import { TransactionType, ExpenseCategory, IncomeCategory, Transaction } from '@/app/data/TransactionItem';
 import { Profile } from '@/app/data/Profile';
 
 export function useHomeViewModel() {
@@ -111,17 +111,32 @@ export function useHomeViewModel() {
     }
   }, [getProfile, updateProfile, getTransactions, updateLoading]);
 
-  const deleteTransactions = useCallback(async (ids: number[]) => {
+  const deleteTransactions = useCallback(async (ids: number[], transactions: Transaction[]) => {
     updateLoading(true, null);
     try {
+      const profile = await getProfile();
+      if (profile) {
+        const remaining = ids.reduce((acc, id) => {
+          const transaction = transactions.find(t => t.id === id);
+          if (transaction) {
+            return acc + (transaction.type === TransactionType.Expense ? transaction.amount : -transaction.amount);
+          }
+          return acc;
+        }, profile.remaining);
+
+        await updateProfile({ remaining, requireAuth: profile.requireAuth });
+      }
+      
       await HomeRepository.deleteTransactionsByIds(ids);
       await getTransactions();
+      clearSelectedTransactions();
+      updateIsDeleteMode(false);
     } catch {
       updateLoading(false, 'Failed to delete transactions');
     } finally {
       updateLoading(false, null);
     }
-  }, [getTransactions, updateLoading]);
+  }, [getTransactions, updateLoading, clearSelectedTransactions, updateIsDeleteMode]);
 
   useEffect(() => {
     (async () => {

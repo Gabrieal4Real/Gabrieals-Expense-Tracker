@@ -7,6 +7,7 @@ import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
 import { SubtitleText, TinyText } from '@/app/util/widgets/CustomText';
 import { RoundedBox } from '@/app/util/widgets/CustomBox';
 import { ChartPageData } from '@/app/data/ChartData';
+import { combinedColorScale } from '@/app/data/ChartData';
 
 export function LegendPie({
   title,
@@ -19,8 +20,8 @@ export function LegendPie({
   theme?: number;
   dualCharts?: boolean;
 }) {
-  const selectedTheme = theme === 0 ? VictoryTheme.clean : VictoryTheme.material;
-  const colorScale = selectedTheme.pie?.colorScale ?? [];
+  const colorScale = combinedColorScale[theme ?? 0];
+
   const width = dualCharts ? SCREEN_WIDTH * 0.40 : SCREEN_WIDTH * 0.76;
   const itemsPerRow = dualCharts ? 1 : 2;
   const height = Math.ceil(chart.length / (itemsPerRow)) * 28;
@@ -34,9 +35,8 @@ export function LegendPie({
         height={150}
         padAngle={6}
         data={chart}
-        theme={selectedTheme}
-        cornerRadius={4}
-        startAngle={-6}
+        colorScale={colorScale}
+        cornerRadius={6}
         innerRadius={65}
         labels={[]}
       />

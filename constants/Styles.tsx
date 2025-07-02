@@ -1,4 +1,5 @@
 import { Colors } from '@/constants/Colors';
+import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
 import { StyleSheet } from 'react-native';
 
 const shadow = {
@@ -105,5 +106,14 @@ export const baseStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     ...shadow,
+  },
+
+  cancelDelete: {
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    bottom: 16,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
 });
