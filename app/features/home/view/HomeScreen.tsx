@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { View, FlatList, ActivityIndicator, Image, Pressable } from 'react-native';
+import { View, FlatList, ActivityIndicator, Image, Pressable, SectionList } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,6 +12,7 @@ import { Transaction, TransactionType, ExpenseCategory, IncomeCategory } from '@
 
 import {
   TitleText, BiggerText, TinyText, SubtitleText,
+  DescriptionText,
 } from '@/app/util/widgets/CustomText';
 import {
   FilterChipGroup, HorizontalDivider, RoundedBox, SpacerVertical, CategoryLabel,
@@ -43,6 +44,8 @@ export default function HomeScreen() {
   const filteredTransactions = uiState.transactions
     .filter(t => uiState.currentTypeFilter === "All" || t.type === uiState.currentTypeFilter)
     .filter(t => !uiState.currentCategoryFilter || t.category === uiState.currentCategoryFilter);
+
+  const groupedTransactions = homeViewModel.groupedTransactionsByDate(filteredTransactions);
 
   useEffect(() => {
     homeViewModel.getTransactions();
@@ -190,12 +193,17 @@ export default function HomeScreen() {
               onClick={() => homeViewModel.updateCurrentCategoryFilter(undefined)}
             />
           )}
-          <FlatList
-            data={[...filteredTransactions].reverse()}
+          <SectionList
+            renderSectionHeader={({ section: { date } }) => (
+              <View>
+                <DescriptionText text={date} textAlign="left" style={{ marginVertical: 8 }}/>
+              </View>
+            )}
+            sections={groupedTransactions}
             renderItem={renderTransaction}
             keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
             ItemSeparatorComponent={() => <SpacerVertical size={8} />}
-            contentContainerStyle={{ paddingBottom: 80, paddingTop: 12 }}
+            contentContainerStyle={{ paddingBottom: 80}}
             showsVerticalScrollIndicator={false}
           />
         </View>

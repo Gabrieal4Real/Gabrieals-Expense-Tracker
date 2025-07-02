@@ -1,8 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { HomeUiState, initialHomeUiState } from './HomeUiState';
 import { HomeRepository } from '../repo/HomeRepository';
 import { TransactionType, ExpenseCategory, IncomeCategory, Transaction } from '@/app/data/TransactionItem';
 import { Profile } from '@/app/data/Profile';
+import { GroupedTransactionSection } from '@/app/data/GroupedTransactionItem';
 
 export function useHomeViewModel() {
   const [uiState, setUiState] = useState<HomeUiState>(initialHomeUiState);
@@ -133,6 +134,21 @@ export function useHomeViewModel() {
     }
   }, [getProfile, updateProfile, getTransactions, clearSelectedTransactions, updateIsDeleteMode, updateLoading]);
 
+  const groupedTransactionsByDate = (transactions: Transaction[]) => {
+    const groups: Record<string, Transaction[]> = {};
+    transactions.forEach(tx => {
+      const date = new Date(tx.date).toDateString();
+      if (!groups[date]) groups[date] = [];
+      groups[date].push(tx);
+    });
+
+    Object.values(groups).forEach(transaction => transaction.reverse());
+
+    return Object.entries(groups)
+      .sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
+      .map(([date, data]) => ({ date, data }));
+  };
+
   useEffect(() => {
     (async () => {
       await getProfile();
@@ -151,6 +167,7 @@ export function useHomeViewModel() {
     updateSelectedTransaction,
     deleteTransactions,
     updateIsDeleteMode,
-    clearSelectedTransactions
+    clearSelectedTransactions,
+    groupedTransactionsByDate
   };
 }

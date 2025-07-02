@@ -51,8 +51,8 @@ export const CustomBlurView = ({children, isShowBlur}: {children: ReactNode, isS
   );
 }
 
-export const HorizontalDivider = () => {
-  return <View style={{ height: 1.5, backgroundColor: Colors.borderStroke }} />;
+export const HorizontalDivider = ({ style }: { style?: ViewStyle }) => {
+  return <View style={{ height: 1.5, backgroundColor: Colors.borderStroke, ...style }} />;
 }
 
 export const VerticalDivider = () => {
