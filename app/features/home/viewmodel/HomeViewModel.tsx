@@ -9,7 +9,6 @@ export function useHomeViewModel() {
 
   const updateState = useCallback((updater: (state: HomeUiState) => Partial<HomeUiState>) => {
     setUiState(prev => ({ ...prev, ...updater(prev) }));
-
   }, []);
 
   const updateLoading = useCallback((loading: boolean, error: string | null) => {
@@ -18,12 +17,7 @@ export function useHomeViewModel() {
 
   const updateSelectedTransaction = useCallback((selectedTransactions: number[], selectedTransaction: number) => {
     const current = new Set(selectedTransactions);
-    if (current.has(selectedTransaction)) {
-      current.delete(selectedTransaction);
-    } else {
-      current.add(selectedTransaction);
-    }
-
+    current.has(selectedTransaction) ? current.delete(selectedTransaction) : current.add(selectedTransaction);
     updateState(() => ({ selectedTransactions: Array.from(current) }));
   }, [updateState]);
 
@@ -42,15 +36,16 @@ export function useHomeViewModel() {
   const updateCurrentCategoryFilter = useCallback((currentCategoryFilter?: string) => {
     updateState(() => ({ currentCategoryFilter }));
   }, [updateState]);
-  
+
   const getProfile = useCallback(async () => {
     updateLoading(true, null);
     try {
       const profile = await HomeRepository.getProfile();
       if (!profile) {
         await HomeRepository.updateProfile(0, true);
-        updateState(() => ({ profile: { remaining: 0, requireAuth: true } }));
-        return { remaining: 0, requireAuth: true };
+        const defaultProfile = { remaining: 0, requireAuth: true };
+        updateState(() => ({ profile: defaultProfile }));
+        return defaultProfile;
       } else {
         updateState(() => ({ profile }));
         return profile;
@@ -96,11 +91,13 @@ export function useHomeViewModel() {
     updateLoading(true, null);
     try {
       await HomeRepository.createTransaction(type, amount, category, description);
+
       const profile = await getProfile();
       if (profile) {
         const remaining = type === TransactionType.Expense
           ? profile.remaining - amount
           : profile.remaining + amount;
+
         await updateProfile({ remaining, requireAuth: profile.requireAuth });
         await getTransactions();
       }
@@ -118,15 +115,13 @@ export function useHomeViewModel() {
       if (profile) {
         const remaining = ids.reduce((acc, id) => {
           const transaction = transactions.find(t => t.id === id);
-          if (transaction) {
-            return acc + (transaction.type === TransactionType.Expense ? transaction.amount : -transaction.amount);
-          }
-          return acc;
+          if (!transaction) return acc;
+          return acc + (transaction.type === TransactionType.Expense ? transaction.amount : -transaction.amount);
         }, profile.remaining);
 
         await updateProfile({ remaining, requireAuth: profile.requireAuth });
       }
-      
+
       await HomeRepository.deleteTransactionsByIds(ids);
       await getTransactions();
       clearSelectedTransactions();
@@ -136,7 +131,7 @@ export function useHomeViewModel() {
     } finally {
       updateLoading(false, null);
     }
-  }, [getTransactions, updateLoading, clearSelectedTransactions, updateIsDeleteMode]);
+  }, [getProfile, updateProfile, getTransactions, clearSelectedTransactions, updateIsDeleteMode, updateLoading]);
 
   useEffect(() => {
     (async () => {
