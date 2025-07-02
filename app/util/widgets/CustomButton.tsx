@@ -33,7 +33,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 );
 
 export const IconButton = ({
-  icon = 'fingerprint',
+  icon = 'finger-print',
   onPress = () => console.log('Icon pressed'),
   size = 32,
   color = Colors.textPrimary,
@@ -43,14 +43,14 @@ export const IconButton = ({
     onPress={onPress}
     style={({ pressed }) => [baseStyles.iconButton, pressed && baseStyles.pressed, style]}
   >
-    <MaterialIcons name={icon as any} size={size} color={color} />
+    <Ionicons name={icon as any} size={size} color={color} />
   </Pressable>
 );
 
-export const FloatingActionButton = ({ onPress, icon = 'add', backgroundColor = Colors.textSecondary }: { onPress: () => void, icon?: string, backgroundColor?: string }) => {
+export const FloatingActionButton = ({ onPress, icon = 'add', backgroundColor = Colors.textSecondary, iconColor = Colors.black }: { onPress: () => void, icon?: string, backgroundColor?: string, iconColor?: string }) => {
   return (
     <TouchableOpacity style={[baseStyles.fab, { backgroundColor }]} onPress={onPress}>
-      <MaterialIcons name={icon as any} size={24} color={Colors.black} />
+      <Ionicons name={icon as any} size={24} color={iconColor} />
     </TouchableOpacity>
   );
 };

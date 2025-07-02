@@ -76,9 +76,7 @@ export default function HomeScreen() {
           justifyContent: 'center',
           alignItems: 'flex-end',
           paddingHorizontal: 20,
-          marginStart: -8,
-          borderTopRightRadius: 12,
-          borderBottomRightRadius: 12,
+          marginStart: -10,
         }}
       >
         <Ionicons name="trash" size={24} color={Colors.white} />
@@ -86,7 +84,10 @@ export default function HomeScreen() {
     );
   
     return (
-      <Swipeable renderRightActions={!isDeleteMode ? renderRightActions : undefined} friction={2}>
+      <Swipeable 
+      renderRightActions={!isDeleteMode ? renderRightActions : undefined} 
+      friction={2} 
+      containerStyle={{ backgroundColor: Colors.textSecondary, borderRadius: 12 }}>
         <Pressable
           key={String(item.id)}
           onPress={() => {
@@ -107,8 +108,8 @@ export default function HomeScreen() {
                 <Ionicons
                   name={selectedTransactions.includes(item.id ?? -1) ? "checkmark-circle" : "checkmark-circle-outline"}
                   size={24}
-                  color={Colors.placeholder}
-                  style={{ paddingEnd: 8 }}
+                  color={Colors.black}
+                  style={{ padding: 8 }}
                 />
               </View>
             )}
@@ -159,7 +160,7 @@ export default function HomeScreen() {
           <TinyText text={"Remaining".toUpperCase()} color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
         </View>
 
-        {!isAuthenticated && <IconButton icon="fingerprint" size={32} color={Colors.textPrimary} onPress={() => { authenticate(() => { setIsAuthenticated(true) }) }} />}
+        {!isAuthenticated && <IconButton onPress={() => { authenticate(() => { setIsAuthenticated(true) }) }} />}
       </RoundedBox>
 
       <TitleText text="Expenses" color={Colors.textPrimary} textAlign="left" style={{ marginVertical: 8 }} />
@@ -217,7 +218,8 @@ export default function HomeScreen() {
       <FloatingActionButton
         onPress={handleFabPress}
         backgroundColor={isDeleteMode ? Colors.red : Colors.textSecondary}
-        icon={bottomSheetIndex === -1 && !isDeleteMode ? 'add' : isDeleteMode ? 'delete' : 'close'}
+        iconColor={isDeleteMode ? Colors.white : Colors.black}
+        icon={bottomSheetIndex === -1 && !isDeleteMode ? 'add' : isDeleteMode ? 'trash' : 'close'}
       />
     </View>
   );

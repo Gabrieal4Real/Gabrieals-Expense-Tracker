@@ -22,7 +22,6 @@ export const baseStyles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 12,
-    ...shadow,
   },
 
   input: {

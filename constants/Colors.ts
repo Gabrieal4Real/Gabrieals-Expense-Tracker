@@ -15,7 +15,7 @@ export const Colors = {
   // Comxmon
   black: 'rgba(0, 0, 0, 1)',
   white: 'rgba(255, 255, 255, 1)',
-  red: 'rgb(178, 34, 34))',
+  red: 'rgba(178, 34, 34, 1)',
   green: 'rgba(10, 152, 105, 1)',
   lightMaroon: 'rgba(171, 69, 103, 0.5)',
 
