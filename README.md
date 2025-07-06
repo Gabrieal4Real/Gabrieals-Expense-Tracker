@@ -1,50 +1,94 @@
-# Welcome to your Expo app 👋
+# Expense Tracker App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern multiplatform expense tracking application built with React Native and Expo. This app helps users track and manage their expenses efficiently with intuitive visualizations and comprehensive reporting.
 
-## Get started
+**Note: This is an ongoing project under active development.**
 
-1. Install dependencies
+## Screenshot
+[ON GOING]
 
+## Features
+
+- **Expense Tracking**: Log and categorize your daily expenses
+- **Visual Analytics**: View your spending patterns through interactive charts and graphs
+- **Budget Management**: Set and monitor spending limits for different categories
+- **Multi-platform Support**: Works seamlessly on iOS, and Android
+- **Biometric Authentication**: Secure your financial data with fingerprint/face recognition
+
+## Tech Stack
+
+- **Frontend**: React Native, Expo Router
+- **State Management**: React Context API
+- **UI Components**: React Native Paper, Victory Native (for charts)
+- **Authentication**: Expo SecureStore, Expo LocalAuthentication
+- **Navigation**: Expo Router v5.1.0
+- **Styling**: Styled Components, React Native StyleSheet
+
+## Architecture
+
+The app follows a feature-based architecture with the following structure:
+
+- **features/**: Contains feature-specific components and logic
+  - **/home**: Home screen components and related files
+  - **/transactions**: Transaction management components
+  - **/analytics**: Data visualization and reporting components
+  - **/settings**: User preferences and app configuration
+- **util/**: Shared utilities, widgets, and helper functions
+- **assets/**: Images, fonts, and other static resources
+- **services/**: API integrations and data services
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm or yarn
+- Expo CLI
+
+### Installation
+
+1. Clone the repository
    ```bash
-   npm install
+   git clone https://github.com/yourusername/expense-tracker.git
+   cd expense-tracker
    ```
 
-2. Start the app
+2. Install dependencies
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
+3. Start the development server
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+4. Run on your preferred platform
+   - Press `a` for Android
+   - Press `i` for iOS
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Platform Support
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- iOS 13.0+
+- Android API level 21+
+- Web (modern browsers)
 
-## Get a fresh project
+## Project Structure
 
-When you're ready, run:
-
-```bash
-npm run reset-project
 ```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+expense-tracker/
+├── app/                    # Main application code
+│   ├── (features)/         # Feature-based components
+│   │   ├── (tabs)/         # Tab navigation components
+│   │   │   ├── home/       # Home screen components
+│   │   │   ├── analytics/  # Analytics screen components
+│   │   │   └── settings/   # Settings screen components
+│   ├── util/               # Utility functions and shared components
+│   │   ├── widgets/        # Reusable UI components
+│   │   └── helpers/        # Helper functions
+├── assets/                 # Static assets
+├── app.json                # Expo configuration
+└── package.json            # Dependencies and scripts
+```
