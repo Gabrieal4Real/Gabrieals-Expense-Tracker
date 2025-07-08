@@ -16,9 +16,17 @@ export function useHomeViewModel() {
     updateState(() => ({ loading, error }));
   }, [updateState]);
 
-  const updateSelectedTransaction = useCallback((selectedTransactions: number[], selectedTransaction: number) => {
-    const current = new Set(selectedTransactions);
+  const updateSelectedTransaction = useCallback((currentTransactions: number[], selectedTransaction: number) => {
+    const current = new Set(currentTransactions);
     current.has(selectedTransaction) ? current.delete(selectedTransaction) : current.add(selectedTransaction);
+    updateState(() => ({ selectedTransactions: Array.from(current) }));
+  }, [updateState]);
+
+  const updateSelectedTransactions = useCallback((currentTransactions: number[], selectedTransactions: number[], isDelete: boolean) => {
+    const current = new Set(currentTransactions);
+    selectedTransactions.forEach(transaction => {
+      isDelete ? current.delete(transaction) : current.add(transaction);
+    });
     updateState(() => ({ selectedTransactions: Array.from(current) }));
   }, [updateState]);
 
@@ -165,6 +173,7 @@ export function useHomeViewModel() {
     updateCurrentTypeFilter,
     updateCurrentCategoryFilter,
     updateSelectedTransaction,
+    updateSelectedTransactions,
     deleteTransactions,
     updateIsDeleteMode,
     clearSelectedTransactions,

@@ -23,6 +23,13 @@ export const baseStyles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 12,
+    overflow: 'hidden',
+  },
+  
+  iconButton: {
+    position: 'absolute',
+    right: 16,
+    top: '50%',
   },
 
   input: {
@@ -87,12 +94,6 @@ export const baseStyles = StyleSheet.create({
 
   pressed: {
     opacity: 0.7,
-  },
-
-  iconButton: {
-    position: 'absolute',
-    right: 16,
-    top: '50%',
   },
 
   fab: {

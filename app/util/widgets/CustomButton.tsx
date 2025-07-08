@@ -43,7 +43,7 @@ export const IconButton = ({
 }: { icon?: string, onPress?: () => void, size?: number, color?: string, style?: ViewStyle }) => (
   <Pressable
     onPress={onPress}
-    style={({ pressed }) => [baseStyles.iconButton, pressed && baseStyles.pressed, style]}
+    style={({ pressed }) => [pressed && baseStyles.pressed, style]}
   >
     <Ionicons name={icon as any} size={size} color={color} />
   </Pressable>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Image, Pressable, SectionList, View } from 'react-native';
+import { ActivityIndicator, AppState, AppStateStatus, Image, Pressable, SectionList, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -30,9 +30,9 @@ export default function HomeScreen() {
   const { uiState, ...homeViewModel } = useHomeViewModel();
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
-  const fabAnim = useExpandUpShrinkDown(!uiState.isDeleteMode);
-  const checkmarkAnim = useFadeInOut(uiState.isDeleteMode);
-  const cancelDeleteAnim = useExpandUpShrinkDown(uiState.isDeleteMode);
+  const fabAnim = useExpandUpShrinkDown(!uiState.isDeleteMode && isAuthenticated);
+  const checkmarkAnim = useFadeInOut(uiState.isDeleteMode && isAuthenticated);
+  const cancelDeleteAnim = useExpandUpShrinkDown(uiState.isDeleteMode && isAuthenticated);
 
   const filteredTransactions = uiState.transactions
     .filter(t => uiState.currentTypeFilter === "All" || t.type === uiState.currentTypeFilter)
@@ -46,12 +46,7 @@ export default function HomeScreen() {
   }, []);
 
   const handleFabPress = () => {
-    if (!isAuthenticated) {
-      authenticate(() => {
-        setIsAuthenticated(true);
-        openBottomSheet(bottomSheetRef);
-      });
-    } else if (uiState.isDeleteMode) {
+    if (uiState.isDeleteMode) {
       homeViewModel.deleteTransactions(uiState.selectedTransactions, uiState.transactions);
       homeViewModel.updateIsDeleteMode(false);
       homeViewModel.clearSelectedTransactions();
@@ -108,8 +103,8 @@ export default function HomeScreen() {
         <Pressable onPress={handlePress} onLongPress={handleLongPress} style={({ pressed }) => [pressed && baseStyles.pressed]}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <AnimatedIonicons
-              name={isSelected ? "checkmark-circle" : "checkmark-circle-outline"}
-              size={24}
+              name={isSelected ? "checkbox" : "checkbox-outline"}
+              size={20}
               color={Colors.white}
               style={[checkmarkAnim.animatedStyle, { marginLeft: uiState.isDeleteMode ? 12 : 0}]}
             />
@@ -159,7 +154,7 @@ export default function HomeScreen() {
           />
           <TinyText text="REMAINING" color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
         </View>
-        {!isAuthenticated && <IconButton onPress={() => authenticate(() => setIsAuthenticated(true))} />}
+        {!isAuthenticated && <IconButton onPress={() => authenticate(() => setIsAuthenticated(true))} style={baseStyles.iconButton} />}
       </RoundedBox>
 
       <TitleText text="Expenses" color={Colors.textPrimary} textAlign="left" style={{ marginVertical: 8 }} />
@@ -194,29 +189,45 @@ export default function HomeScreen() {
               />
             </View>
           )}
+          <SpacerVertical size={4} />
           <SectionList
             sections={groupedTransactions}
             contentContainerStyle={{ paddingBottom: 80 }}
             renderItem={({ item, section, index }) => {
               const isFirst = index === 0;
               const isLast = index === section.data.length - 1;
+              const listOfSectionIds = section.data.map(t => t.id ?? -1);
+              const isSectionSelected = uiState.selectedTransactions.some(id => listOfSectionIds.includes(id));
+
               return (
-                <View style={{
-                  backgroundColor: Colors.navigationBar,
+                <RoundedBox style={{
+                  paddingVertical: 0,
+                  paddingHorizontal: 0,
                   borderTopLeftRadius: isFirst ? 12 : 0,
                   borderTopRightRadius: isFirst ? 12 : 0,
                   borderBottomLeftRadius: isLast ? 12 : 0,
                   borderBottomRightRadius: isLast ? 12 : 0,
-                  overflow: 'hidden',
+                  marginBottom:isLast ? 12 : 0,
                 }}>
                   {isFirst && (
                     <View>
-                      <DescriptionText text={section.date} textAlign="left" style={{ margin: 12 }}/>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 12}}>
+                        <DescriptionText text={section.date} textAlign="left"/>
+                        {uiState.isDeleteMode && (
+                          IconButton({
+                            icon: isSectionSelected ? "checkbox" : "checkbox-outline",
+                            onPress: () => homeViewModel.updateSelectedTransactions(uiState.selectedTransactions, listOfSectionIds, isSectionSelected),
+                            size: 20,
+                            color: Colors.textPrimary,
+                            style: {  },
+                          })
+                        )}
+                      </View>
                       <HorizontalDivider />
                     </View>
                   )}
                   {renderTransaction({ item })}
-                </View>
+                </RoundedBox>
               );
             }}
             keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}

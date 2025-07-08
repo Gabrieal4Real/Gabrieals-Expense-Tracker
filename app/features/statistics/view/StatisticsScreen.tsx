@@ -49,7 +49,6 @@ export default function StatisticsScreen() {
         <CustomBlurView isShowBlur={!shouldShowCharts}>
           <ChartPager chart={charts} />
         </CustomBlurView>
-        <SpacerVertical size={16} />
         <CustomBlurView isShowBlur={!shouldShowCharts}>
           <ChartPager chart={summaryCharts} title="" />
         </CustomBlurView>
