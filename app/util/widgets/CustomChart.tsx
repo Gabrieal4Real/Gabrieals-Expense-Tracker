@@ -5,7 +5,7 @@ import { VictoryPie, VictoryLegend, VictoryTheme } from 'victory-native';
 import { Colors } from '@/constants/Colors';
 import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
 import { SubtitleText, TinyText } from '@/app/util/widgets/CustomText';
-import { RoundedBox } from '@/app/util/widgets/CustomBox';
+import { RoundedBox, SpacerVertical } from '@/app/util/widgets/CustomBox';
 import { ChartPageData } from '@/app/data/ChartData';
 import { combinedColorScale } from '@/app/data/ChartData';
 
@@ -67,7 +67,7 @@ export function ChartPager({ chart, title }: { chart: ChartPageData[]; title?: s
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <RoundedBox style={{ marginBottom: 16, paddingHorizontal: 0, alignItems: 'center' }}>
+    <RoundedBox style={{ paddingHorizontal: 0, alignItems: 'center' }}>
       <FlatList
         data={chart}
         keyExtractor={(_, index) => index.toString()}

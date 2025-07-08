@@ -196,6 +196,7 @@ export default function HomeScreen() {
           )}
           <SectionList
             sections={groupedTransactions}
+            contentContainerStyle={{ paddingBottom: 80 }}
             renderItem={({ item, section, index }) => {
               const isFirst = index === 0;
               const isLast = index === section.data.length - 1;

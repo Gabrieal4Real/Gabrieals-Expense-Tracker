@@ -45,11 +45,11 @@ export default function StatisticsScreen() {
       <TitleText text="Statistics" color={Colors.textPrimary} textAlign="center" />
       <SpacerVertical size={16} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
         <CustomBlurView isShowBlur={!shouldShowCharts}>
           <ChartPager chart={charts} />
         </CustomBlurView>
-
+        <SpacerVertical size={16} />
         <CustomBlurView isShowBlur={!shouldShowCharts}>
           <ChartPager chart={summaryCharts} title="" />
         </CustomBlurView>
