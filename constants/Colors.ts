@@ -18,6 +18,7 @@ export const Colors = {
   red: 'rgba(178, 34, 34, 1)',
   green: 'rgba(10, 152, 105, 1)',
   lightMaroon: 'rgba(171, 69, 103, 0.5)',
+  transparent: 'rgba(0, 0, 0, 0)',
 
   // Accents
   greenAccent: 'rgba(51, 214, 159, 1)',

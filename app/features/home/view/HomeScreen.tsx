@@ -1,33 +1,26 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
-import { View, FlatList, ActivityIndicator, Image, Pressable, SectionList } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Image, Pressable, SectionList, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { format } from 'date-fns';
 import BottomSheet from '@gorhom/bottom-sheet';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { format } from 'date-fns';
-import { Ionicons } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
 
-import { useHomeViewModel } from '../viewmodel/HomeViewModel';
-import { useAuth, authenticate } from '@/app/util/systemFunctions/AuthenticationUtil';
-import { Transaction, TransactionType, ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
-
-import {
-  TitleText, BiggerText, TinyText, SubtitleText,
-  DescriptionText,
-} from '@/app/util/widgets/CustomText';
-import {
-  FilterChipGroup, HorizontalDivider, RoundedBox, SpacerVertical, CategoryLabel,
-} from '@/app/util/widgets/CustomBox';
-import {
-  IconButton, FloatingActionButton,
-} from '@/app/util/widgets/CustomButton';
-import {
-  CustomBottomSheet, openBottomSheet, closeBottomSheet,
-} from '@/app/util/widgets/CustomBottomSheet';
-import TransactionBottomSheet from '../../transactionBottomSheet/view/TransactionBottomSheet';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
+
+import { Transaction, TransactionType, ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
+import { useAuth, authenticate } from '@/app/util/systemFunctions/AuthenticationUtil';
+import { useHomeViewModel } from '../viewmodel/HomeViewModel';
+
 import { AnimatedIonicons, useExpandUpShrinkDown, useFadeInOut } from '@/app/util/widgets/CustomAnimations';
-import Animated from 'react-native-reanimated';
+import { CustomBottomSheet, closeBottomSheet, openBottomSheet } from '@/app/util/widgets/CustomBottomSheet';
+import { IconButton, FloatingActionButton } from '@/app/util/widgets/CustomButton';
+import { FilterChipGroup, HorizontalDivider, RoundedBox, SpacerVertical, CategoryLabel } from '@/app/util/widgets/CustomBox';
+import { TitleText, BiggerText, TinyText, SubtitleText, DescriptionText } from '@/app/util/widgets/CustomText';
+
+import TransactionBottomSheet from '../../transactionBottomSheet/view/TransactionBottomSheet';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -75,7 +68,15 @@ export default function HomeScreen() {
   );
 
   const renderTransaction = ({ item }: { item: Transaction }) => {
+    const swipeableRef = useRef<any>(null);
     const isSelected = uiState.selectedTransactions.includes(item.id ?? -1);
+
+    useEffect(() => {
+      if (uiState.isDeleteMode) {
+        swipeableRef.current?.close();
+      }
+    }, [uiState.isDeleteMode]);
+
 
     const handlePress = () => {
       if (uiState.isDeleteMode) {
@@ -93,28 +94,26 @@ export default function HomeScreen() {
 
     return (
       <Swipeable
+        ref={swipeableRef}
         renderRightActions={!uiState.isDeleteMode ? () => (
           <Pressable onPress={() => homeViewModel.deleteTransactions([item.id ?? -1], uiState.transactions)} style={{
             backgroundColor: Colors.red,
             justifyContent: 'center',
             alignItems: 'flex-end',
-            paddingHorizontal: 20,
-            marginStart: -10}}>
+            paddingHorizontal: 20}}>
             <Ionicons name="trash" size={24} color={Colors.white} />
           </Pressable>
         ) : undefined}
-        friction={2}
-        containerStyle={{ borderRadius: 12 }}
-      >
+        friction={2}>
         <Pressable onPress={handlePress} onLongPress={handleLongPress} style={({ pressed }) => [pressed && baseStyles.pressed]}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <AnimatedIonicons
               name={isSelected ? "checkmark-circle" : "checkmark-circle-outline"}
               size={24}
               color={Colors.white}
-              style={checkmarkAnim.animatedStyle}
+              style={[checkmarkAnim.animatedStyle, { marginLeft: uiState.isDeleteMode ? 12 : 0}]}
             />
-            <RoundedBox style={{ marginStart: uiState.isDeleteMode ? 8 : 0, flex: 1, paddingVertical: 12 }}>
+            <RoundedBox style={{ flex: 1, paddingVertical: 12, borderRadius: 0}}>
               <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
                 <Ionicons
@@ -188,22 +187,39 @@ export default function HomeScreen() {
             onSelectedChange={homeViewModel.updateCurrentTypeFilter}
           />
           {uiState.currentCategoryFilter && (
-            <CategoryLabel
-              title={uiState.currentCategoryFilter.valueOf()}
-              onClick={() => homeViewModel.updateCurrentCategoryFilter(undefined)}
-            />
+            <View style={{ marginBottom: 8, flexDirection: 'row'}}>
+              <CategoryLabel
+                title={uiState.currentCategoryFilter.valueOf()}
+                onClick={() => homeViewModel.updateCurrentCategoryFilter(undefined)}
+              />
+            </View>
           )}
           <SectionList
-            renderSectionHeader={({ section: { date } }) => (
-              <View>
-                <DescriptionText text={date} textAlign="left" style={{ marginVertical: 8 }}/>
-              </View>
-            )}
             sections={groupedTransactions}
-            renderItem={renderTransaction}
+            renderItem={({ item, section, index }) => {
+              const isFirst = index === 0;
+              const isLast = index === section.data.length - 1;
+              return (
+                <View style={{
+                  backgroundColor: Colors.navigationBar,
+                  borderTopLeftRadius: isFirst ? 12 : 0,
+                  borderTopRightRadius: isFirst ? 12 : 0,
+                  borderBottomLeftRadius: isLast ? 12 : 0,
+                  borderBottomRightRadius: isLast ? 12 : 0,
+                  overflow: 'hidden',
+                }}>
+                  {isFirst && (
+                    <View>
+                      <DescriptionText text={section.date} textAlign="left" style={{ margin: 12 }}/>
+                      <HorizontalDivider />
+                    </View>
+                  )}
+                  {renderTransaction({ item })}
+                </View>
+              );
+            }}
             keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
-            ItemSeparatorComponent={() => <SpacerVertical size={8} />}
-            contentContainerStyle={{ paddingBottom: 80}}
+            ItemSeparatorComponent={() => <HorizontalDivider style={{backgroundColor: Colors.placeholder}}/>}
             showsVerticalScrollIndicator={false}
           />
         </View>
