@@ -30,7 +30,7 @@ export default function HomeScreen() {
   const { uiState, ...homeViewModel } = useHomeViewModel();
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
-  const fabAnim = useExpandUpShrinkDown(!uiState.isDeleteMode && isAuthenticated);
+  const fabAnim = useExpandUpShrinkDown(!isAuthenticated || (!uiState.isDeleteMode && isAuthenticated));
   const checkmarkAnim = useFadeInOut(uiState.isDeleteMode && isAuthenticated);
   const cancelDeleteAnim = useExpandUpShrinkDown(uiState.isDeleteMode && isAuthenticated);
 
@@ -46,7 +46,11 @@ export default function HomeScreen() {
   }, []);
 
   const handleFabPress = () => {
-    if (uiState.isDeleteMode) {
+    if (!isAuthenticated) {
+      authenticate(() => {
+        setIsAuthenticated(true);
+      });
+    } else if (uiState.isDeleteMode) {
       homeViewModel.deleteTransactions(uiState.selectedTransactions, uiState.transactions);
       homeViewModel.updateIsDeleteMode(false);
       homeViewModel.clearSelectedTransactions();
@@ -243,7 +247,7 @@ export default function HomeScreen() {
 
       <FloatingActionButton
         onPress={handleFabPress}
-        icon={bottomSheetIndex === -1 ? 'add' : 'close'}
+        icon={isAuthenticated ? (bottomSheetIndex === -1 ? 'add' : 'close') : 'finger-print'}
         style={fabAnim.animatedStyle}
       />
 
