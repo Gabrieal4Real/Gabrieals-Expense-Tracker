@@ -12,5 +12,5 @@ export enum TransactionTypeFilter {
 export enum TransactionFilter {
     Date = 'Date',
     Category = 'Category',
-    Type = 'Type'
+    Type = 'Expense Type'
 }

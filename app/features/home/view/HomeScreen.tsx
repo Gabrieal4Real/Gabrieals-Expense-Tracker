@@ -24,6 +24,7 @@ import { FilterChipGroup, HorizontalDivider, RoundedBox, SpacerVertical, Categor
 import { TitleText, BiggerText, TinyText, SubtitleText, DescriptionText } from '@/app/util/widgets/CustomText';
 
 import TransactionBottomSheet from '../../transactionBottomSheet/view/TransactionBottomSheet';
+import CustomPicker from '@/app/util/widgets/CustomPicker';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -39,29 +40,35 @@ export default function HomeScreen() {
     homeViewModel.getProfile();
   }, []);
 
-  const handleFilterPress = (filter: TransactionFilter) => {
-    setCurrentFilter(prev =>
-      prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]
-    );
+  const handleFilterPress = (filter: TransactionFilter[]) => {
+    setCurrentFilter(filter);
   };
 
-  const filterSortLogic = () => {
+  const filterDateLogic = () => {
     return (a: Transaction, b: Transaction) => {
-      let result = 0;
-  
-      if (currentFilter.includes(TransactionFilter.Date)) {
-        result = new Date(a.date).getTime() - new Date(b.date).getTime();
+      if (currentFilter.includes(TransactionFilter.Date) || currentFilter.length == 0) {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
       }
 
-      if (currentFilter.includes(TransactionFilter.Category)) {
-        result = a.category.localeCompare(b.category);
-      }
+      return 0;
+    };
+  };
 
+  const filterTypeLogic = () => {
+    return (a: Transaction, b: Transaction) => {
       if (currentFilter.includes(TransactionFilter.Type)) {
-        result = a.type.localeCompare(b.type);
+        return a.type.localeCompare(b.type);
       }
+      return 0;
+    };
+  };
 
-      return result;
+  const filterCategoryLogic = () => {
+    return (a: Transaction, b: Transaction) => {
+      if (currentFilter.includes(TransactionFilter.Category)) {
+        return a.category.localeCompare(b.category);
+      }
+      return 0;
     };
   };
 
@@ -72,7 +79,9 @@ export default function HomeScreen() {
   const filteredTransactions = uiState.transactions
     .filter(t => uiState.currentTypeFilter === TransactionTypeFilter.All || t.type === uiState.currentTypeFilter.valueOf())
     .filter(t => !uiState.currentCategoryFilter || t.category === uiState.currentCategoryFilter)
-    .sort(filterSortLogic());
+    .sort(filterDateLogic())
+    .sort(filterCategoryLogic())
+    .sort(filterTypeLogic());
 
   const groupedTransactions = homeViewModel.groupedTransactionsByDate(filteredTransactions);
 
@@ -214,9 +223,14 @@ export default function HomeScreen() {
               selected={uiState.currentTypeFilter}
               onSelectedChange={homeViewModel.updateCurrentTypeFilter}
             />
-            <Pressable style={({ pressed }) => [pressed && baseStyles.pressed]} onPress={() => handleFilterPress(TransactionFilter.Type)}>
-              <Ionicons name="filter" size={24} color={Colors.textPrimary} />
-            </Pressable>
+            <View style={{ flex: 1}}>
+              <CustomPicker
+              options={Object.values(TransactionFilter).map(type => ({ label: type.valueOf(), value: type.valueOf() }))}
+              autoSelected={[TransactionFilter.Date]}
+              onChangeSelection={(values) => {
+                handleFilterPress(values as TransactionFilter[]);
+              }}/>
+            </View>
           </View>
           {uiState.currentCategoryFilter && (
             <View style={{ marginBottom: 8, flexDirection: 'row'}}>
