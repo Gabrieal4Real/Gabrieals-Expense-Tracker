@@ -100,10 +100,11 @@ export function FilterChipGroup<T extends string | number>({
   );
 }
 
-export const CategoryLabel = ({ title = "", onClick }: { title: string, onClick?: () => void }) => (
+export const CategoryLabel = ({ title = "", onClick, style }: { title: string, onClick?: () => void, style?: ViewStyle }) => (
   <Pressable onPress={onClick} style={({ pressed }) => [
     baseStyles.categoryDisplay,
     pressed && baseStyles.pressed,
+    style,
   ]}>
     <TinierText text={title.toUpperCase()} color={Colors.white} textAlign="center" />
   </Pressable>

@@ -1,5 +1,4 @@
 import { Transaction } from "@/app/data/TransactionItem";
-import { ChartData } from "@/app/data/ChartData";
 import { ChartPageData } from "@/app/data/ChartData";
 
 export interface StatisticUiState {

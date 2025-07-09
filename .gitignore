@@ -28,3 +28,4 @@ captures
 # @end expo-cli
 ios/Appspensive.xcodeproj/project.pbxproj
 *.pbxproj
+/ios/Appspensive.xcodeproj

@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { HomeUiState, initialHomeUiState } from './HomeUiState';
 import { HomeRepository } from '../repo/HomeRepository';
-import { TransactionType, ExpenseCategory, IncomeCategory, Transaction } from '@/app/data/TransactionItem';
+import { Transaction } from '@/app/data/TransactionItem';
+import { TransactionType, TransactionTypeFilter } from '@/app/util/enums/TransactionType';
+import { ExpenseCategory, IncomeCategory } from '@/app/util/enums/Category';
+
 import { Profile } from '@/app/data/Profile';
-import { GroupedTransactionSection } from '@/app/data/GroupedTransactionItem';
 
 export function useHomeViewModel() {
   const [uiState, setUiState] = useState<HomeUiState>(initialHomeUiState);
@@ -38,7 +40,7 @@ export function useHomeViewModel() {
     updateState(() => ({ isDeleteMode }));
   }, [updateState]);
 
-  const updateCurrentTypeFilter = useCallback((currentTypeFilter: string) => {
+  const updateCurrentTypeFilter = useCallback((currentTypeFilter: TransactionTypeFilter) => {
     updateState(() => ({ currentTypeFilter }));
   }, [updateState]);
 

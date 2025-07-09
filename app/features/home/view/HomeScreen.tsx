@@ -10,7 +10,10 @@ import Animated from 'react-native-reanimated';
 import { Colors } from '@/constants/Colors';
 import { baseStyles } from '@/constants/Styles';
 
-import { Transaction, TransactionType, ExpenseCategory, IncomeCategory } from '@/app/data/TransactionItem';
+import { Transaction } from '@/app/data/TransactionItem';
+import { TransactionType, TransactionTypeFilter, TransactionFilter } from '@/app/util/enums/TransactionType';
+import { ExpenseCategory, IncomeCategory } from '@/app/util/enums/Category';
+
 import { useAuth, authenticate } from '@/app/util/systemFunctions/AuthenticationUtil';
 import { useHomeViewModel } from '../viewmodel/HomeViewModel';
 
@@ -29,21 +32,49 @@ export default function HomeScreen() {
 
   const { uiState, ...homeViewModel } = useHomeViewModel();
   const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const [currentFilter, setCurrentFilter] = useState<TransactionFilter[]>([TransactionFilter.Date]);
+
+  useEffect(() => {
+    homeViewModel.getTransactions();
+    homeViewModel.getProfile();
+  }, []);
+
+  const handleFilterPress = (filter: TransactionFilter) => {
+    setCurrentFilter(prev =>
+      prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]
+    );
+  };
+
+  const filterSortLogic = () => {
+    return (a: Transaction, b: Transaction) => {
+      let result = 0;
+  
+      if (currentFilter.includes(TransactionFilter.Date)) {
+        result = new Date(a.date).getTime() - new Date(b.date).getTime();
+      }
+
+      if (currentFilter.includes(TransactionFilter.Category)) {
+        result = a.category.localeCompare(b.category);
+      }
+
+      if (currentFilter.includes(TransactionFilter.Type)) {
+        result = a.type.localeCompare(b.type);
+      }
+
+      return result;
+    };
+  };
 
   const fabAnim = useExpandUpShrinkDown(!isAuthenticated || (!uiState.isDeleteMode && isAuthenticated));
   const checkmarkAnim = useFadeInOut(uiState.isDeleteMode && isAuthenticated);
   const cancelDeleteAnim = useExpandUpShrinkDown(uiState.isDeleteMode && isAuthenticated);
 
   const filteredTransactions = uiState.transactions
-    .filter(t => uiState.currentTypeFilter === "All" || t.type === uiState.currentTypeFilter)
-    .filter(t => !uiState.currentCategoryFilter || t.category === uiState.currentCategoryFilter);
+    .filter(t => uiState.currentTypeFilter === TransactionTypeFilter.All || t.type === uiState.currentTypeFilter.valueOf())
+    .filter(t => !uiState.currentCategoryFilter || t.category === uiState.currentCategoryFilter)
+    .sort(filterSortLogic());
 
   const groupedTransactions = homeViewModel.groupedTransactionsByDate(filteredTransactions);
-
-  useEffect(() => {
-    homeViewModel.getTransactions();
-    homeViewModel.getProfile();
-  }, []);
 
   const handleFabPress = () => {
     if (!isAuthenticated) {
@@ -117,23 +148,20 @@ export default function HomeScreen() {
                 <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
                 <Ionicons
                   name={item.type === TransactionType.Income ? "arrow-down" : "arrow-up"}
-                  size={28}
+                  size={24}
                   color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent}
                 />
               </View>
-              <TinyText text={item.description} color={Colors.textPrimary} textAlign="left" />
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                <TinyText
-                  text={format(new Date(item.date), 'hh:mm a').toUpperCase()}
-                  color={Colors.textPrimary}
-                  textAlign="left"
-                />
-                <CategoryLabel
-                  title={item.category.valueOf()}
-                  onClick={() =>
-                    homeViewModel.updateCurrentCategoryFilter(uiState.currentCategoryFilter !== item.category ? item.category : undefined)
-                  }
-                />
+              <View style={{ flexDirection: 'row' }}>
+                <TinyText text={item.description} color={Colors.textPrimary} textAlign="left" style={{flex: 1, marginEnd: 8}}/>
+                <View style={{ marginTop: 8, alignSelf: 'flex-end' }}>
+                  <CategoryLabel
+                    title={item.category.valueOf()}
+                    onClick={() =>
+                      homeViewModel.updateCurrentCategoryFilter(uiState.currentCategoryFilter !== item.category ? item.category : undefined)
+                    }
+                  />
+                </View>
               </View>
             </RoundedBox>
           </View>
@@ -180,11 +208,16 @@ export default function HomeScreen() {
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          <FilterChipGroup
-            items={["All", TransactionType.Expense, TransactionType.Income]}
-            selected={uiState.currentTypeFilter}
-            onSelectedChange={homeViewModel.updateCurrentTypeFilter}
-          />
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+            <FilterChipGroup
+              items={Object.values(TransactionTypeFilter)}
+              selected={uiState.currentTypeFilter}
+              onSelectedChange={homeViewModel.updateCurrentTypeFilter}
+            />
+            <Pressable style={({ pressed }) => [pressed && baseStyles.pressed]} onPress={() => handleFilterPress(TransactionFilter.Type)}>
+              <Ionicons name="filter" size={24} color={Colors.textPrimary} />
+            </Pressable>
+          </View>
           {uiState.currentCategoryFilter && (
             <View style={{ marginBottom: 8, flexDirection: 'row'}}>
               <CategoryLabel
@@ -203,6 +236,17 @@ export default function HomeScreen() {
               const listOfSectionIds = section.data.map(t => t.id ?? -1);
               const isSectionSelected = uiState.selectedTransactions.some(id => listOfSectionIds.includes(id));
 
+              const totalAmount = listOfSectionIds.reduce((acc, id) => {
+                const transaction = section.data.find(t => t.id === id);
+
+                if(transaction?.type === TransactionType.Expense) {
+                  return acc - (transaction?.amount ?? 0);
+                } else if(transaction?.type === TransactionType.Income) {
+                  return acc + (transaction?.amount ?? 0);
+                }
+                return acc;
+              }, 0);
+
               return (
                 <RoundedBox style={{
                   paddingVertical: 0,
@@ -215,8 +259,8 @@ export default function HomeScreen() {
                 }}>
                   {isFirst && (
                     <View>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 12}}>
-                        <DescriptionText text={section.date} textAlign="left"/>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 12}}>
+                        <DescriptionText text={section.date} textAlign="left" style={{ paddingVertical: 14}}/>
                         {uiState.isDeleteMode && (
                           IconButton({
                             icon: isSectionSelected ? "checkbox" : "checkbox-outline",
@@ -225,6 +269,14 @@ export default function HomeScreen() {
                             color: Colors.textPrimary,
                             style: {  },
                           })
+                        )}
+                        {!uiState.isDeleteMode && (
+                          <TinyText
+                            text={Intl.NumberFormat('en-US', { style: 'currency', currency: 'MYR' }).format(totalAmount)}
+                            color={totalAmount >= 0 ? Colors.greenAccent : Colors.redAccent}
+                            textAlign="right"
+                            style={{ backgroundColor: Colors.backgroundColor, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 }}
+                          />
                         )}
                       </View>
                       <HorizontalDivider />

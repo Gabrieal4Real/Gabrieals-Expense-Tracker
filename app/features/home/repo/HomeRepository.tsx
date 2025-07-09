@@ -1,5 +1,6 @@
 import { addTransaction, deleteTransactionsByIds, getAllTransactions, getProfile, upsertProfile } from "@/app/sql/AppDatabase";
-import { TransactionType, ExpenseCategory, IncomeCategory } from "@/app/data/TransactionItem";
+import { TransactionType } from "@/app/util/enums/TransactionType";
+import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
 
 export const HomeRepository = {
     async fetchTransactions() {

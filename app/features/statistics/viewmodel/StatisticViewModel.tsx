@@ -1,12 +1,9 @@
 import { useState, useCallback } from 'react';
 import { StatisticUiState, initialStatisticUiState } from './StatisticUiState';
 import { HomeRepository } from '../../home/repo/HomeRepository';
-import {
-  Transaction,
-  TransactionType,
-  ExpenseCategory,
-  IncomeCategory,
-} from '@/app/data/TransactionItem';
+import {Transaction} from '@/app/data/TransactionItem';
+import { TransactionType } from '@/app/util/enums/TransactionType';
+import { ExpenseCategory, IncomeCategory } from '@/app/util/enums/Category';
 import { ChartPageData, ChartData } from '@/app/data/ChartData';
 import { getMonthName, getYearName } from '@/app/util/systemFunctions/DateUtil';
 import { getRandomAmount } from '@/app/util/systemFunctions/TextUtil';

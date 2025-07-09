@@ -1,4 +1,5 @@
-import { ExpenseCategory, IncomeCategory, TransactionType } from "@/app/data/TransactionItem";
+import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
+import { TransactionType } from "@/app/util/enums/TransactionType";
 
 export interface TransactionUiState {
   amount: string;

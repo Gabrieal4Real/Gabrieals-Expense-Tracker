@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { TransactionUiState, initialTransactionUiState } from "./TransactionUiState";
-import { TransactionType, ExpenseCategory, IncomeCategory } from "@/app/data/TransactionItem";
+import { TransactionType } from "@/app/util/enums/TransactionType";
+import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
 
 export function useTransactionViewModel() {
     const [uiState, setUiState] = useState<TransactionUiState>(initialTransactionUiState);

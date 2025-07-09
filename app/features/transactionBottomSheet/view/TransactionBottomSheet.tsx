@@ -6,11 +6,8 @@ import CustomTextInput from '@/app/util/widgets/CustomTextInput';
 import { CustomButton } from '@/app/util/widgets/CustomButton';
 import { FilterChipGroup } from '@/app/util/widgets/CustomBox';
 import { useTransactionViewModel } from '../viewmodel/TransactionViewModel';
-import {
-  ExpenseCategory,
-  IncomeCategory,
-  TransactionType,
-} from '@/app/data/TransactionItem';
+import { TransactionType } from '@/app/util/enums/TransactionType';
+import { ExpenseCategory, IncomeCategory } from '@/app/util/enums/Category';
 import { Colors } from '@/constants/Colors';
 
 interface TransactionBottomSheetProps {
