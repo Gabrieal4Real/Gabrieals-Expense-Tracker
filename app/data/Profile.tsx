@@ -1,4 +1,4 @@
 export interface Profile {
-    remaining: number;
-    requireAuth: boolean | true;
+  remaining: number;
+  requireAuth: boolean | true;
 }

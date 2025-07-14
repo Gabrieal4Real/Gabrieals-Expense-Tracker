@@ -1,24 +1,29 @@
-import { useState, useCallback } from 'react';
-import { StatisticUiState, initialStatisticUiState } from './StatisticUiState';
-import { HomeRepository } from '../../home/repo/HomeRepository';
-import {Transaction} from '@/app/data/TransactionItem';
-import { TransactionType } from '@/app/util/enums/TransactionType';
-import { ExpenseCategory, IncomeCategory } from '@/app/util/enums/Category';
-import { ChartPageData, ChartData } from '@/app/data/ChartData';
-import { getMonthName, getYearName } from '@/app/util/systemFunctions/DateUtil';
-import { getRandomAmount } from '@/app/util/systemFunctions/TextUtil';
+import { useState, useCallback } from "react";
+import { StatisticUiState, initialStatisticUiState } from "./StatisticUiState";
+import { HomeRepository } from "../../home/repo/HomeRepository";
+import { Transaction } from "@/app/data/TransactionItem";
+import { TransactionType } from "@/app/util/enums/TransactionType";
+import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
+import { ChartPageData, ChartData } from "@/app/data/ChartData";
+import { getMonthName, getYearName } from "@/app/util/systemFunctions/DateUtil";
+import { getRandomAmount } from "@/app/util/systemFunctions/TextUtil";
 
 type ChartGroup = Record<string, number>;
 
 export function useStatisticViewModel() {
-  const [uiState, setUiState] = useState<StatisticUiState>(initialStatisticUiState);
+  const [uiState, setUiState] = useState<StatisticUiState>(
+    initialStatisticUiState,
+  );
 
   const updateLoading = (loading: boolean, error: string | null) => {
-    setUiState(prev => ({ ...prev, loading, error }));
+    setUiState((prev) => ({ ...prev, loading, error }));
   };
 
   const groupTransactions = (transactions: Transaction[]): ChartPageData[] => {
-    const grouped = new Map<string, { expense: ChartGroup; income: ChartGroup }>();
+    const grouped = new Map<
+      string,
+      { expense: ChartGroup; income: ChartGroup }
+    >();
 
     transactions.forEach(({ amount, category, type, date }) => {
       const txDate = new Date(date);
@@ -28,13 +33,14 @@ export function useStatisticViewModel() {
       }
 
       const group = grouped.get(key)!;
-      const target = type === TransactionType.Expense ? group.expense : group.income;
+      const target =
+        type === TransactionType.Expense ? group.expense : group.income;
       target[category] = (target[category] || 0) + amount;
     });
 
     return Array.from(grouped.entries())
       .map(([key, { expense, income }]) => {
-        const [yearStr, monthStr] = key.split('-');
+        const [yearStr, monthStr] = key.split("-");
         const year = parseInt(yearStr, 10);
         const month = parseInt(monthStr, 10);
         const title = `${getMonthName(month)} ${getYearName(year)} Summary`;
@@ -52,7 +58,7 @@ export function useStatisticViewModel() {
 
   const generateChartData = useCallback((transactions: Transaction[]) => {
     const chartPages = groupTransactions(transactions);
-    setUiState(prev => ({ ...prev, chartPages }));
+    setUiState((prev) => ({ ...prev, chartPages }));
   }, []);
 
   const getCategorySummary = (chartPages: ChartPageData[]): ChartPageData[] => {
@@ -60,16 +66,18 @@ export function useStatisticViewModel() {
       const combinedMap: Record<string, number> = {};
 
       expense.forEach(({ x, y }) => {
-        const label = x.includes(ExpenseCategory.Other) ? 'Ex. Other' : x;
+        const label = x.includes(ExpenseCategory.Other) ? "Ex. Other" : x;
         combinedMap[label] = (combinedMap[label] || 0) + y;
       });
 
       income.forEach(({ x, y }) => {
-        const label = x.includes(IncomeCategory.Other) ? 'In. Other' : x;
+        const label = x.includes(IncomeCategory.Other) ? "In. Other" : x;
         combinedMap[label] = (combinedMap[label] || 0) + y;
       });
 
-      const combined: ChartData[] = Object.entries(combinedMap).map(([x, y]) => ({ x, y }));
+      const combined: ChartData[] = Object.entries(combinedMap).map(
+        ([x, y]) => ({ x, y }),
+      );
 
       return {
         year,
@@ -91,8 +99,14 @@ export function useStatisticViewModel() {
       title: `${getMonthName(month)} ${getYearName(year)} Summary`,
       year,
       month,
-      expense: Object.values(ExpenseCategory).map(x => ({ x, y: getRandomAmount(100, 800) })),
-      income: Object.values(IncomeCategory).map(x => ({ x, y: getRandomAmount(1000, 5000) })),
+      expense: Object.values(ExpenseCategory).map((x) => ({
+        x,
+        y: getRandomAmount(100, 800),
+      })),
+      income: Object.values(IncomeCategory).map((x) => ({
+        x,
+        y: getRandomAmount(1000, 5000),
+      })),
     }));
   };
 
@@ -100,10 +114,10 @@ export function useStatisticViewModel() {
     updateLoading(true, null);
     try {
       const transactions = await HomeRepository.fetchTransactions();
-      setUiState(prev => ({ ...prev, transactions }));
+      setUiState((prev) => ({ ...prev, transactions }));
       generateChartData(transactions);
     } catch {
-      updateLoading(false, 'Failed to load transactions');
+      updateLoading(false, "Failed to load transactions");
     } finally {
       updateLoading(false, null);
     }

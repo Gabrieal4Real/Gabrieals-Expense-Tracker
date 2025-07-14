@@ -3,12 +3,20 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
-    "lint": "expo lint"
+    "init": "expo prebuild",
+    "android": "npm run android:run",
+    "android:run": "npm run android:build && expo run:android -d && echo '\nAndroid (Development) run successfully!'",
+    "android:build": "expo prebuild --platform android --clean && echo '\nAndroid (Development) native folder build completed successfully!'",
+    "android:apk": "npm run android:build && cd android && ./gradlew assembleRelease && echo '\nAndroid (Development) APK built and installed successfully!' && open app/build/outputs/apk/release",
+    "ios": "npm run ios:run",
+    "ios:run": "npm run ios:build && expo run:ios -d && echo '\niOS (Development) run successfully!'",
+    "ios:build": "expo prebuild --platform ios && npx pod-install && echo '\niOS (Development) native folder build completed successfully!'",
+    "ios:ipa": "npm run ios:build && cd ios && xcodebuild -workspace Treats.xcworkspace -scheme Treats -archivePath build/Treats.xcarchive archive && xcodebuild -exportArchive -archivePath build/Treats.xcarchive -exportPath build -exportOptionsPlist ExportOptions.plist && echo '\niOS (Development) IPA built successfully!' && open build",
+    "test": "jest --watchAll",
+    "check": "expo install --fix",
+    "build": "expo prebuild --clean",
+    "expo": "expo install expo@latest",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -50,6 +58,7 @@
     "@types/react-native": "^0.72.8",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
+    "prettier": "^3.6.2",
     "typescript": "~5.8.3"
   },
   "private": true

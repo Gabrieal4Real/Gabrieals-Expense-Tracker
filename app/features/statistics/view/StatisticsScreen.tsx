@@ -1,18 +1,21 @@
-import React, { useCallback } from 'react';
-import { View, ScrollView } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useFocusEffect } from 'expo-router';
+import React, { useCallback } from "react";
+import { View, ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFocusEffect } from "expo-router";
 
-import { TitleText } from '@/app/util/widgets/CustomText';
-import { FloatingActionButton } from '@/app/util/widgets/CustomButton';
-import { CustomBlurView, SpacerVertical } from '@/app/util/widgets/CustomBox';
-import { ChartPager } from '@/app/util/widgets/CustomChart';
+import { TitleText } from "@/app/util/widgets/CustomText";
+import { FloatingActionButton } from "@/app/util/widgets/CustomButton";
+import { CustomBlurView, SpacerVertical } from "@/app/util/widgets/CustomBox";
+import { ChartPager } from "@/app/util/widgets/CustomChart";
 
-import { Colors } from '@/constants/Colors';
-import { baseStyles } from '@/constants/Styles';
+import { Colors } from "@/constants/Colors";
+import { baseStyles } from "@/constants/Styles";
 
-import { authenticate, useAuth } from '@/app/util/systemFunctions/AuthenticationUtil';
-import { useStatisticViewModel } from '../../statistics/viewmodel/StatisticViewModel';
+import {
+  authenticate,
+  useAuth,
+} from "@/app/util/systemFunctions/AuthenticationUtil";
+import { useStatisticViewModel } from "../../statistics/viewmodel/StatisticViewModel";
 
 export default function StatisticsScreen() {
   const insets = useSafeAreaInsets();
@@ -33,7 +36,7 @@ export default function StatisticsScreen() {
     useCallback(() => {
       statisticViewModel.getTransactions();
       return () => {};
-    }, [])
+    }, []),
   );
 
   const shouldShowCharts = isAuthenticated && chartPages.length > 0;
@@ -42,10 +45,17 @@ export default function StatisticsScreen() {
 
   return (
     <View style={[baseStyles.baseBackground, { paddingTop: insets.top + 18 }]}>
-      <TitleText text="Statistics" color={Colors.textPrimary} textAlign="center" />
+      <TitleText
+        text="Statistics"
+        color={Colors.textPrimary}
+        textAlign="center"
+      />
       <SpacerVertical size={16} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 80 }}
+      >
         <CustomBlurView isShowBlur={!shouldShowCharts}>
           <ChartPager chart={charts} />
         </CustomBlurView>

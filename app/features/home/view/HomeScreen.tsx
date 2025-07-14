@@ -1,30 +1,65 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, AppState, AppStateStatus, Image, Pressable, SectionList, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { format } from 'date-fns';
-import BottomSheet from '@gorhom/bottom-sheet';
-import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated from 'react-native-reanimated';
+import { Ionicons } from "@expo/vector-icons";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  SectionList,
+  View,
+} from "react-native";
+import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
+import Animated from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Colors } from '@/constants/Colors';
-import { baseStyles } from '@/constants/Styles';
+import { Colors } from "@/constants/Colors";
+import { baseStyles } from "@/constants/Styles";
 
-import { Transaction } from '@/app/data/TransactionItem';
-import { TransactionType, TransactionTypeFilter, TransactionFilter } from '@/app/util/enums/TransactionType';
-import { ExpenseCategory, IncomeCategory } from '@/app/util/enums/Category';
+import { Transaction } from "@/app/data/TransactionItem";
+import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
+import {
+  TransactionFilter,
+  TransactionType,
+  TransactionTypeFilter,
+} from "@/app/util/enums/TransactionType";
 
-import { useAuth, authenticate } from '@/app/util/systemFunctions/AuthenticationUtil';
-import { useHomeViewModel } from '../viewmodel/HomeViewModel';
+import {
+  authenticate,
+  useAuth,
+} from "@/app/util/systemFunctions/AuthenticationUtil";
+import { useHomeViewModel } from "../viewmodel/HomeViewModel";
 
-import { AnimatedIonicons, useExpandUpShrinkDown, useFadeInOut } from '@/app/util/widgets/CustomAnimations';
-import { CustomBottomSheet, closeBottomSheet, openBottomSheet } from '@/app/util/widgets/CustomBottomSheet';
-import { IconButton, FloatingActionButton } from '@/app/util/widgets/CustomButton';
-import { FilterChipGroup, HorizontalDivider, RoundedBox, SpacerVertical, CategoryLabel } from '@/app/util/widgets/CustomBox';
-import { TitleText, BiggerText, TinyText, SubtitleText, DescriptionText } from '@/app/util/widgets/CustomText';
+import {
+  AnimatedIonicons,
+  useExpandUpShrinkDown,
+  useFadeInOut,
+} from "@/app/util/widgets/CustomAnimations";
+import {
+  CustomBottomSheet,
+  closeBottomSheet,
+  openBottomSheet,
+} from "@/app/util/widgets/CustomBottomSheet";
+import {
+  CategoryLabel,
+  FilterChipGroup,
+  HorizontalDivider,
+  RoundedBox,
+  SpacerVertical,
+} from "@/app/util/widgets/CustomBox";
+import {
+  FloatingActionButton,
+  IconButton,
+} from "@/app/util/widgets/CustomButton";
+import {
+  BiggerText,
+  DescriptionText,
+  SubtitleText,
+  TinyText,
+  TitleText,
+} from "@/app/util/widgets/CustomText";
 
-import TransactionBottomSheet from '../../transactionBottomSheet/view/TransactionBottomSheet';
-import CustomPicker from '@/app/util/widgets/CustomPicker';
+import CustomPicker from "@/app/util/widgets/CustomPicker";
+import TransactionBottomSheet from "../../transactionBottomSheet/view/TransactionBottomSheet";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -33,7 +68,9 @@ export default function HomeScreen() {
 
   const { uiState, ...homeViewModel } = useHomeViewModel();
   const { isAuthenticated, setIsAuthenticated } = useAuth();
-  const [currentFilter, setCurrentFilter] = useState<TransactionFilter[]>([TransactionFilter.Date]);
+  const [currentFilter, setCurrentFilter] = useState<TransactionFilter[]>([
+    TransactionFilter.Date,
+  ]);
 
   useEffect(() => {
     homeViewModel.getTransactions();
@@ -46,7 +83,10 @@ export default function HomeScreen() {
 
   const filterDateLogic = () => {
     return (a: Transaction, b: Transaction) => {
-      if (currentFilter.includes(TransactionFilter.Date) || currentFilter.length == 0) {
+      if (
+        currentFilter.includes(TransactionFilter.Date) ||
+        currentFilter.length == 0
+      ) {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       }
 
@@ -72,18 +112,31 @@ export default function HomeScreen() {
     };
   };
 
-  const fabAnim = useExpandUpShrinkDown(!isAuthenticated || (!uiState.isDeleteMode && isAuthenticated));
+  const fabAnim = useExpandUpShrinkDown(
+    !isAuthenticated || (!uiState.isDeleteMode && isAuthenticated),
+  );
   const checkmarkAnim = useFadeInOut(uiState.isDeleteMode && isAuthenticated);
-  const cancelDeleteAnim = useExpandUpShrinkDown(uiState.isDeleteMode && isAuthenticated);
+  const cancelDeleteAnim = useExpandUpShrinkDown(
+    uiState.isDeleteMode && isAuthenticated,
+  );
 
   const filteredTransactions = uiState.transactions
-    .filter(t => uiState.currentTypeFilter === TransactionTypeFilter.All || t.type === uiState.currentTypeFilter.valueOf())
-    .filter(t => !uiState.currentCategoryFilter || t.category === uiState.currentCategoryFilter)
+    .filter(
+      (t) =>
+        uiState.currentTypeFilter === TransactionTypeFilter.All ||
+        t.type === uiState.currentTypeFilter.valueOf(),
+    )
+    .filter(
+      (t) =>
+        !uiState.currentCategoryFilter ||
+        t.category === uiState.currentCategoryFilter,
+    )
     .sort(filterDateLogic())
     .sort(filterCategoryLogic())
     .sort(filterTypeLogic());
 
-  const groupedTransactions = homeViewModel.groupedTransactionsByDate(filteredTransactions);
+  const groupedTransactions =
+    homeViewModel.groupedTransactionsByDate(filteredTransactions);
 
   const handleFabPress = () => {
     if (!isAuthenticated) {
@@ -91,19 +144,30 @@ export default function HomeScreen() {
         setIsAuthenticated(true);
       });
     } else if (uiState.isDeleteMode) {
-      homeViewModel.deleteTransactions(uiState.selectedTransactions, uiState.transactions);
+      homeViewModel.deleteTransactions(
+        uiState.selectedTransactions,
+        uiState.transactions,
+      );
       homeViewModel.updateIsDeleteMode(false);
       homeViewModel.clearSelectedTransactions();
     } else {
-      bottomSheetIndex === -1 ? openBottomSheet(bottomSheetRef) : closeBottomSheet(bottomSheetRef);
+      bottomSheetIndex === -1
+        ? openBottomSheet(bottomSheetRef)
+        : closeBottomSheet(bottomSheetRef);
     }
   };
 
   const handleTransactionAdded = useCallback(
-    (type: TransactionType, amount: number, category: ExpenseCategory | IncomeCategory, description: string) => {
+    (
+      type: TransactionType,
+      amount: number,
+      category: ExpenseCategory | IncomeCategory,
+      description: string,
+    ) => {
       homeViewModel.updateTransaction(type, amount, category, description);
       closeBottomSheet(bottomSheetRef);
-    }, []
+    },
+    [],
   );
 
   const renderTransaction = ({ item }: { item: Transaction }) => {
@@ -116,10 +180,12 @@ export default function HomeScreen() {
       }
     }, [uiState.isDeleteMode]);
 
-
     const handlePress = () => {
       if (uiState.isDeleteMode) {
-        homeViewModel.updateSelectedTransaction(uiState.selectedTransactions, item.id ?? -1);
+        homeViewModel.updateSelectedTransaction(
+          uiState.selectedTransactions,
+          item.id ?? -1,
+        );
       }
     };
 
@@ -127,47 +193,98 @@ export default function HomeScreen() {
       homeViewModel.clearSelectedTransactions();
       homeViewModel.updateIsDeleteMode(!uiState.isDeleteMode);
       if (!uiState.isDeleteMode) {
-        homeViewModel.updateSelectedTransaction(uiState.selectedTransactions, item.id ?? -1);
+        homeViewModel.updateSelectedTransaction(
+          uiState.selectedTransactions,
+          item.id ?? -1,
+        );
       }
     };
 
     return (
       <Swipeable
         ref={swipeableRef}
-        renderRightActions={!uiState.isDeleteMode ? () => (
-          <Pressable onPress={() => homeViewModel.deleteTransactions([item.id ?? -1], uiState.transactions)} style={{
-            backgroundColor: Colors.red,
-            justifyContent: 'center',
-            alignItems: 'flex-end',
-            paddingHorizontal: 20}}>
-            <Ionicons name="trash" size={24} color={Colors.white} />
-          </Pressable>
-        ) : undefined}
-        friction={2}>
-        <Pressable onPress={handlePress} onLongPress={handleLongPress} style={({ pressed }) => [pressed && baseStyles.pressed]}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        renderRightActions={
+          !uiState.isDeleteMode
+            ? () => (
+                <Pressable
+                  onPress={() =>
+                    homeViewModel.deleteTransactions(
+                      [item.id ?? -1],
+                      uiState.transactions,
+                    )
+                  }
+                  style={{
+                    backgroundColor: Colors.red,
+                    justifyContent: "center",
+                    alignItems: "flex-end",
+                    paddingHorizontal: 20,
+                  }}
+                >
+                  <Ionicons name="trash" size={24} color={Colors.white} />
+                </Pressable>
+              )
+            : undefined
+        }
+        friction={2}
+      >
+        <Pressable
+          onPress={handlePress}
+          onLongPress={handleLongPress}
+          style={({ pressed }) => [pressed && baseStyles.pressed]}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <AnimatedIonicons
               name={isSelected ? "checkbox" : "checkbox-outline"}
               size={20}
               color={Colors.white}
-              style={[checkmarkAnim.animatedStyle, { marginLeft: uiState.isDeleteMode ? 12 : 0}]}
+              style={[
+                checkmarkAnim.animatedStyle,
+                { marginLeft: uiState.isDeleteMode ? 12 : 0 },
+              ]}
             />
-            <RoundedBox style={{ flex: 1, paddingVertical: 12, borderRadius: 0}}>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <SubtitleText text={`RM ${item.amount.toFixed(2)}`} textAlign="left" />
+            <RoundedBox
+              style={{ flex: 1, paddingVertical: 12, borderRadius: 0 }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <SubtitleText
+                  text={`RM ${item.amount.toFixed(2)}`}
+                  textAlign="left"
+                />
                 <Ionicons
-                  name={item.type === TransactionType.Income ? "arrow-down" : "arrow-up"}
+                  name={
+                    item.type === TransactionType.Income
+                      ? "arrow-down"
+                      : "arrow-up"
+                  }
                   size={24}
-                  color={item.type === TransactionType.Income ? Colors.greenAccent : Colors.redAccent}
+                  color={
+                    item.type === TransactionType.Income
+                      ? Colors.greenAccent
+                      : Colors.redAccent
+                  }
                 />
               </View>
-              <View style={{ flexDirection: 'row' }}>
-                <TinyText text={item.description} color={Colors.textPrimary} textAlign="left" style={{flex: 1, marginEnd: 8}}/>
-                <View style={{ marginTop: 8, alignSelf: 'flex-end' }}>
+              <View style={{ flexDirection: "row" }}>
+                <TinyText
+                  text={item.description}
+                  color={Colors.textPrimary}
+                  textAlign="left"
+                  style={{ flex: 1, marginEnd: 8 }}
+                />
+                <View style={{ marginTop: 8, alignSelf: "flex-end" }}>
                   <CategoryLabel
                     title={item.category.valueOf()}
                     onClick={() =>
-                      homeViewModel.updateCurrentCategoryFilter(uiState.currentCategoryFilter !== item.category ? item.category : undefined)
+                      homeViewModel.updateCurrentCategoryFilter(
+                        uiState.currentCategoryFilter !== item.category
+                          ? item.category
+                          : undefined,
+                      )
                     }
                   />
                 </View>
@@ -181,62 +298,135 @@ export default function HomeScreen() {
 
   return (
     <View style={[baseStyles.baseBackground, { paddingTop: 18 + insets.top }]}>
-      <TitleText text="Gabrieal's Appspensive" color={Colors.textPrimary} textAlign="center" />
+      <TitleText
+        text="Gabrieal's Appspensive"
+        color={Colors.textPrimary}
+        textAlign="center"
+      />
 
       <RoundedBox style={{ marginVertical: 16 }}>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: "center" }}>
           <BiggerText
-            text={isAuthenticated
-              ? Intl.NumberFormat('en-US', { style: 'currency', currency: 'MYR' }).format(uiState.profile?.remaining ?? 0)
-              : '******'}
-            color={(uiState.profile?.remaining ?? 0) >= 0 ? Colors.greenAccent : Colors.redAccent}
+            text={
+              isAuthenticated
+                ? Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "MYR",
+                  }).format(uiState.profile?.remaining ?? 0)
+                : "******"
+            }
+            color={
+              (uiState.profile?.remaining ?? 0) >= 0
+                ? Colors.greenAccent
+                : Colors.redAccent
+            }
             textAlign="center"
             style={{ paddingVertical: 4, paddingHorizontal: 48 }}
           />
-          <TinyText text="REMAINING" color={Colors.textPrimary} textAlign="center" style={{ paddingBottom: 4 }} />
+          <TinyText
+            text="REMAINING"
+            color={Colors.textPrimary}
+            textAlign="center"
+            style={{ paddingBottom: 4 }}
+          />
         </View>
-        {!isAuthenticated && <IconButton onPress={() => authenticate(() => setIsAuthenticated(true))} style={baseStyles.iconButton} />}
+        {!isAuthenticated && (
+          <IconButton
+            onPress={() => authenticate(() => setIsAuthenticated(true))}
+            style={baseStyles.iconButton}
+          />
+        )}
       </RoundedBox>
 
-      <TitleText text="Expenses" color={Colors.textPrimary} textAlign="left" style={{ marginVertical: 8 }} />
+      <TitleText
+        text="Expenses"
+        color={Colors.textPrimary}
+        textAlign="left"
+        style={{ marginVertical: 8 }}
+      />
       <HorizontalDivider />
 
       {uiState.loading ? (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20}}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
           <ActivityIndicator size="large" color={Colors.textPrimary} />
         </View>
       ) : uiState.error ? (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20}}>
-          <TinyText text={uiState.error} color={Colors.redAccent} textAlign="center" />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
+          <TinyText
+            text={uiState.error}
+            color={Colors.redAccent}
+            textAlign="center"
+          />
         </View>
-      ) : (!isAuthenticated || uiState.transactions.length === 0) ? (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20}}>
-          <Image source={require('@/assets/images/nothing_here_yet.webp')} style={{ height: 300 }} resizeMode="contain" />
+      ) : !isAuthenticated || uiState.transactions.length === 0 ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
+          <Image
+            source={require("@/assets/images/nothing_here_yet.webp")}
+            style={{ height: 300 }}
+            resizeMode="contain"
+          />
           <SpacerVertical size={8} />
-          <TinyText text="No transactions yet" color={Colors.textPrimary} textAlign="center" />
+          <TinyText
+            text="No transactions yet"
+            color={Colors.textPrimary}
+            textAlign="center"
+          />
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <FilterChipGroup
               items={Object.values(TransactionTypeFilter)}
               selected={uiState.currentTypeFilter}
               onSelectedChange={homeViewModel.updateCurrentTypeFilter}
             />
-            <View style={{ flex: 1}}>
+            <View style={{ flex: 1 }}>
               <CustomPicker
-              options={Object.values(TransactionFilter).map(type => ({ label: type.valueOf(), value: type.valueOf() }))}
-              autoSelected={[TransactionFilter.Date]}
-              onChangeSelection={(values) => {
-                handleFilterPress(values as TransactionFilter[]);
-              }}/>
+                options={Object.values(TransactionFilter).map((type) => ({
+                  label: type.valueOf(),
+                  value: type.valueOf(),
+                }))}
+                autoSelected={[TransactionFilter.Date]}
+                onChangeSelection={(values) => {
+                  handleFilterPress(values as TransactionFilter[]);
+                }}
+              />
             </View>
           </View>
           {uiState.currentCategoryFilter && (
-            <View style={{ marginBottom: 8, flexDirection: 'row'}}>
+            <View style={{ marginBottom: 8, flexDirection: "row" }}>
               <CategoryLabel
                 title={uiState.currentCategoryFilter.valueOf()}
-                onClick={() => homeViewModel.updateCurrentCategoryFilter(undefined)}
+                onClick={() =>
+                  homeViewModel.updateCurrentCategoryFilter(undefined)
+                }
               />
             </View>
           )}
@@ -247,49 +437,82 @@ export default function HomeScreen() {
             renderItem={({ item, section, index }) => {
               const isFirst = index === 0;
               const isLast = index === section.data.length - 1;
-              const listOfSectionIds = section.data.map(t => t.id ?? -1);
-              const isSectionSelected = uiState.selectedTransactions.some(id => listOfSectionIds.includes(id));
+              const listOfSectionIds = section.data.map((t) => t.id ?? -1);
+              const isSectionSelected = uiState.selectedTransactions.some(
+                (id) => listOfSectionIds.includes(id),
+              );
 
               const totalAmount = listOfSectionIds.reduce((acc, id) => {
-                const transaction = section.data.find(t => t.id === id);
+                const transaction = section.data.find((t) => t.id === id);
 
-                if(transaction?.type === TransactionType.Expense) {
+                if (transaction?.type === TransactionType.Expense) {
                   return acc - (transaction?.amount ?? 0);
-                } else if(transaction?.type === TransactionType.Income) {
+                } else if (transaction?.type === TransactionType.Income) {
                   return acc + (transaction?.amount ?? 0);
                 }
                 return acc;
               }, 0);
 
               return (
-                <RoundedBox style={{
-                  paddingVertical: 0,
-                  paddingHorizontal: 0,
-                  borderTopLeftRadius: isFirst ? 12 : 0,
-                  borderTopRightRadius: isFirst ? 12 : 0,
-                  borderBottomLeftRadius: isLast ? 12 : 0,
-                  borderBottomRightRadius: isLast ? 12 : 0,
-                  marginBottom:isLast ? 12 : 0,
-                }}>
+                <RoundedBox
+                  style={{
+                    paddingVertical: 0,
+                    paddingHorizontal: 0,
+                    borderTopLeftRadius: isFirst ? 12 : 0,
+                    borderTopRightRadius: isFirst ? 12 : 0,
+                    borderBottomLeftRadius: isLast ? 12 : 0,
+                    borderBottomRightRadius: isLast ? 12 : 0,
+                    marginBottom: isLast ? 12 : 0,
+                  }}
+                >
                   {isFirst && (
                     <View>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 12}}>
-                        <DescriptionText text={section.date} textAlign="left" style={{ paddingVertical: 14}}/>
-                        {uiState.isDeleteMode && (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginHorizontal: 12,
+                        }}
+                      >
+                        <DescriptionText
+                          text={section.date}
+                          textAlign="left"
+                          style={{ paddingVertical: 14 }}
+                        />
+                        {uiState.isDeleteMode &&
                           IconButton({
-                            icon: isSectionSelected ? "checkbox" : "checkbox-outline",
-                            onPress: () => homeViewModel.updateSelectedTransactions(uiState.selectedTransactions, listOfSectionIds, isSectionSelected),
+                            icon: isSectionSelected
+                              ? "checkbox"
+                              : "checkbox-outline",
+                            onPress: () =>
+                              homeViewModel.updateSelectedTransactions(
+                                uiState.selectedTransactions,
+                                listOfSectionIds,
+                                isSectionSelected,
+                              ),
                             size: 20,
                             color: Colors.textPrimary,
-                            style: {  },
-                          })
-                        )}
+                            style: {},
+                          })}
                         {!uiState.isDeleteMode && (
                           <TinyText
-                            text={Intl.NumberFormat('en-US', { style: 'currency', currency: 'MYR' }).format(totalAmount)}
-                            color={totalAmount >= 0 ? Colors.greenAccent : Colors.redAccent}
+                            text={Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "MYR",
+                            }).format(totalAmount)}
+                            color={
+                              totalAmount >= 0
+                                ? Colors.greenAccent
+                                : Colors.redAccent
+                            }
                             textAlign="right"
-                            style={{ backgroundColor: Colors.backgroundColor, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 }}
+                            style={{
+                              backgroundColor: Colors.backgroundColor,
+                              paddingHorizontal: 8,
+                              paddingVertical: 2,
+                              borderRadius: 4,
+                            }}
                           />
                         )}
                       </View>
@@ -300,42 +523,84 @@ export default function HomeScreen() {
                 </RoundedBox>
               );
             }}
-            keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
-            ItemSeparatorComponent={() => <HorizontalDivider style={{backgroundColor: Colors.placeholder}}/>}
+            keyExtractor={(item) =>
+              item.id?.toString() ?? Math.random().toString()
+            }
+            ItemSeparatorComponent={() => (
+              <HorizontalDivider
+                style={{ backgroundColor: Colors.placeholder }}
+              />
+            )}
             showsVerticalScrollIndicator={false}
           />
         </View>
       )}
 
-      <CustomBottomSheet index={bottomSheetIndex} snapPoints={['90%']} ref={bottomSheetRef} onChange={setBottomSheetIndex}>
+      <CustomBottomSheet
+        index={bottomSheetIndex}
+        snapPoints={["90%"]}
+        ref={bottomSheetRef}
+        onChange={setBottomSheetIndex}
+      >
         <TransactionBottomSheet onTransactionAdded={handleTransactionAdded} />
       </CustomBottomSheet>
 
       <FloatingActionButton
         onPress={handleFabPress}
-        icon={isAuthenticated ? (bottomSheetIndex === -1 ? 'add' : 'close') : 'finger-print'}
+        icon={
+          isAuthenticated
+            ? bottomSheetIndex === -1
+              ? "add"
+              : "close"
+            : "finger-print"
+        }
         style={fabAnim.animatedStyle}
       />
 
-      <Animated.View style={[cancelDeleteAnim.animatedStyle, baseStyles.cancelDelete, { flex: 1, flexDirection: 'row' }]}>
-        <Pressable 
+      <Animated.View
+        style={[
+          cancelDeleteAnim.animatedStyle,
+          baseStyles.cancelDelete,
+          { flex: 1, flexDirection: "row" },
+        ]}
+      >
+        <Pressable
           onPress={() => {
             if (uiState.isDeleteMode) {
               homeViewModel.updateIsDeleteMode(false);
               homeViewModel.clearSelectedTransactions();
             }
-          }} 
-          style={[baseStyles.baseRoundedBox, { flex: 0.5, backgroundColor: Colors.placeholder, marginEnd: 4 }]}>
-          <TinyText text="Cancel" color={Colors.textPrimary} textAlign="center"/>
+          }}
+          style={[
+            baseStyles.baseRoundedBox,
+            { flex: 0.5, backgroundColor: Colors.placeholder, marginEnd: 4 },
+          ]}
+        >
+          <TinyText
+            text="Cancel"
+            color={Colors.textPrimary}
+            textAlign="center"
+          />
         </Pressable>
-        <Pressable 
-        onPress={() => {
-          if (uiState.isDeleteMode) {
-            homeViewModel.deleteTransactions(uiState.selectedTransactions, uiState.transactions);
-          }
-        }} 
-        style={[baseStyles.baseRoundedBox, { flex: 1, backgroundColor: Colors.red, marginStart: 4 }]}>
-          <TinyText text="Delete" color={Colors.textPrimary} textAlign="center" />
+        <Pressable
+          onPress={() => {
+            if (uiState.isDeleteMode) {
+              homeViewModel.deleteTransactions(
+                uiState.selectedTransactions,
+                uiState.transactions,
+              );
+            }
+          }}
+          style={[
+            baseStyles.baseRoundedBox,
+            { flex: 1, backgroundColor: Colors.red, marginStart: 4 },
+          ]}
+        >
+          <TinyText
+            text="Delete"
+            color={Colors.textPrimary}
+            textAlign="center"
+          />
         </Pressable>
       </Animated.View>
     </View>

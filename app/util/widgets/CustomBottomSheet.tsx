@@ -1,7 +1,11 @@
-import React, { forwardRef } from 'react';
-import BottomSheet, { BottomSheetBackdropProps, BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { ViewStyle } from 'react-native';
-import { Colors } from '@/constants/Colors';
+import React, { forwardRef, useContext, useState } from "react";
+import BottomSheet, {
+  BottomSheetBackdropProps,
+  BottomSheetView,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
+import { ViewStyle } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 interface CustomBottomSheetProps {
   index: number;
@@ -22,11 +26,14 @@ const CustomBackdrop = (props: BottomSheetBackdropProps) => (
   />
 );
 
-export const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>((props, ref) => {
+export const CustomBottomSheet = forwardRef<
+  BottomSheet,
+  CustomBottomSheetProps
+>((props, ref) => {
   const {
     index,
     children,
-    snapPoints = ['65%'],
+    snapPoints = ["65%"],
     onChange,
     backgroundColor = Colors.bottomSheetBackground,
     contentContainerStyle,
@@ -51,7 +58,7 @@ export const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>
 });
 
 export const openBottomSheet = (ref: React.RefObject<BottomSheet | null>) => {
-  ref.current?.expand();
+    ref.current?.expand();
 };
 
 export const closeBottomSheet = (ref: React.RefObject<BottomSheet | null>) => {

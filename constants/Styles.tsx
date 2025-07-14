@@ -1,6 +1,6 @@
-import { Colors } from '@/constants/Colors';
-import { SCREEN_WIDTH } from '@gorhom/bottom-sheet';
-import { StyleSheet } from 'react-native';
+import { Colors } from "@/constants/Colors";
+import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
+import { StyleSheet } from "react-native";
 
 const shadow = {
   elevation: 5,
@@ -23,19 +23,19 @@ export const baseStyles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
-  
+
   iconButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 16,
-    top: '50%',
+    top: "50%",
   },
 
   input: {
     color: Colors.textPrimary,
     borderColor: Colors.textPrimary,
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
@@ -45,9 +45,9 @@ export const baseStyles = StyleSheet.create({
 
   textInput: {
     flex: 1,
-    fontFamily: 'PoppinsRegular',
+    fontFamily: "PoppinsRegular",
     color: Colors.textPrimary,
-    textAlign: 'left',
+    textAlign: "left",
     fontSize: 14,
     paddingVertical: 16,
     includeFontPadding: false,
@@ -57,13 +57,13 @@ export const baseStyles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   categoryContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     marginTop: 8,
   },
 
@@ -89,7 +89,7 @@ export const baseStyles = StyleSheet.create({
 
   selectedCategoryButton: {
     backgroundColor: Colors.textSecondary,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
 
   pressed: {
@@ -97,24 +97,24 @@ export const baseStyles = StyleSheet.create({
   },
 
   fab: {
-    position: 'absolute',
+    position: "absolute",
     right: 16,
     bottom: 16,
     backgroundColor: Colors.textSecondary,
     width: 48,
     height: 48,
     borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     ...shadow,
   },
 
   cancelDelete: {
-    position: 'absolute',
+    position: "absolute",
     left: 16,
     right: 16,
     bottom: 16,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+    justifyContent: "space-evenly",
+    alignItems: "center",
   },
 });

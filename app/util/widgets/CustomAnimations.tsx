@@ -1,15 +1,16 @@
-import { useEffect } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   Easing,
-} from 'react-native-reanimated';
-import { TouchableOpacity } from 'react-native';
+} from "react-native-reanimated";
+import { TouchableOpacity } from "react-native";
 
 export const AnimatedIonicons = Animated.createAnimatedComponent(Ionicons);
-export const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+export const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity);
 
 export const useExpandUpShrinkDown = (
   visible: boolean,
@@ -41,7 +42,7 @@ export const useExpandUpShrinkDown = (
 export const useFadeInOut = (
   visible: boolean,
   duration: number = 70,
-  maxWidth: number = 24
+  maxWidth: number = 24,
 ) => {
   const scale = useSharedValue(visible ? 1 : 0);
   const width = useSharedValue(visible ? maxWidth : 0);
@@ -60,7 +61,7 @@ export const useFadeInOut = (
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
-    width: width.value
+    width: width.value,
   }));
 
   return { shouldRender: visible, animatedStyle };

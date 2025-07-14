@@ -9,8 +9,8 @@ export interface TransactionUiState {
 }
 
 export const initialTransactionUiState: TransactionUiState = {
-  amount: '',
-  description: '',
+  amount: "",
+  description: "",
   category: ExpenseCategory.Food,
-  transactionType: TransactionType.Expense
+  transactionType: TransactionType.Expense,
 };

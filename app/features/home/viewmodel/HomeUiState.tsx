@@ -1,6 +1,6 @@
-import { Profile } from '@/app/data/Profile';
-import { Transaction } from '@/app/data/TransactionItem';
-import { TransactionTypeFilter } from '@/app/util/enums/TransactionType';
+import { Profile } from "@/app/data/Profile";
+import { Transaction } from "@/app/data/TransactionItem";
+import { TransactionTypeFilter } from "@/app/util/enums/TransactionType";
 
 export interface HomeUiState {
   transactions: Transaction[];
@@ -21,5 +21,5 @@ export const initialHomeUiState: HomeUiState = {
   currentTypeFilter: TransactionTypeFilter.All,
   currentCategoryFilter: undefined,
   selectedTransactions: [],
-  isDeleteMode: false
+  isDeleteMode: false,
 };

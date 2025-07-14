@@ -23,7 +23,7 @@ export const combinedColorScale = [
     "#8B46FF", // Purple
     "#20D9D2", // Teal
     "#FF94C2", // Light Pink
-    "#A0A0A0"  // Neutral Gray
+    "#A0A0A0", // Neutral Gray
   ],
 
   // Material Theme (Extended)
@@ -37,6 +37,6 @@ export const combinedColorScale = [
     "#AB47BC", // Violet
     "#FF7043", // Light Orange
     "#81D4FA", // Sky Blue
-    "#5D4037"  // Brown/Neutral
-  ]
+    "#5D4037", // Brown/Neutral
+  ],
 ];

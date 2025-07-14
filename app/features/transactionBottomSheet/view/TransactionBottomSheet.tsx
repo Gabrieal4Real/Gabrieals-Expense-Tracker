@@ -1,51 +1,52 @@
-import React from 'react';
-import { View } from 'react-native';
-import { TitleText } from '@/app/util/widgets/CustomText';
-import { SpacerVertical } from '@/app/util/widgets/CustomBox';
-import CustomTextInput from '@/app/util/widgets/CustomTextInput';
-import { CustomButton } from '@/app/util/widgets/CustomButton';
-import { FilterChipGroup } from '@/app/util/widgets/CustomBox';
-import { useTransactionViewModel } from '../viewmodel/TransactionViewModel';
-import { TransactionType } from '@/app/util/enums/TransactionType';
-import { ExpenseCategory, IncomeCategory } from '@/app/util/enums/Category';
-import { Colors } from '@/constants/Colors';
+import React from "react";
+import { View } from "react-native";
+import { TitleText } from "@/app/util/widgets/CustomText";
+import { SpacerVertical } from "@/app/util/widgets/CustomBox";
+import CustomTextInput from "@/app/util/widgets/CustomTextInput";
+import { CustomButton } from "@/app/util/widgets/CustomButton";
+import { FilterChipGroup } from "@/app/util/widgets/CustomBox";
+import { useTransactionViewModel } from "../viewmodel/TransactionViewModel";
+import { TransactionType } from "@/app/util/enums/TransactionType";
+import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
+import { Colors } from "@/constants/Colors";
 
 interface TransactionBottomSheetProps {
   onTransactionAdded?: (
     type: TransactionType,
     amount: number,
     category: ExpenseCategory | IncomeCategory,
-    description: string
+    description: string,
   ) => void;
 }
 
-export default function TransactionBottomSheet({ onTransactionAdded }: TransactionBottomSheetProps) {
+export default function TransactionBottomSheet({
+  onTransactionAdded,
+}: TransactionBottomSheetProps) {
   const transactionViewModel = useTransactionViewModel();
-  const { transactionType, amount, category, description } = transactionViewModel.uiState;
+  const { transactionType, amount, category, description } =
+    transactionViewModel.uiState;
 
   const handleSubmit = () => {
     onTransactionAdded?.(
       transactionType,
       Number(amount),
       category,
-      description
+      description,
     );
     transactionViewModel.reset();
   };
 
-  const isAmountValid = amount !== '';
+  const isAmountValid = amount !== "";
 
-  const buttonBackground =
-    !isAmountValid
-      ? Colors.navigationBar
-      : transactionType === TransactionType.Expense
+  const buttonBackground = !isAmountValid
+    ? Colors.navigationBar
+    : transactionType === TransactionType.Expense
       ? Colors.red
       : Colors.green;
 
-  const buttonTextColor =
-    !isAmountValid
-      ? Colors.white
-      : transactionType === TransactionType.Expense
+  const buttonTextColor = !isAmountValid
+    ? Colors.white
+    : transactionType === TransactionType.Expense
       ? Colors.textPrimary
       : Colors.black;
 
@@ -64,7 +65,7 @@ export default function TransactionBottomSheet({ onTransactionAdded }: Transacti
         onSelectedChange={(type) =>
           transactionViewModel.updateTransactionType(type as TransactionType)
         }
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       />
       <SpacerVertical size={8} />
 
@@ -75,7 +76,7 @@ export default function TransactionBottomSheet({ onTransactionAdded }: Transacti
         keyboardType="decimal-pad"
         value={amount}
         onChangeText={(text) => {
-          if (text === '' || /^\d*\.?\d{0,2}$/.test(text)) {
+          if (text === "" || /^\d*\.?\d{0,2}$/.test(text)) {
             transactionViewModel.updateAmount(text);
           }
         }}
@@ -94,12 +95,12 @@ export default function TransactionBottomSheet({ onTransactionAdded }: Transacti
       <FilterChipGroup
         title="Category"
         items={Object.values(
-          transactionViewModel.getCategoriesByType(transactionType)
+          transactionViewModel.getCategoriesByType(transactionType),
         )}
         selected={category}
         onSelectedChange={(cat) =>
           transactionViewModel.updateCategory(
-            cat as ExpenseCategory | IncomeCategory
+            cat as ExpenseCategory | IncomeCategory,
           )
         }
       />

@@ -8,35 +8,40 @@ import { baseStyles } from "@/constants/Styles";
 import { SpacerVertical } from "@/app/util/widgets/CustomBox";
 
 interface InputProps extends TextInputProps {
-    label: string;
-    prefix?: string;
+  label: string;
+  prefix?: string;
 }
 
 const CustomTextInput = forwardRef<TextInput, InputProps>(
-    ({ label, prefix, ...props }, ref) => (
-      <View>
-        <TinyText text={label} color={Colors.textPrimary} textAlign="left" />
-        <SpacerVertical size={8} />
-        <View style={[baseStyles.input, { flexDirection: 'row', alignItems: 'center' }]}>
-          {prefix && (
-            <TinyText
-              text={prefix}
-              color={Colors.textPrimary}
-              textAlign="left"
-              style={{ marginRight: 8 }}
-            />
-          )}
-          <TextInput
-            ref={ref}
-            style={[baseStyles.textInput]}
-            placeholderTextColor={Colors.placeholder}
-            selectionColor={Colors.placeholder}
-            returnKeyType="next"
-            {...props}
+  ({ label, prefix, ...props }, ref) => (
+    <View>
+      <TinyText text={label} color={Colors.textPrimary} textAlign="left" />
+      <SpacerVertical size={8} />
+      <View
+        style={[
+          baseStyles.input,
+          { flexDirection: "row", alignItems: "center" },
+        ]}
+      >
+        {prefix && (
+          <TinyText
+            text={prefix}
+            color={Colors.textPrimary}
+            textAlign="left"
+            style={{ marginRight: 8 }}
           />
-        </View>
+        )}
+        <TextInput
+          ref={ref}
+          style={[baseStyles.textInput]}
+          placeholderTextColor={Colors.placeholder}
+          selectionColor={Colors.placeholder}
+          returnKeyType="next"
+          {...props}
+        />
       </View>
-    )
-  );
+    </View>
+  ),
+);
 
 export default CustomTextInput;

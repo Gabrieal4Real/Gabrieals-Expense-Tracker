@@ -1,75 +1,145 @@
-import React from 'react';
-import { Text, TextProps, StyleSheet } from 'react-native';
-import { Colors } from '@/constants/Colors';
+import React from "react";
+import { Text, TextProps, StyleSheet } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 type TypographyProps = TextProps & {
   text: string;
   color?: string;
-  textAlign?: 'auto' | 'left' | 'right' | 'center' | 'justify';
+  textAlign?: "auto" | "left" | "right" | "center" | "justify";
 };
 
-export const TitleText: React.FC<TypographyProps> = ({ text, style, color, textAlign = 'left', ...props }) => {
-  return (
-    <Text 
-      style={[textStyles.titleText, { color: color || Colors.textPrimary, textAlign }, style]} 
-      {...props}
-    >
-      {text.toUpperCase()}
-    </Text>
-  );
-};
-
-export const BiggerText: React.FC<TypographyProps> = ({ text, style, color, textAlign = 'center', ...props }) => (
+export const TitleText = ({
+  text,
+  style,
+  color,
+  textAlign = "left",
+  ...props
+}: TypographyProps) => (
   <Text
+    style={[
+      textStyles.titleText,
+      { color: color || Colors.textPrimary, textAlign },
+      style,
+    ]}
     {...props}
-    style={[textStyles.biggerText, { color: color || Colors.textPrimary, textAlign }, style]}
   >
     {text.toUpperCase()}
   </Text>
 );
 
-export const BigText: React.FC<TypographyProps> = ({ text, style, color, numberOfLines, textAlign = 'left', ...props }) => (
+export const BiggerText = ({
+  text,
+  style,
+  color,
+  textAlign = "center",
+  ...props
+}: TypographyProps) => (
+  <Text
+    {...props}
+    style={[
+      textStyles.biggerText,
+      { color: color || Colors.textPrimary, textAlign },
+      style,
+    ]}
+  >
+    {text.toUpperCase()}
+  </Text>
+);
+
+export const BigText = ({
+  text,
+  style,
+  color,
+  numberOfLines,
+  textAlign = "left",
+  ...props
+}: TypographyProps) => (
   <Text
     {...props}
     numberOfLines={numberOfLines}
-    style={[textStyles.bigText, { color: color || Colors.textSecondary, textAlign }, style]}
+    style={[
+      textStyles.bigText,
+      { color: color || Colors.textSecondary, textAlign },
+      style,
+    ]}
   >
     {text}
   </Text>
 );
 
-export const SubtitleText: React.FC<TypographyProps> = ({ text, style, color, numberOfLines, textAlign = 'left', ...props }) => (
+export const SubtitleText = ({
+  text,
+  style,
+  color,
+  numberOfLines,
+  textAlign = "left",
+  ...props
+}: TypographyProps) => (
   <Text
     {...props}
     numberOfLines={numberOfLines}
-    style={[textStyles.subtitleText, { color: color || Colors.textPrimary, textAlign }, style]}
+    style={[
+      textStyles.subtitleText,
+      { color: color || Colors.textPrimary, textAlign },
+      style,
+    ]}
   >
     {text}
   </Text>
 );
 
-export const DescriptionText: React.FC<TypographyProps> = ({ text, style, color, textAlign = 'left', ...props }) => (
+export const DescriptionText = ({
+  text,
+  style,
+  color,
+  textAlign = "left",
+  ...props
+}: TypographyProps) => (
   <Text
     {...props}
-    style={[textStyles.descriptionText, { color: color || Colors.textPrimary, textAlign }, style]}
+    style={[
+      textStyles.descriptionText,
+      { color: color || Colors.textPrimary, textAlign },
+      style,
+    ]}
   >
     {text}
   </Text>
 );
 
-export const TinyText: React.FC<TypographyProps> = ({ text, style, color, textAlign = 'left', ...props }) => (
+export const TinyText = ({
+  text,
+  style,
+  color,
+  textAlign = "left",
+  ...props
+}: TypographyProps) => (
   <Text
     {...props}
-    style={[textStyles.tinyText, { color: color || Colors.textPrimary, textAlign }, style]}
+    style={[
+      textStyles.tinyText,
+      { color: color || Colors.textPrimary, textAlign },
+      style,
+    ]}
   >
     {text}
   </Text>
 );
 
-export const TinierText: React.FC<TypographyProps> = ({ text, style, color, textAlign = 'left', ...props }) => (
+export const TinierText = ({
+  text,
+  style,
+  color,
+  textAlign = "left",
+  ...props
+}: TypographyProps) => (
   <Text
     {...props}
-    style={[textStyles.tinierText, { color: color || Colors.textPrimary, textAlign }, style]}
+    style={[
+      textStyles.tinierText,
+      { color: color || Colors.textPrimary, textAlign },
+      style,
+    ]}
   >
     {text}
   </Text>
@@ -77,45 +147,45 @@ export const TinierText: React.FC<TypographyProps> = ({ text, style, color, text
 
 export const textStyles = StyleSheet.create({
   titleText: {
-    fontFamily: 'PoppinsBold',
+    fontFamily: "PoppinsBold",
     fontSize: 18,
     letterSpacing: 4,
     lineHeight: 24,
     includeFontPadding: false,
   },
   biggerText: {
-    fontFamily: 'PoppinsExtraBold',
+    fontFamily: "PoppinsExtraBold",
     fontSize: 22,
     letterSpacing: 4,
     lineHeight: 30,
     includeFontPadding: false,
   },
   bigText: {
-    fontFamily: 'PoppinsSemiBold',
+    fontFamily: "PoppinsSemiBold",
     fontSize: 20,
     lineHeight: 28,
     includeFontPadding: false,
   },
   subtitleText: {
-    fontFamily: 'PoppinsSemiBold',
+    fontFamily: "PoppinsSemiBold",
     fontSize: 16,
     lineHeight: 22,
     includeFontPadding: false,
   },
   descriptionText: {
-    fontFamily: 'PoppinsMedium',
+    fontFamily: "PoppinsMedium",
     fontSize: 14,
     lineHeight: 20,
     includeFontPadding: false,
   },
   tinyText: {
-    fontFamily: 'PoppinsRegular',
+    fontFamily: "PoppinsRegular",
     fontSize: 12,
     lineHeight: 18,
     includeFontPadding: false,
   },
   tinierText: {
-    fontFamily: 'PoppinsRegular',
+    fontFamily: "PoppinsRegular",
     fontSize: 10,
     lineHeight: 14,
     includeFontPadding: false,

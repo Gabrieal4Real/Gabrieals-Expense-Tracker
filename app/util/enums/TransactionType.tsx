@@ -1,16 +1,16 @@
 export enum TransactionType {
-    Expense = 'Expense',
-    Income = 'Income'
+  Expense = "Expense",
+  Income = "Income",
 }
 
 export enum TransactionTypeFilter {
-    All = 'All',
-    Expense = 'Expense',
-    Income = 'Income'
+  All = "All",
+  Expense = "Expense",
+  Income = "Income",
 }
 
 export enum TransactionFilter {
-    Date = 'Date',
-    Category = 'Category',
-    Type = 'Expense Type'
+  Date = "Date",
+  Category = "Category",
+  Type = "Expense Type",
 }

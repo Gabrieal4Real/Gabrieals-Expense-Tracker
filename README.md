@@ -5,6 +5,7 @@ A modern multiplatform expense tracking application built with React Native and 
 **Note: This is an ongoing project under active development.**
 
 ## Screenshot
+
 [ON GOING]
 
 ## Features
@@ -48,12 +49,14 @@ The app follows a feature-based architecture with the following structure:
 ### Installation
 
 1. Clone the repository
+
    ```bash
    git clone https://github.com/yourusername/expense-tracker.git
    cd expense-tracker
    ```
 
 2. Install dependencies
+
    ```bash
    npm install
    # or
@@ -61,6 +64,7 @@ The app follows a feature-based architecture with the following structure:
    ```
 
 3. Start the development server
+
    ```bash
    npx expo start
    ```

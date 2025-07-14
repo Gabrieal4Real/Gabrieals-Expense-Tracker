@@ -1,52 +1,82 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
-import { HomeUiState, initialHomeUiState } from './HomeUiState';
-import { HomeRepository } from '../repo/HomeRepository';
-import { Transaction } from '@/app/data/TransactionItem';
-import { TransactionType, TransactionTypeFilter } from '@/app/util/enums/TransactionType';
-import { ExpenseCategory, IncomeCategory } from '@/app/util/enums/Category';
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { HomeUiState, initialHomeUiState } from "./HomeUiState";
+import { HomeRepository } from "../repo/HomeRepository";
+import { Transaction } from "@/app/data/TransactionItem";
+import {
+  TransactionType,
+  TransactionTypeFilter,
+} from "@/app/util/enums/TransactionType";
+import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
 
-import { Profile } from '@/app/data/Profile';
+import { Profile } from "@/app/data/Profile";
 
 export function useHomeViewModel() {
   const [uiState, setUiState] = useState<HomeUiState>(initialHomeUiState);
 
-  const updateState = useCallback((updater: (state: HomeUiState) => Partial<HomeUiState>) => {
-    setUiState(prev => ({ ...prev, ...updater(prev) }));
-  }, []);
+  const updateState = useCallback(
+    (updater: (state: HomeUiState) => Partial<HomeUiState>) => {
+      setUiState((prev) => ({ ...prev, ...updater(prev) }));
+    },
+    [],
+  );
 
-  const updateLoading = useCallback((loading: boolean, error: string | null) => {
-    updateState(() => ({ loading, error }));
-  }, [updateState]);
+  const updateLoading = useCallback(
+    (loading: boolean, error: string | null) => {
+      updateState(() => ({ loading, error }));
+    },
+    [updateState],
+  );
 
-  const updateSelectedTransaction = useCallback((currentTransactions: number[], selectedTransaction: number) => {
-    const current = new Set(currentTransactions);
-    current.has(selectedTransaction) ? current.delete(selectedTransaction) : current.add(selectedTransaction);
-    updateState(() => ({ selectedTransactions: Array.from(current) }));
-  }, [updateState]);
+  const updateSelectedTransaction = useCallback(
+    (currentTransactions: number[], selectedTransaction: number) => {
+      const current = new Set(currentTransactions);
+      current.has(selectedTransaction)
+        ? current.delete(selectedTransaction)
+        : current.add(selectedTransaction);
+      updateState(() => ({ selectedTransactions: Array.from(current) }));
+    },
+    [updateState],
+  );
 
-  const updateSelectedTransactions = useCallback((currentTransactions: number[], selectedTransactions: number[], isDelete: boolean) => {
-    const current = new Set(currentTransactions);
-    selectedTransactions.forEach(transaction => {
-      isDelete ? current.delete(transaction) : current.add(transaction);
-    });
-    updateState(() => ({ selectedTransactions: Array.from(current) }));
-  }, [updateState]);
+  const updateSelectedTransactions = useCallback(
+    (
+      currentTransactions: number[],
+      selectedTransactions: number[],
+      isDelete: boolean,
+    ) => {
+      const current = new Set(currentTransactions);
+      selectedTransactions.forEach((transaction) => {
+        isDelete ? current.delete(transaction) : current.add(transaction);
+      });
+      updateState(() => ({ selectedTransactions: Array.from(current) }));
+    },
+    [updateState],
+  );
 
   const clearSelectedTransactions = useCallback(() => {
     updateState(() => ({ selectedTransactions: [] }));
   }, [updateState]);
 
-  const updateIsDeleteMode = useCallback((isDeleteMode: boolean) => {
-    updateState(() => ({ isDeleteMode }));
-  }, [updateState]);
+  const updateIsDeleteMode = useCallback(
+    (isDeleteMode: boolean) => {
+      updateState(() => ({ isDeleteMode }));
+    },
+    [updateState],
+  );
 
-  const updateCurrentTypeFilter = useCallback((currentTypeFilter: TransactionTypeFilter) => {
-    updateState(() => ({ currentTypeFilter }));
-  }, [updateState]);
+  const updateCurrentTypeFilter = useCallback(
+    (currentTypeFilter: TransactionTypeFilter) => {
+      updateState(() => ({ currentTypeFilter }));
+    },
+    [updateState],
+  );
 
-  const updateCurrentCategoryFilter = useCallback((currentCategoryFilter?: string) => {
-    updateState(() => ({ currentCategoryFilter }));
-  }, [updateState]);
+  const updateCurrentCategoryFilter = useCallback(
+    (currentCategoryFilter?: string) => {
+      updateState(() => ({ currentCategoryFilter }));
+    },
+    [updateState],
+  );
 
   const getProfile = useCallback(async () => {
     updateLoading(true, null);
@@ -62,24 +92,30 @@ export function useHomeViewModel() {
         return profile;
       }
     } catch {
-      updateLoading(false, 'Failed to get profile');
+      updateLoading(false, "Failed to get profile");
       return null;
     } finally {
       updateLoading(false, null);
     }
   }, [updateState, updateLoading]);
 
-  const updateProfile = useCallback(async (profile: Profile) => {
-    updateLoading(true, null);
-    try {
-      await HomeRepository.updateProfile(profile.remaining, profile.requireAuth);
-      updateState(() => ({ profile }));
-    } catch {
-      updateLoading(false, 'Failed to update profile');
-    } finally {
-      updateLoading(false, null);
-    }
-  }, [updateState, updateLoading]);
+  const updateProfile = useCallback(
+    async (profile: Profile) => {
+      updateLoading(true, null);
+      try {
+        await HomeRepository.updateProfile(
+          profile.remaining,
+          profile.requireAuth,
+        );
+        updateState(() => ({ profile }));
+      } catch {
+        updateLoading(false, "Failed to update profile");
+      } finally {
+        updateLoading(false, null);
+      }
+    },
+    [updateState, updateLoading],
+  );
 
   const getTransactions = useCallback(async () => {
     updateLoading(true, null);
@@ -87,72 +123,96 @@ export function useHomeViewModel() {
       const transactions = await HomeRepository.fetchTransactions();
       updateState(() => ({ transactions }));
     } catch {
-      updateLoading(false, 'Failed to load transactions');
+      updateLoading(false, "Failed to load transactions");
     } finally {
       updateLoading(false, null);
     }
   }, [updateState, updateLoading]);
 
-  const updateTransaction = useCallback(async (
-    type: TransactionType,
-    amount: number,
-    category: ExpenseCategory | IncomeCategory,
-    description: string
-  ) => {
-    updateLoading(true, null);
-    try {
-      await HomeRepository.createTransaction(type, amount, category, description);
+  const updateTransaction = useCallback(
+    async (
+      type: TransactionType,
+      amount: number,
+      category: ExpenseCategory | IncomeCategory,
+      description: string,
+    ) => {
+      updateLoading(true, null);
+      try {
+        await HomeRepository.createTransaction(
+          type,
+          amount,
+          category,
+          description,
+        );
 
-      const profile = await getProfile();
-      if (profile) {
-        const remaining = type === TransactionType.Expense
-          ? profile.remaining - amount
-          : profile.remaining + amount;
+        const profile = await getProfile();
+        if (profile) {
+          const remaining =
+            type === TransactionType.Expense
+              ? profile.remaining - amount
+              : profile.remaining + amount;
 
-        await updateProfile({ remaining, requireAuth: profile.requireAuth });
+          await updateProfile({ remaining, requireAuth: profile.requireAuth });
+          await getTransactions();
+        }
+      } catch {
+        updateLoading(false, "Failed to add transaction");
+      } finally {
+        updateLoading(false, null);
+      }
+    },
+    [getProfile, updateProfile, getTransactions, updateLoading],
+  );
+
+  const deleteTransactions = useCallback(
+    async (ids: number[], transactions: Transaction[]) => {
+      updateLoading(true, null);
+      try {
+        const profile = await getProfile();
+        if (profile) {
+          const remaining = ids.reduce((acc, id) => {
+            const transaction = transactions.find((t) => t.id === id);
+            if (!transaction) return acc;
+            return (
+              acc +
+              (transaction.type === TransactionType.Expense
+                ? transaction.amount
+                : -transaction.amount)
+            );
+          }, profile.remaining);
+
+          await updateProfile({ remaining, requireAuth: profile.requireAuth });
+        }
+
+        await HomeRepository.deleteTransactionsByIds(ids);
         await getTransactions();
+        clearSelectedTransactions();
+        updateIsDeleteMode(false);
+      } catch {
+        updateLoading(false, "Failed to delete transactions");
+      } finally {
+        updateLoading(false, null);
       }
-    } catch {
-      updateLoading(false, 'Failed to add transaction');
-    } finally {
-      updateLoading(false, null);
-    }
-  }, [getProfile, updateProfile, getTransactions, updateLoading]);
-
-  const deleteTransactions = useCallback(async (ids: number[], transactions: Transaction[]) => {
-    updateLoading(true, null);
-    try {
-      const profile = await getProfile();
-      if (profile) {
-        const remaining = ids.reduce((acc, id) => {
-          const transaction = transactions.find(t => t.id === id);
-          if (!transaction) return acc;
-          return acc + (transaction.type === TransactionType.Expense ? transaction.amount : -transaction.amount);
-        }, profile.remaining);
-
-        await updateProfile({ remaining, requireAuth: profile.requireAuth });
-      }
-
-      await HomeRepository.deleteTransactionsByIds(ids);
-      await getTransactions();
-      clearSelectedTransactions();
-      updateIsDeleteMode(false);
-    } catch {
-      updateLoading(false, 'Failed to delete transactions');
-    } finally {
-      updateLoading(false, null);
-    }
-  }, [getProfile, updateProfile, getTransactions, clearSelectedTransactions, updateIsDeleteMode, updateLoading]);
+    },
+    [
+      getProfile,
+      updateProfile,
+      getTransactions,
+      clearSelectedTransactions,
+      updateIsDeleteMode,
+      updateLoading,
+    ],
+  );
 
   const groupedTransactionsByDate = (transactions: Transaction[]) => {
     const groups: Record<string, Transaction[]> = {};
-    transactions.forEach(tx => {
+    transactions.forEach((tx) => {
       const date = new Date(tx.date).toDateString();
       if (!groups[date]) groups[date] = [];
       groups[date].push(tx);
     });
 
-    Object.values(groups).forEach(transaction => transaction.reverse());
+    Object.values(groups).forEach((transaction) => transaction.reverse());
 
     return Object.entries(groups)
       .sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
@@ -179,6 +239,6 @@ export function useHomeViewModel() {
     deleteTransactions,
     updateIsDeleteMode,
     clearSelectedTransactions,
-    groupedTransactionsByDate
+    groupedTransactionsByDate,
   };
 }

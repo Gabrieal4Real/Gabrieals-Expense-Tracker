@@ -1,11 +1,11 @@
-import React from 'react';
-import { Pressable, TouchableOpacity, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { DescriptionText } from '@/app/util/widgets/CustomText';
-import { Colors } from '@/constants/Colors';
-import { baseStyles } from '@/constants/Styles';
-import Animated from 'react-native-reanimated';
-import { AnimatedTouchableOpacity } from './CustomAnimations';
+import React from "react";
+import { Pressable, TouchableOpacity, ViewStyle } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { DescriptionText } from "@/app/util/widgets/CustomText";
+import { Colors } from "@/constants/Colors";
+import { baseStyles } from "@/constants/Styles";
+import Animated from "react-native-reanimated";
+import { AnimatedTouchableOpacity } from "./CustomAnimations";
 
 interface CustomButtonProps {
   text: string;
@@ -15,13 +15,13 @@ interface CustomButtonProps {
   disabled?: boolean;
 }
 
-export const CustomButton: React.FC<CustomButtonProps> = ({
+export const CustomButton = ({
   text,
-  onPress = () => console.log('Button pressed'),
+  onPress = () => console.log("Button pressed"),
   style,
   color = Colors.textPrimary,
   disabled = false,
-}) => (
+}: CustomButtonProps) => (
   <Pressable
     onPress={onPress}
     disabled={disabled}
@@ -29,18 +29,29 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
       baseStyles.button,
       pressed && baseStyles.pressed,
       style,
-    ]}>
-    <DescriptionText text={text.toUpperCase()} color={color} textAlign="center" />
+    ]}
+  >
+    <DescriptionText
+      text={text.toUpperCase()}
+      color={color}
+      textAlign="center"
+    />
   </Pressable>
 );
 
 export const IconButton = ({
-  icon = 'finger-print',
-  onPress = () => console.log('Icon pressed'),
+  icon = "finger-print",
+  onPress = () => console.log("Icon pressed"),
   size = 32,
   color = Colors.textPrimary,
-  style
-}: { icon?: string, onPress?: () => void, size?: number, color?: string, style?: ViewStyle }) => (
+  style,
+}: {
+  icon?: string;
+  onPress?: () => void;
+  size?: number;
+  color?: string;
+  style?: ViewStyle;
+}) => (
   <Pressable
     onPress={onPress}
     style={({ pressed }) => [pressed && baseStyles.pressed, style]}
@@ -49,7 +60,15 @@ export const IconButton = ({
   </Pressable>
 );
 
-export const FloatingActionButton = ({ onPress, icon = 'add', style }: { onPress: () => void, icon?: string, style?: ViewStyle }) => {
+export const FloatingActionButton = ({
+  onPress,
+  icon = "add",
+  style,
+}: {
+  onPress: () => void;
+  icon?: string;
+  style?: ViewStyle;
+}) => {
   return (
     <AnimatedTouchableOpacity style={[baseStyles.fab, style]} onPress={onPress}>
       <Ionicons name={icon as any} size={24} color={Colors.black} />
