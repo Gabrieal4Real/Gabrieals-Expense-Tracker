@@ -35,6 +35,24 @@ export async function getTransactionById(
   return result ?? null;
 }
 
+export async function updateTransactionById(
+  id: number,
+  transaction: Transaction,
+): Promise<void> {
+  const db = await getDB();
+  await db.runAsync(
+    `UPDATE transactions SET amount = ?, date = ?, type = ?, category = ?, description = ? WHERE id = ?`,
+    [
+      transaction.amount,
+      transaction.date,
+      transaction.type,
+      transaction.category,
+      transaction.description,
+      id,
+    ],
+  );
+}
+
 export async function deleteTransactionsByIds(ids: number[]): Promise<void> {
   if (ids.length === 0) return;
   const db = await getDB();

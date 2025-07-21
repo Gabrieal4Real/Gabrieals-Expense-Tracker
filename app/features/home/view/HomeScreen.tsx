@@ -60,6 +60,7 @@ import {
 
 import CustomPicker from "@/app/util/widgets/CustomPicker";
 import TransactionBottomSheet from "../../transactionBottomSheet/view/TransactionBottomSheet";
+import { navigateToEditTransaction } from "@/app/util/systemFunctions/NavigationUtil";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -186,6 +187,8 @@ export default function HomeScreen() {
           uiState.selectedTransactions,
           item.id ?? -1,
         );
+      } else {
+        navigateToEditTransaction(item);
       }
     };
 
@@ -493,7 +496,6 @@ export default function HomeScreen() {
                               ),
                             size: 20,
                             color: Colors.textPrimary,
-                            style: {},
                           })}
                         {!uiState.isDeleteMode && (
                           <TinyText
@@ -573,7 +575,7 @@ export default function HomeScreen() {
           }}
           style={[
             baseStyles.baseRoundedBox,
-            { flex: 0.5, backgroundColor: Colors.placeholder, marginEnd: 4 },
+            { flex: 0.4, backgroundColor: Colors.placeholder, marginEnd: 4 },
           ]}
         >
           <TinyText

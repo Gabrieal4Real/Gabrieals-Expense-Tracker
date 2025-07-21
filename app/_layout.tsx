@@ -47,6 +47,10 @@ export default function RootLayout() {
         <GestureHandlerRootView>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" options={{ title: "Home" }} />
+            <Stack.Screen
+              name="features/editTransaction/view/EditTransactionScreen"
+              options={{ title: "Edit Transaction" }}
+            />
           </Stack>
         </GestureHandlerRootView>
       </AuthProvider>

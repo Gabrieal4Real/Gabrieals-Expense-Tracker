@@ -74,8 +74,8 @@ export function ChartPager({
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  return (
-    <RoundedBox
+  return (<RoundedBox
+    
       style={{ marginBottom: 12, paddingHorizontal: 0, alignItems: "center" }}
     >
       <FlatList

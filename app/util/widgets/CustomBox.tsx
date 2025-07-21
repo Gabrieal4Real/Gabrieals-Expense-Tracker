@@ -6,6 +6,35 @@ import { TinyText, TinierText } from "@/app/util/widgets/CustomText";
 import { BlurView } from "expo-blur";
 import { StyleSheet } from "react-native";
 import { TitleText } from "@/app/util/widgets/CustomText";
+import { Ionicons } from "@expo/vector-icons";
+import { navigateBack } from "@/app/util/systemFunctions/NavigationUtil";
+
+export const TitleBox = ({ title }: { title: string }) => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <Pressable
+        onPress={() => {
+          navigateBack();
+        }}
+        style={({ pressed }) => [pressed && baseStyles.pressed]}
+      >
+        <Ionicons
+          name="chevron-back-outline"
+          size={24}
+          color={Colors.textPrimary}
+        />
+      </Pressable>
+      <TitleText text={title} color={Colors.textPrimary} textAlign="center" />
+      <SpacerHorizontal size={24} />
+    </View>
+  );
+};
 
 export const RoundedBox = ({
   children,

@@ -16,6 +16,7 @@ export const Colors = {
   black: "rgba(0, 0, 0, 1)",
   white: "rgba(255, 255, 255, 1)",
   red: "rgba(178, 34, 34, 1)",
+  blue: "rgb(0, 123, 255)",
   green: "rgba(10, 152, 105, 1)",
   lightMaroon: "rgba(171, 69, 103, 0.5)",
   transparent: "rgba(0, 0, 0, 0)",
