@@ -1,6 +1,7 @@
 import * as LocalAuthentication from "expo-local-authentication";
 import { createContext, useState, useContext, useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
+import { getProfile } from "@/app/sql/AppDatabase";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -18,8 +19,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const subscription = AppState.addEventListener(
       "change",
-      (nextAppState: AppStateStatus) => {
-        if (nextAppState === "active" && isAuthenticated) {
+      async (nextAppState: AppStateStatus) => {
+        const profile = await getProfile();
+        if (nextAppState === "active" && isAuthenticated && profile?.requireAuth === 1) {
           setIsAuthenticated(false);
         }
       },

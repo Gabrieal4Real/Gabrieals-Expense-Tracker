@@ -79,7 +79,9 @@ export default function HomeScreen() {
 
   useEffect(() => {
     homeViewModel.getTransactions();
-    homeViewModel.getProfile();
+    homeViewModel.getProfile().then((profile) => {
+      setIsAuthenticated(profile?.requireAuth === 0);
+    });
   }, []);
 
   const handleFilterPress = (filter: TransactionFilter[]) => {

@@ -83,8 +83,8 @@ export function useHomeViewModel() {
     try {
       const profile = await HomeRepository.getProfile();
       if (!profile) {
-        await HomeRepository.updateProfile(0, true);
-        const defaultProfile = { remaining: 0, requireAuth: true };
+        await HomeRepository.updateProfile(0, 1);
+        const defaultProfile = { remaining: 0, requireAuth: 1 };
         updateState(() => ({ profile: defaultProfile }));
         return defaultProfile;
       } else {
