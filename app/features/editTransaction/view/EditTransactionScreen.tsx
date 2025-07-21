@@ -15,15 +15,14 @@ import { Colors } from "@/constants/Colors";
 import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
 import { useTransactionViewModel } from "../../transactionBottomSheet/viewmodel/TransactionViewModel";
 import { useHomeViewModel } from "../../home/viewmodel/HomeViewModel";
-import { navigateBack } from "@/app/util/systemFunctions/NavigationUtil";
 
 export default function EditTransactionScreen() {
   const insets = useSafeAreaInsets();
   const { data } = useLocalSearchParams();
 
-  const { uiState, ...editTransactionViewModel } = useEditTransactionViewModel();
+  const { uiState, ...editTransactionViewModel } =
+    useEditTransactionViewModel();
   const { ...transactionViewModel } = useTransactionViewModel();
-  const { ...homeViewModel } = useHomeViewModel();
 
   useEffect(() => {
     editTransactionViewModel.setTransaction(data as string);
@@ -95,8 +94,10 @@ export default function EditTransactionScreen() {
       >
         <Pressable
           onPress={() => {
-            homeViewModel.deleteTransactions([uiState.transaction?.id ?? -1], [uiState.transaction!!]);
-            navigateBack();
+            editTransactionViewModel.deleteTransactionById(
+              uiState.transaction?.id ?? -1,
+              uiState.transaction!,
+            );
           }}
           style={[
             baseStyles.baseRoundedBox,
@@ -111,7 +112,17 @@ export default function EditTransactionScreen() {
         </Pressable>
         <Pressable
           onPress={() => {
-
+            editTransactionViewModel.updateTransactionById(
+              uiState.transaction?.id ?? -1,
+              uiState.transaction!,
+              {
+                ...uiState.transaction!,
+                type: uiState.transactionType,
+                category: uiState.category,
+                amount: Number(uiState.amount),
+                description: uiState.description,
+              },
+            );
           }}
           style={[
             baseStyles.baseRoundedBox,

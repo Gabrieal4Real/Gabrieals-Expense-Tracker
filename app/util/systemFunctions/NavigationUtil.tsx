@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 
 const router = useRouter();
 
-export function navigateToEditTransaction(transaction: Transaction) {
+export function navigateToEditTransaction(transaction: Transaction, handleTransactionUpdated: () => void) {
   const serialized = JSON.stringify(transaction);
   const encoded = encodeURIComponent(serialized);
 

@@ -165,11 +165,16 @@ export default function HomeScreen() {
       category: ExpenseCategory | IncomeCategory,
       description: string,
     ) => {
-      homeViewModel.updateTransaction(type, amount, category, description);
+      homeViewModel.addTransaction(type, amount, category, description);
       closeBottomSheet(bottomSheetRef);
     },
     [],
   );
+
+  const handleTransactionUpdated = useCallback(() => {
+    homeViewModel.getTransactions();
+    homeViewModel.getProfile();
+  }, []);
 
   const renderTransaction = ({ item }: { item: Transaction }) => {
     const swipeableRef = useRef<any>(null);
@@ -188,7 +193,7 @@ export default function HomeScreen() {
           item.id ?? -1,
         );
       } else {
-        navigateToEditTransaction(item);
+        navigateToEditTransaction(item, handleTransactionUpdated);
       }
     };
 

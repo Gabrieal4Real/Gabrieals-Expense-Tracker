@@ -129,7 +129,7 @@ export function useHomeViewModel() {
     }
   }, [updateState, updateLoading]);
 
-  const updateTransaction = useCallback(
+  const addTransaction = useCallback(
     async (
       type: TransactionType,
       amount: number,
@@ -229,7 +229,7 @@ export function useHomeViewModel() {
   return {
     uiState,
     getTransactions,
-    updateTransaction,
+    addTransaction,
     getProfile,
     updateProfile,
     updateCurrentTypeFilter,
