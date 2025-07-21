@@ -58,7 +58,7 @@ export const CustomBottomSheet = forwardRef<
 });
 
 export const openBottomSheet = (ref: React.RefObject<BottomSheet | null>) => {
-    ref.current?.expand();
+  ref.current?.expand();
 };
 
 export const closeBottomSheet = (ref: React.RefObject<BottomSheet | null>) => {

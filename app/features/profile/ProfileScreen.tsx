@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function SettingsScreen() {
   return (
     <SafeAreaView style={baseStyles.baseBackground}>
-      <TitleText text="Settings" color={Colors.textPrimary} />
+      <TitleText text="Profile" color={Colors.textPrimary} />
     </SafeAreaView>
   );
 }

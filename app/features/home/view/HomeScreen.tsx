@@ -60,7 +60,11 @@ import {
 
 import CustomPicker from "@/app/util/widgets/CustomPicker";
 import TransactionBottomSheet from "../../transactionBottomSheet/view/TransactionBottomSheet";
-import { navigateToEditTransaction } from "@/app/util/systemFunctions/NavigationUtil";
+import {
+  navigateBack,
+  navigateToEditTransaction,
+} from "@/app/util/systemFunctions/NavigationUtil";
+import EventBus from "@/app/util/systemFunctions/EventBus";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -174,7 +178,14 @@ export default function HomeScreen() {
   const handleTransactionUpdated = useCallback(() => {
     homeViewModel.getTransactions();
     homeViewModel.getProfile();
+    navigateBack();
   }, []);
+
+  useEffect(() => {
+    const handler = () => handleTransactionUpdated();
+    EventBus.on("transactionUpdated", handler);
+    return () => EventBus.off("transactionUpdated", handler);
+  }, [handleTransactionUpdated]);
 
   const renderTransaction = ({ item }: { item: Transaction }) => {
     const swipeableRef = useRef<any>(null);
@@ -193,7 +204,7 @@ export default function HomeScreen() {
           item.id ?? -1,
         );
       } else {
-        navigateToEditTransaction(item, handleTransactionUpdated);
+        navigateToEditTransaction(item);
       }
     };
 

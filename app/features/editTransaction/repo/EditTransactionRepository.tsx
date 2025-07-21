@@ -7,10 +7,7 @@ import {
 import { Transaction } from "@/app/data/TransactionItem";
 
 export const EditTransactionRepository = {
-  async updateTransactionById(
-    id: number,
-    transaction: Transaction,
-  ) {
+  async updateTransactionById(id: number, transaction: Transaction) {
     return await updateTransactionById(id, transaction);
   },
 

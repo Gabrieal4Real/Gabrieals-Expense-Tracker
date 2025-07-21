@@ -5,6 +5,7 @@ import { baseStyles } from "@/constants/Styles";
 import { TitleBox } from "@/app/util/widgets/CustomBox";
 import { Pressable, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import EventBus from "@/app/util/systemFunctions/EventBus";
 import { SpacerVertical } from "@/app/util/widgets/CustomBox";
 import CustomTextInput from "@/app/util/widgets/CustomTextInput";
 import { useEditTransactionViewModel } from "../viewmodel/EditTransactionViewModel";
@@ -14,7 +15,6 @@ import { TinyText } from "@/app/util/widgets/CustomText";
 import { Colors } from "@/constants/Colors";
 import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
 import { useTransactionViewModel } from "../../transactionBottomSheet/viewmodel/TransactionViewModel";
-import { useHomeViewModel } from "../../home/viewmodel/HomeViewModel";
 
 export default function EditTransactionScreen() {
   const insets = useSafeAreaInsets();
