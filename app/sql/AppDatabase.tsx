@@ -73,12 +73,12 @@ export async function getProfile(): Promise<Profile | null> {
 
 export async function upsertProfile(
   remaining: number,
-  requireAuth: boolean,
+  requireAuth: number,
 ): Promise<void> {
   const db = await getDB();
   await db.runAsync(
     `INSERT INTO profile (id, remaining, requireAuth) VALUES (1, ?, ?) 
      ON CONFLICT(id) DO UPDATE SET remaining = ?, requireAuth = ?`,
-    [remaining, requireAuth ? 1 : 0, remaining, requireAuth ? 1 : 0],
+    [remaining, requireAuth, remaining, requireAuth],
   );
 }

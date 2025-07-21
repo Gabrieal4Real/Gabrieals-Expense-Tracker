@@ -145,7 +145,7 @@ export function useHomeViewModel() {
           description,
         );
 
-        const profile = await getProfile();
+        const profile = await HomeRepository.getProfile();
         if (profile) {
           const remaining =
             type === TransactionType.Expense
@@ -168,7 +168,7 @@ export function useHomeViewModel() {
     async (ids: number[], transactions: Transaction[]) => {
       updateLoading(true, null);
       try {
-        const profile = await getProfile();
+        const profile = await HomeRepository.getProfile();
         if (profile) {
           const remaining = ids.reduce((acc, id) => {
             const transaction = transactions.find((t) => t.id === id);
@@ -221,7 +221,7 @@ export function useHomeViewModel() {
 
   useEffect(() => {
     (async () => {
-      await getProfile();
+      await HomeRepository.getProfile();
       await getTransactions();
     })();
   }, [getProfile, getTransactions]);

@@ -32,7 +32,7 @@ export const HomeRepository = {
     return await getProfile();
   },
 
-  async updateProfile(remaining: number, requireAuth: boolean) {
+  async updateProfile(remaining: number, requireAuth: number) {
     return await upsertProfile(remaining, requireAuth);
   },
 

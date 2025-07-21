@@ -36,7 +36,7 @@ export default function EditTransactionScreen() {
       ]}
     >
       <TitleBox title="Edit Transaction" />
-      <SpacerVertical size={12} />
+      <SpacerVertical size={16} />
       <FilterChipGroup
         items={Object.values(TransactionType)}
         selected={uiState.transactionType}
