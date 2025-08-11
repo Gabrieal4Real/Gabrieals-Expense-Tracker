@@ -13,6 +13,12 @@ export function navigateToEditTransaction(transaction: Transaction) {
   });
 }
 
+export function navigateToTravelTracking() {
+  router.push({
+    pathname: "/features/travelTracking/view/TravelTrackingScreen",
+  });
+}
+
 export function navigateBack() {
   router.back();
 }

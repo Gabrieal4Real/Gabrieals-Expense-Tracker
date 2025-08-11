@@ -16,6 +16,7 @@ export const TitleBox = ({ title }: { title: string }) => {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        marginBottom: 16,
       }}
     >
       <Pressable

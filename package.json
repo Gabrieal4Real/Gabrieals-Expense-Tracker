@@ -16,6 +16,8 @@
     "check": "expo install --fix",
     "build": "expo prebuild --clean",
     "expo": "expo install expo@latest",
+    "expo-android": "npx expo run:android --device",
+    "expo-ios": "npx expo run:ios",
     "format": "prettier . --write"
   },
   "dependencies": {

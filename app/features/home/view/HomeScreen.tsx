@@ -318,7 +318,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={[baseStyles.baseBackground, { paddingTop: 18 + insets.top }]}>
+    <View style={[baseStyles.baseBackground, { paddingTop: insets.top + 18 }]}>
       <TitleText
         text="Gabrieal's Appspensive"
         color={Colors.textPrimary}

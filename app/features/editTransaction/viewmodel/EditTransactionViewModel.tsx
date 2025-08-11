@@ -10,7 +10,6 @@ import { HomeRepository } from "../../home/repo/HomeRepository";
 import { EditTransactionRepository } from "../repo/EditTransactionRepository";
 import { getProfile } from "@/app/sql/AppDatabase";
 import { Profile } from "@/app/data/Profile";
-import { navigateBack } from "@/app/util/systemFunctions/NavigationUtil";
 import EventBus from "@/app/util/systemFunctions/EventBus";
 
 export function useEditTransactionViewModel() {

@@ -32,19 +32,23 @@ export default function EditTransactionScreen() {
     <View
       style={[
         baseStyles.baseBackground,
-        { paddingTop: 18 + insets.top, paddingBottom: 18 + insets.bottom },
+        { paddingTop: insets.top + 18, paddingBottom: insets.bottom + 18 },
       ]}
     >
       <TitleBox title="Edit Transaction" />
-      <SpacerVertical size={16} />
       <FilterChipGroup
         items={Object.values(TransactionType)}
         selected={uiState.transactionType}
-        onSelectedChange={(type) =>
+        onSelectedChange={(type) => {
           editTransactionViewModel.updateTransactionType(
             type as TransactionType,
-          )
-        }
+          );
+          editTransactionViewModel.updateCategory(
+            type === TransactionType.Expense
+              ? ExpenseCategory.Food
+              : IncomeCategory.Salary,
+          );
+        }}
         style={{ justifyContent: "center", alignItems: "center" }}
       />
       <SpacerVertical size={12} />
