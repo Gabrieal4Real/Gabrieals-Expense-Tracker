@@ -27,6 +27,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="expensetracker"/>
+        <data android:scheme="exp+expense-tracker"/>
       </intent-filter>
     </activity>
   </application>
