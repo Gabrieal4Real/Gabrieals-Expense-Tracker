@@ -9,6 +9,8 @@ import { useTransactionViewModel } from "../viewmodel/TransactionViewModel";
 import { TransactionType } from "@/app/util/enums/TransactionType";
 import { ExpenseCategory, IncomeCategory } from "@/app/util/enums/Category";
 import { Colors } from "@/constants/Colors";
+import { openFlutter } from "@/app/util/systemFunctions/flutterBridge";
+
 
 interface TransactionBottomSheetProps {
   onTransactionAdded?: (
@@ -110,7 +112,7 @@ export default function TransactionBottomSheet({
         text="Confirm"
         style={{ backgroundColor: buttonBackground }}
         color={buttonTextColor}
-        onPress={handleSubmit}
+        onPress={() => openFlutter({ route: '/home', params: { userId: '123' } })}
         disabled={!isAmountValid}
       />
     </View>

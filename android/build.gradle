@@ -22,6 +22,12 @@ def reactNativeAndroidDir = new File(
 
 allprojects {
   repositories {
+        maven {
+            url "$rootDir/../assets/repo"
+        }
+        maven {
+            url "https://storage.googleapis.com/download.flutter.io"
+        }
     maven {
       // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
       url(reactNativeAndroidDir)

@@ -30,5 +30,6 @@
         <data android:scheme="exp+expense-tracker"/>
       </intent-filter>
     </activity>
+    <activity android:name="io.flutter.embedding.android.FlutterActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize"/>
   </application>
 </manifest>

@@ -1,3 +1,4 @@
+
 {
   "expo": {
     "name": "Appspensive",
@@ -10,7 +11,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.gabrieal.ExpenseTracker"
+      "bundleIdentifier": "org.gabrieal.expensetracker"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +19,7 @@
         "backgroundColor": "#90bcee"
       },
       "edgeToEdgeEnabled": true,
-      "package": "org.gabrieal.ExpenseTracker"
+      "package": "org.gabrieal.expensetracker"
     },
     "web": {
       "bundler": "metro",
@@ -36,7 +37,9 @@
           "backgroundColor": "#90bcee"
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      "./plugins/withFlutterAAR.js",
+      "./plugins/withFlutterBridge.js"
     ],
     "experiments": {
       "typedRoutes": true

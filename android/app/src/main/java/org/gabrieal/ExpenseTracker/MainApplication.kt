@@ -1,10 +1,11 @@
-package org.gabrieal.ExpenseTracker
+package org.gabrieal.expensetracker
 
 import android.app.Application
 import android.content.res.Configuration
 
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
+import org.gabrieal.expensetracker.flutterbridge.FlutterBridgePackage
 import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.ReactHost
@@ -22,7 +23,9 @@ class MainApplication : Application(), ReactApplication {
         this,
         object : DefaultReactNativeHost(this) {
           override fun getPackages(): List<ReactPackage> {
-            val packages = PackageList(this).packages
+            val packages = PackageList(this).packages.apply {
+      add(FlutterBridgePackage())
+    }
             // Packages that cannot be autolinked yet can be added manually here, for example:
             // packages.add(MyReactNativePackage())
             return packages

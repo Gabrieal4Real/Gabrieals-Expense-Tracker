@@ -1,4 +1,4 @@
-package org.gabrieal.ExpenseTracker
+package org.gabrieal.expensetracker
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
