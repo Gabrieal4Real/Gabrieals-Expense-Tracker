@@ -2,7 +2,7 @@ const { withAppBuildGradle, withProjectBuildGradle } = require('@expo/config-plu
 
 const FLUTTER_DEPENDENCY = "    implementation 'com.experian.sample_module:flutter_release:1.0'";
 const REPO_DECLARATION = `        maven {
-            url "$rootDir/../assets/repo"
+            url "$rootDir/../native_modules/android/repo"
         }
         maven {
             url "https://storage.googleapis.com/download.flutter.io"
@@ -27,7 +27,7 @@ const addFlutterRepositories = (config) => {
   const { modResults } = config;
   let gradleContent = modResults.contents;
 
-  if (gradleContent.includes('assets/repo')) return config;
+  if (gradleContent.includes('native_modules/android/repo')) return config;
 
   const allProjectsRepoRegex = /(allprojects\s*\{\s*repositories\s*\{)/;
   if (allProjectsRepoRegex.test(gradleContent)) {
