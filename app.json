@@ -39,7 +39,14 @@
       ],
       "expo-sqlite",
       "./plugins/withFlutterAAR.js",
-      "./plugins/withFlutterBridge.js"
+      "./plugins/withFlutterBridge.js",
+      [
+        "./plugins/withXCFramework.js",
+        {
+          "frameworks": ["App.xcframework", "Flutter.xcframework"],
+          "frameworksPath": "../native_modules/ios"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

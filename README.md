@@ -23,6 +23,7 @@ A modern multiplatform expense tracking application built with React Native and 
 - **UI Components**: React Native Paper, Victory Native (for charts)
 - **Authentication**: Expo SecureStore, Expo LocalAuthentication
 - **Navigation**: Expo Router v5.1.0
+- **Native Integration**: Flutter via XCFrameworks (iOS), AAR (Android)
 - **Styling**: Styled Components, React Native StyleSheet
 
 ## Architecture

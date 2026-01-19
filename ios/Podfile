@@ -57,8 +57,34 @@ target 'Appspensive' do
       target_installation_result.resource_bundle_targets.each do |resource_bundle_target|
         resource_bundle_target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+    # XCFramework Integration - Configure build settings for XCFrameworks
+    # Add framework search paths to the main app target
+    installer.target_installation_results.pod_target_installation_results.each do |pod_name, target_installation_result|
+      if pod_name == 'Pods-Appspensive'
+        target_installation_result.native_target.build_configurations.each do |config|
+          config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+          config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(PROJECT_DIR)/../native_modules/ios'
+          config.build_settings['ENABLE_BITCODE'] = 'NO'
         end
       end
+    end
+    
+    # Also add to Pods project targets
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(PROJECT_DIR)/../native_modules/ios'
+        config.build_settings['ENABLE_BITCODE'] = 'NO'
+        
+        if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 15.1
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
+        end
+      end
+    end
+
+        end
+end
+
     end
   end
 end

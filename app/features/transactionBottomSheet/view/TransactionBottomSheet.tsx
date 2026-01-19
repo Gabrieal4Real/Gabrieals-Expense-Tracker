@@ -112,7 +112,7 @@ export default function TransactionBottomSheet({
         text="Confirm"
         style={{ backgroundColor: buttonBackground }}
         color={buttonTextColor}
-        onPress={() => openFlutter({ route: '/home', params: { userId: '123' } })}
+        onPress={() => openFlutter({ params: { userId: '123' } })}
         disabled={!isAmountValid}
       />
     </View>

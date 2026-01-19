@@ -8,28 +8,53 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		251809422596BA5D9667B953 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2098CF96900DB1F1F65B555E /* ExpoModulesProvider.swift */; };
-		284B10D9D5B9020E2F62D1A6 /* libPods-Appspensive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 493C018B6BD8AB537A312C31 /* libPods-Appspensive.a */; };
+		3054BA794404F274F84D0365 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EE849D0CBA5BB515E555196C /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		86D362153A2CF7F882C9F7C4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BE05614C930A7A479229302D /* PrivacyInfo.xcprivacy */; };
+		565C21B3DCBF43238748B872 /* FlutterBridgeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BA76337B2340329A418CEE /* FlutterBridgeModule.swift */; };
+		8128A0AC0B214871B24B0994 /* App.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 417346BDA1954DC18AB46C1C /* App.xcframework */; };
+		81BB13030AFEFDCEF9A15499 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7C0936F0BF083467E733A9 /* ExpoModulesProvider.swift */; };
+		9ACA4CF3D8574DB0A79A6583 /* FlutterBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FB8A7BFBBC4BA2B8426B3E /* FlutterBridgeModule.m */; };
+		A7BB0B1ACF5C479D9B2B6E6B /* App.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 417346BDA1954DC18AB46C1C /* App.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		C33940D71CEA4199B61EB3E9 /* Flutter.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC6E99F1DDBA42A18BF4AE4B /* Flutter.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D43168247CC17ED9BA3ABC45 /* libPods-Appspensive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E609E5E34B9D6AB0A62AE96 /* libPods-Appspensive.a */; };
+		EC22D6EBAB4641CD8D41D0C8 /* Flutter.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC6E99F1DDBA42A18BF4AE4B /* Flutter.xcframework */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		388838A1F80E406BA33B4312 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A7BB0B1ACF5C479D9B2B6E6B /* App.xcframework in Embed Frameworks */,
+				C33940D71CEA4199B61EB3E9 /* Flutter.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		05F18E1AFA6F976A1E0C9950 /* Pods-Appspensive.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Appspensive.debug.xcconfig"; path = "Target Support Files/Pods-Appspensive/Pods-Appspensive.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Appspensive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Appspensive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Appspensive/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Appspensive/Info.plist; sourceTree = "<group>"; };
-		1F5FA55FD4EBB31475A1213F /* Pods-Appspensive.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Appspensive.debug.xcconfig"; path = "Target Support Files/Pods-Appspensive/Pods-Appspensive.debug.xcconfig"; sourceTree = "<group>"; };
-		2098CF96900DB1F1F65B555E /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Appspensive/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		3281B09D252F0035A1838F72 /* Pods-Appspensive.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Appspensive.release.xcconfig"; path = "Target Support Files/Pods-Appspensive/Pods-Appspensive.release.xcconfig"; sourceTree = "<group>"; };
-		493C018B6BD8AB537A312C31 /* libPods-Appspensive.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Appspensive.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		417346BDA1954DC18AB46C1C /* App.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = App.xcframework; path = ../native_modules/ios/App.xcframework; sourceTree = "<group>"; };
+		55FB8A7BFBBC4BA2B8426B3E /* FlutterBridgeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Appspensive/FlutterBridgeModule.m; sourceTree = "<group>"; };
+		596AC01AE2CCD1155EE6E1D1 /* Pods-Appspensive.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Appspensive.release.xcconfig"; path = "Target Support Files/Pods-Appspensive/Pods-Appspensive.release.xcconfig"; sourceTree = "<group>"; };
+		6E609E5E34B9D6AB0A62AE96 /* libPods-Appspensive.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Appspensive.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6BA76337B2340329A418CEE /* FlutterBridgeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appspensive/FlutterBridgeModule.swift; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Appspensive/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		BE05614C930A7A479229302D /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Appspensive/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		CC7C0936F0BF083467E733A9 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Appspensive/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EE849D0CBA5BB515E555196C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Appspensive/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Appspensive/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* Appspensive-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Appspensive-Bridging-Header.h"; path = "Appspensive/Appspensive-Bridging-Header.h"; sourceTree = "<group>"; };
+		FC6E99F1DDBA42A18BF4AE4B /* Flutter.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Flutter.xcframework; path = ../native_modules/ios/Flutter.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,13 +62,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				284B10D9D5B9020E2F62D1A6 /* libPods-Appspensive.a in Frameworks */,
+				8128A0AC0B214871B24B0994 /* App.xcframework in Frameworks */,
+				EC22D6EBAB4641CD8D41D0C8 /* Flutter.xcframework in Frameworks */,
+				D43168247CC17ED9BA3ABC45 /* libPods-Appspensive.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06829DC2F8052EFED2BBCF73 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				05F18E1AFA6F976A1E0C9950 /* Pods-Appspensive.debug.xcconfig */,
+				596AC01AE2CCD1155EE6E1D1 /* Pods-Appspensive.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* Appspensive */ = {
 			isa = PBXGroup;
 			children = (
@@ -53,7 +90,9 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				BE05614C930A7A479229302D /* PrivacyInfo.xcprivacy */,
+				A6BA76337B2340329A418CEE /* FlutterBridgeModule.swift */,
+				55FB8A7BFBBC4BA2B8426B3E /* FlutterBridgeModule.m */,
+				EE849D0CBA5BB515E555196C /* PrivacyInfo.xcprivacy */,
 			);
 			name = Appspensive;
 			sourceTree = "<group>";
@@ -62,27 +101,27 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				493C018B6BD8AB537A312C31 /* libPods-Appspensive.a */,
+				417346BDA1954DC18AB46C1C /* App.xcframework */,
+				FC6E99F1DDBA42A18BF4AE4B /* Flutter.xcframework */,
+				6E609E5E34B9D6AB0A62AE96 /* libPods-Appspensive.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5786A17080FDFA7767EBB9EE /* Pods */ = {
+		36395018F9E4C2E5327C6D38 /* Appspensive */ = {
 			isa = PBXGroup;
 			children = (
-				1F5FA55FD4EBB31475A1213F /* Pods-Appspensive.debug.xcconfig */,
-				3281B09D252F0035A1838F72 /* Pods-Appspensive.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		708E8F533BC831B747F1BCCC /* Appspensive */ = {
-			isa = PBXGroup;
-			children = (
-				2098CF96900DB1F1F65B555E /* ExpoModulesProvider.swift */,
+				CC7C0936F0BF083467E733A9 /* ExpoModulesProvider.swift */,
 			);
 			name = Appspensive;
+			sourceTree = "<group>";
+		};
+		6227814DD2DABE286FA12F49 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				36395018F9E4C2E5327C6D38 /* Appspensive */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -99,8 +138,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				5786A17080FDFA7767EBB9EE /* Pods */,
-				8A34B8AAA382865B9FD642D4 /* ExpoModulesProviders */,
+				06829DC2F8052EFED2BBCF73 /* Pods */,
+				6227814DD2DABE286FA12F49 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -113,14 +152,6 @@
 				13B07F961A680F5B00A75B9A /* Appspensive.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		8A34B8AAA382865B9FD642D4 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				708E8F533BC831B747F1BCCC /* Appspensive */,
-			);
-			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -140,13 +171,14 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Appspensive" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				30A48320A1784D074F67409E /* [Expo] Configure project */,
+				4122DF6F32B3DA81D19ADFDF /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				4D17051FBEBCEB0FF0C0290E /* [CP] Embed Pods Frameworks */,
+				388838A1F80E406BA33B4312 /* Embed Frameworks */,
+				D7A21F3D3FF19435CDF22234 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +228,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				86D362153A2CF7F882C9F7C4 /* PrivacyInfo.xcprivacy in Resources */,
+				3054BA794404F274F84D0365 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,7 +272,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		30A48320A1784D074F67409E /* [Expo] Configure project */ = {
+		4122DF6F32B3DA81D19ADFDF /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -258,24 +290,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-Appspensive/expo-configure-project.sh\"\n";
-		};
-		4D17051FBEBCEB0FF0C0290E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Appspensive/Pods-Appspensive-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Appspensive/Pods-Appspensive-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -319,6 +333,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Appspensive/Pods-Appspensive-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D7A21F3D3FF19435CDF22234 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Appspensive/Pods-Appspensive-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Appspensive/Pods-Appspensive-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -327,7 +359,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				251809422596BA5D9667B953 /* ExpoModulesProvider.swift in Sources */,
+				565C21B3DCBF43238748B872 /* FlutterBridgeModule.swift in Sources */,
+				9ACA4CF3D8574DB0A79A6583 /* FlutterBridgeModule.m in Sources */,
+				81BB13030AFEFDCEF9A15499 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,13 +370,17 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F5FA55FD4EBB31475A1213F /* Pods-Appspensive.debug.xcconfig */;
+			baseConfigurationReference = 05F18E1AFA6F976A1E0C9950 /* Pods-Appspensive.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Appspensive/Appspensive.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../native_modules/ios",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
@@ -361,7 +399,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = org.gabrieal.expensetracker;
-				PRODUCT_NAME = "Appspensive";
+				PRODUCT_NAME = Appspensive;
 				SWIFT_OBJC_BRIDGING_HEADER = "Appspensive/Appspensive-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -372,12 +410,16 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3281B09D252F0035A1838F72 /* Pods-Appspensive.release.xcconfig */;
+			baseConfigurationReference = 596AC01AE2CCD1155EE6E1D1 /* Pods-Appspensive.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Appspensive/Appspensive.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../native_modules/ios",
+				);
 				INFOPLIST_FILE = Appspensive/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -392,7 +434,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = org.gabrieal.expensetracker;
-				PRODUCT_NAME = "Appspensive";
+				PRODUCT_NAME = Appspensive;
 				SWIFT_OBJC_BRIDGING_HEADER = "Appspensive/Appspensive-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

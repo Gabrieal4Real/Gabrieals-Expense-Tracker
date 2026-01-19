@@ -8,7 +8,7 @@
     "android:run": "npm run android:build && expo run:android -d && echo '\nAndroid (Development) run successfully!'",
     "android:build": "expo prebuild --platform android --clean && echo '\nAndroid (Development) native folder build completed successfully!'",
     "android:apk": "npm run android:build && cd android && ./gradlew assembleRelease && echo '\nAndroid (Development) APK built and installed successfully!' && open app/build/outputs/apk/release",
-    "ios": "npm run ios:run",
+    "ios": "npx expo prebuild --clean --platform ios && npm run ios:run",
     "ios:run": "npm run ios:build && expo run:ios -d && echo '\niOS (Development) run successfully!'",
     "ios:build": "expo prebuild --platform ios && npx pod-install && echo '\niOS (Development) native folder build completed successfully!'",
     "ios:ipa": "npm run ios:build && cd ios && xcodebuild -workspace Treats.xcworkspace -scheme Treats -archivePath build/Treats.xcarchive archive && xcodebuild -exportArchive -archivePath build/Treats.xcarchive -exportPath build -exportOptionsPlist ExportOptions.plist && echo '\niOS (Development) IPA built successfully!' && open build",
@@ -62,7 +62,8 @@
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "prettier": "^3.6.2",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "@react-native-community/cli": "latest"
   },
   "private": true
 }
